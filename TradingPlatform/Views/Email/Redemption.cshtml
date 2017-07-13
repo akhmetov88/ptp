@@ -1,0 +1,15 @@
+﻿@model TradingPlatform.Models.NotifyModels.Redemption
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+    <p>
+        @LocalText.Inst.Get("text", "EmailTemplate.BaseNotification", "Повідомляємо, що", "Уведомляем, что", Model.Lang) 
+        @LocalText.Inst.Get("text", "EmailTemplate.InTrades", "у торгах", "в торгах", Model.Lang) № <span class="mail-important-info">@Model.TradeNumber</span> @LocalText.Inst.Get("text", "EmailTemplate.ByCompany", "компанією ", "компанией ", Model.Lang) 
+        <span class="mail-important-info">@Model.ContragentName</span> @LocalText.Inst.Get("text", "EmailTemplate.Buyed", "викуплено", "выкуплено", Model.Lang) @Model.LotsCount @LocalText.Inst.Get("text", "EmailTemplate.Lots", "лот(ів)", "лот(ов)", Model.Lang).
+    </p>
+</div>
+

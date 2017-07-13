@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="@LocalText.GetCultureName()">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <meta name="keywords" content="@ViewBag.MetaKeywords">
+    <meta name="description" content="@ViewBag.MetaDesc">
+    @Styles.Render("~/Content/css")
+    @RenderSection("css", required: false)
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+
+    <div id="top">
+        <div class="container">
+            <div id="top-main">
+                @Html.Partial("Lang")
+
+                <div id="currency">
+                    <div id="currency_nbu">
+                        @Html.Partial("Currency")
+                    </div>
+                </div>
+                <div class="clear"></div>
+
+                <div id="logo"><a href="/"><img alt="Petroleum Trading Platform" src="@Url.Content("~/Content/images/logo.png")"></a></div>
+
+                <div id="date">
+                    24 января 2016 <em>13:21</em> Киев
+                </div>
+                <div class="clear"></div>
+
+                @Html.Partial("TopNav")
+            </div>
+        </div>
+    </div>
+    <div id="middle">
+        <div id="middle-bg"></div>
+        <div class="container">
+            <div id="main" class="row">
+                <div id="aside" class="col-lg-3">
+                    @Html.Partial("LeftMenu")
+                    @Html.Partial("Banner")
+                </div>
+                <div id="content" class="col-lg-8">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <div class="footer-item">
+                <h4>Информация</h4>
+                <ul>
+                    <li class="active"><a href="/home/about">О нас</a></li>
+                    <li><a href="/home/rules">Правила и инструкции</a></li>
+                    <li><a href="/trade">Торги</a></li>
+                    <li><a href="/home/feedback">Обратная связь</a></li>
+                </ul>
+            </div>
+            <div class="footer-item">
+                <h4>обслуживание клиентов</h4>
+                <ul>
+                    <li><a href="/home/Register">Регистрация</a></li>
+                    <li><a href="/home/Login">Войти в профиль</a></li>
+                    <li>Условия использования</li>
+                    <li><a href="/home/PrivacyPolicy">Политика конфиденциальности</a></li>
+                </ul>
+            </div>
+            <div id="footer-logo">
+                <img alt="Petroleum Trading Platform" src="@Url.Content("~/Content/images/logo-footer.jpg")">
+            </div>
+        </div>
+    </div>
+    <div id="copyright">
+        <div class="container">
+            <div class="copyright-txt">
+                &copy; @DateTime.Now.Year - Petroleum trading platform. All Right Reserved
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

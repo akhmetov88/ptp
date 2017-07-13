@@ -1,0 +1,16 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true"><img src="~/Content/images/modal-close-btn.png"></span>
+    </button>
+    <h4 class="modal-title" id="">@LocalText.Inst.Get("title", "errorModal", "Помилка", "Ошибка")</h4>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        @Html.ValidationSummary()
+        @LocalText.Inst.Get("title", "errorModalText", "Вибичате, під час обробки Вашого запиту відбуалсь помилка, спробуйте, будь ласка, пізніше", "Извините, во время обработки Вашего запроса произошла ошибка, попробуйте, пожалуйста позже")
+    </div>
+</div>
+<div class="modal-footer">
+    <input type="submit" value="OK" />
+</div>

@@ -1,0 +1,31 @@
+﻿@using TradingPlatform.Models;
+@using TradingPlatform.Enums;
+@model TradingPlatform.Models.NotifyModels.NewTrade
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+    <p>
+        @LocalText.Inst.Get("email", "EmailTemplate.TradePlanned", "На торговому майданчику Petroleum Trading Platform заплановано торги", "На торговой площадке Petroleum Trading Platform запланированы торги", Model.Lang) № <span class="mail-important-info">@Model.TradeNumber</span>.
+    </p>
+    <p>
+        <br />
+        Час початку: @Model.Model.DateBegin.ToClientTime()
+        <br />
+        Товар: @StaticData.Inst.GetCatalogValue(@Model.Model.ProductName)
+        <br />
+        Обсяг: @Model.Model.TotalVolume @StaticData.Inst.GetCatalogValue(@Model.Model.Unit).
+        <br />
+        Базис поставки: @StaticData.Inst.GetCatalogValue(@Model.Model.Incotherms) (@StaticData.Inst.GetCatalogValue(@Model.Model.ShipmentPoint) )
+        <br />
+        Ціна: @Model.Model.PriceStart @StaticData.Inst.GetCatalogValue(@Model.Model.PriceCurrency)/@StaticData.Inst.GetCatalogValue(@Model.Model.Unit).
+        <br />
+
+        @LocalText.Inst.Get("email", "EmailTemplate.GoToParticipate", "Для участі Ви можете пройти за", "Для участия Вы можете пройти по", Model.Lang) 
+        <a href="@Model.Link">@LocalText.Inst.Get("email", "EmailTemplate.Link", "посиланням", "ссылке", Model.Lang)</a>
+    </p>
+</div>
+

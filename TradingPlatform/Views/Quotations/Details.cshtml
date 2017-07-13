@@ -1,0 +1,74 @@
+﻿@model TradingPlatform.Data.Quotation
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Quotation</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedByUser.RegisterName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedByUser.RegisterName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.QuotationType.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QuotationType.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdatedByUser.RegisterName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdatedByUser.RegisterName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Value)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Value)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Created)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Created)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Updated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Updated)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

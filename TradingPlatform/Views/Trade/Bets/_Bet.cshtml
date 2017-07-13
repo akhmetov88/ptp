@@ -1,0 +1,115 @@
+﻿@using System.Globalization
+@using TradingPlatform.Enums
+@model TradingPlatform.Models.EntityModel.BetViewModel
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+@*<script src="~/Scripts/jquery-2.2.4.min.js"></script>
+<script src="~/Scripts/jquery.countdown.min.js"></script>*@
+
+<div class="modal-header">
+    <span data-countdown="@Model.DateEnd.ToParse()" class="time"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true"><img src="~/Content/images/modal-close-btn.png"></span>
+    </button>
+    <h4 class="modal-title" id="">@LocalText.Inst.Get("totle", "BetModel", "Зробити ставку ", "Сделать ставку ")</h4>
+</div>
+@using (@Ajax.BeginForm("Bet", "Trade", FormMethod.Post, new AjaxOptions() { OnSuccess = "onTwoModelSuccess" },new {id= "betForm" }))
+{
+    <div class="modal-body">
+        <div class="row">
+            @Html.LabelFor(c => c.LotsCount, LocalText.Inst.Get("label", "labelBetConfirm", "Підтвердити:", "Подтвердить:"), new { @class = "col-sm-5" })
+            <div class="col-sm-7">@Html.DisplayFor(c => c.LotsCount) лот (@Model.LotVolume тн.) </div>
+        </div>
+        <div class="row noselect">
+            @Html.LabelFor(c => c.Price, LocalText.Inst.Get("label", "labelBetConfirmPrice", "По ціні:", "По цене:"), new { @class = "col-sm-5" })
+            <div class="col-sm-7">
+                <span class="inc-step" onclick="return IncDec(false);">-</span>
+                <span id="display-price">@Model.Price.Value.ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 0 })</span> грн./тн.
+                <span class="dec-step" onclick="return IncDec(true);">+</span>
+                <br /><span style="font-size:smaller;">(@LocalText.Inst.Get("text","LabelStep","крок","шаг") @Html.DisplayFor(c => c.Step))</span>
+            </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(c => c.Sum, LocalText.Inst.Get("label", "labelBetConfirmSumm", "На суму:", "На сумму:"), new { @class = "col-sm-5" })
+            <div id="firstsum" class="col-sm-7">
+            </div>
+        </div>
+        @if (Model.Buyers.Count > 1)
+        {
+            @Html.LabelFor(c => c.BuyerId, LocalText.Inst.Get("label", "labelBetFromContragent", "Представляючи:", "От лица:"), new { @class = "col-sm-5" })
+            @Html.DropDownListFor(c => c.BuyerId, Model.Buyers, new { @class = "auction-value col-sm-7" })
+        }
+        else
+        {
+            <div class="row">
+                @Html.LabelFor(c => c.BuyerId, LocalText.Inst.Get("label", "labelBetFromContragent", "Представляючи:", "От лица:"), new { @class = "col-sm-5" })
+                @*  @Html.DisplayFor(c => c.BuyerName, null,new { @class = "col-sm-7" })*@
+                <div class="col-sm-7">@Model.BuyerName</div>
+
+            </div>
+                @Html.HiddenFor(c => c.BuyerId)
+        }
+        @Html.HiddenFor(c => c.LotId)
+        @Html.HiddenFor(c => c.TradeId)
+        @Html.HiddenFor(c => c.LotsCount)
+        @Html.HiddenFor(c => c.Price)
+        @Html.HiddenFor(c => c.Step)
+        @Html.Hidden("IsRedemption", false)
+        <div id="error" class="text-danger"></div>
+    </div>
+        <div class="modal-footer">
+            @*<input type="submit" value="OK" />*@
+            <button type="submit" id="submitBet">OK</button>
+        </div>
+}
+<script>
+
+    $("#submitBet").one("click", function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        $('#betForm').submit();
+    });
+        $('[data-countdown]').each(function () {
+            var $this = $(this), finalDate = $(this).data('countdown');
+            $this.countdown(finalDate, function (event) {
+                $this.html(event.strftime('<i class="fa fa-clock-o" aria-hidden="true"></i> %H:%M:%S'));
+            });
+        });
+    //});
+
+    function SetSum() {
+        var sum = parseFloat($('#LotsCountMax').val()) * parseFloat($('#pricecalc').val()) * parseFloat($('#volumecalc').val());
+        var lotsvolume = sum / parseFloat(parseFloat($('#pricecalc').val()));
+        $('#sum').text(sum.toLocaleString() + " грн");
+        $('#lotsvolume').text('(' + lotsvolume.toLocaleString() + " тн)");
+    };
+
+    $(function () {
+        var sum = parseFloat(@Model.Sum);
+        $('#firstsum').text(sum.toLocaleString() + " грн");
+    });
+
+    var minPrice = parseFloat(@Model.Price);
+    var maxPrice = parseFloat(@Model.MaxPrice);
+    var step = parseFloat(@Model.Step);
+    var lotVolume = parseFloat(@Model.LotVolume);
+    var lotsCount = parseInt(@Model.LotsCount);
+    function IncDec(inc) {
+        var buff = minPrice;
+        if (inc) {
+            buff = parseFloat($('#display-price').html().replace(' ', '').replace('&nbsp;', '').replace(' ', '').replace('&nbsp;', '')) + step;
+            UpdatePrice(buff);
+
+        } else {
+            buff = parseFloat($('#display-price').html().replace(' ', '').replace('&nbsp;', '').replace(' ', '').replace('&nbsp;', '')) - step;
+            if (buff >= minPrice) {
+                UpdatePrice(buff);
+            }
+        }
+        return false;
+    };
+    function UpdatePrice(price) {
+        $('#display-price').html(price.toLocaleString());
+        $('#Price').val(parseFloat(price));
+        $('#firstsum').text((parseFloat(price) * lotVolume).toLocaleString() + " грн");
+    }
+</script>

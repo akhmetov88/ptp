@@ -1,0 +1,41 @@
+﻿@model IEnumerable<TradingPlatform.Data.Contragent>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>@LocalText.Inst.Get("title", "ContragentRequestHistory", "Історія заявок на аккредитацію", "История заявок на аккредитацию")</h2>
+
+<table class="table">
+    <tr>
+        <th style="width:5%">
+            @LocalText.Inst.Get("text", "contragent_accr", "Акредитація", "Аккредитация")
+        </th>
+        <th>
+            @LocalText.Inst.Get("text", "contragent_name", "Найменування", "Наименование")
+        </th>
+        <th>
+            @LocalText.Inst.Get("text", "contragent_date", "Дата", "Дата")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsApproved)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LongName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateDate)
+            </td>
+            <td>
+                @Html.RouteLink(LocalText.Inst.Get("link", "more", "Детальніше", "Подробно"), "administration-request-details", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>

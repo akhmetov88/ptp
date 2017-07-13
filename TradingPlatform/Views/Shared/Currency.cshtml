@@ -1,0 +1,7 @@
+﻿@model IEnumerable<TradingPlatform.Models.Currency>
+<ul>
+    @foreach (var currency in Model)
+    {
+        <li id="@currency.Abbrreviature">@currency.Abbrreviature&nbsp;<span>@currency.Rate.ToString("N3")</span></li>
+    }
+</ul>

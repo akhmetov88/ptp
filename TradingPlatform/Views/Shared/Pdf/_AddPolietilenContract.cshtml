@@ -1,0 +1,171 @@
+﻿@using System.Globalization
+@using TradingPlatform.Enums
+@using TradingPlatform.Models
+@model TradingPlatform.Models.BillModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; CHARSET=utf-8">
+    <title></title>
+    <style>
+        section {
+            width: 100%;
+            height: 100%;
+        }
+        section > div p {
+            font-size: 18px;
+            letter-spacing: 0.4px;
+        }
+        h3 {
+            text-align: center;
+        }
+        .floater::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        .floater > *:first-child {
+            float: left;
+            width: 48%;
+            text-align: left;
+        }
+        .floater > *:last-child {
+            float: right;
+            width: 48%;
+            text-align: right;
+        }
+        .floater > div:last-child {
+            text-align: left;
+        }
+
+        section table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 5px 0;
+        }
+
+            section table, section table th, section table td {
+                border: 1px solid black;
+                padding: 4px;
+            }
+
+                section table th {
+                    background-color: lightgrey;
+                    text-align: center;
+                }
+
+                section table td {
+                    padding: 4px;
+                }
+
+                section table tr td:last-child {
+                    text-align: right;
+                }
+                section table tr:nth-child(n+3) {
+                    /*text-align: right;*/
+                }
+    </style>
+</head>
+<body>
+    @{
+        var ceoSeller = Model.Seller.IsConfidant ? Model.Seller.ConfidantName : Model.Seller.CeoName;
+        var ceoBuyer = Model.Buyer.IsConfidant ? Model.Buyer.ConfidantName : Model.Buyer.CeoName;
+    }
+
+        <section>
+            <header>
+                <h3>
+                    СПЕЦИФІКАЦІЯ № @Model.ShowModel.AddContract
+                </h3>
+                <h3>
+                    до Договору поставки № @Model.ShowModel.Contract від @Model.ShowModel.DocCreaDate.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("uk-UA"))
+                </h3>
+                <div class="floater">
+                    <p>м. Київ</p>
+                    <p>@Model.ShowModel.DocCreaDate.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("uk-UA")) року</p>
+                </div>
+            </header>
+
+            <div>
+                <p>
+                    <b>«@Model.ShowModel.SellerName»</b>, що іменується надалі «Постачальник», в особі <b>@ceoSeller</b>, який діє на підставі <b>@Model.Seller.ConfidantDocumentType</b>, з одної сторони, та
+                    <b>«@Model.ShowModel.BuyerName»</b>, що іменується надалі «Покупець», в особі <b>@ceoBuyer</b>, який діє на підставі <b>@Model.Buyer.ConfidantDocumentType</b>, з іншої сторони,
+                    іменовані надалі разом – «Сторони», а кожна окремо – «Сторона», відповідно до чинного законодавства України уклали цю Специфікацію про наступне:
+                </p>
+                <p>
+                    1.  Постачальник зобов’язується поставити, а Покупець зобов’язується прийняти і оплатити наступний Товар:
+                </p>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr style="background-color: darkolivegreen">
+                                <th>№</th>
+                                <th>Товар</th>
+                                <th colspan="2">Кількість</th>
+                                <th>Ціна, грн.</th>
+                                <th>Сума, грн.</th>
+                            </tr>
+                        </thead>
+
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                @StaticData.Inst.GetCatalogValue(@Model.Trade.ProductName)
+                            </td>
+                            <td>@Model.Bets.Where(c => c.IsActual).Sum(x => x.Volume ?? 0).ToStandartString()</td>
+                            <td>т</td>
+                            <td>@((Model.Bets.Where(c => c.IsActual).Sum(x => x.Price * x.LotsCount ?? 0) / Model.Bets.Sum(x => x.LotsCount)).ToString("C2", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 0 }))</td>
+                            <td>@Model.Bets.Where(c => c.IsActual).Sum(x => x.Volume * x.Price ?? 0).ToStandartString()</td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="text-align: right">Разом:</td>
+                            <td>@(Model.Bets.Where(c => c.IsActual).Sum(x => x.Price * x.Volume ?? 0).ToString("C2", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 0 })) </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="text-align: right">У тому числі ПДВ:</td>
+                            <td>@((Model.Bets.Where(c => c.IsActual).Sum(x => x.Price * x.Volume ?? 0) / 6).ToString("C2", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 0 }))</td>
+                        </tr>
+                    </table>
+                <p>
+                    2.	Загальна вартість Товару, що постачається Покупцю за даною Специфікацією, складає <b>@(Model.Bets.Where(c => c.IsActual).Sum(x => x.Price * x.Volume ?? 0))грн</b>, у тому числі ПДВ(20 %) <b>@((Model.Bets.Where(c => c.IsActual).Sum(x => x.Price * x.Volume ?? 0) / 6).ToString("C2", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 0 }))грн</b>.
+                </p>
+                <p>
+                    3. Сторони визначили, що передача Товару Покупцю буде здійснюватися на наступних умовах поставки:<br />
+                    &nbsp;&nbsp;&nbsp;<b>@StaticData.Inst.GetCatalogValue(Model.Trade.Incotherms), @StaticData.Inst.GetCatalogValue(Model.Trade.ShipmentPoint)</b>
+                </p>
+                @*<p>
+                    4. Товар, що постачається Покупцю, має відповідати таким вимогам якості: <b>@StaticData.Inst.GetCatalogValue(Model.Trade.ProductQuality)</b>.   
+                </p>
+                <p>
+                    5.  Країна виробництва Товару: <b>@Model.Trade.ProductCountry</b>.
+                </p>*@
+                <p>
+                    4.  Строк поставки Товару: з @*<b>@DateTime.UtcNow.ToClientDate()</b>*@ @Model.Trade.DeliveryDateFrom.ToClientDate() по <b>@Model.Trade.DeliveryDateTo.ToClientDate()р.</b> включно.
+                </p>
+                <p>
+                    5. Умови оплати: 100% попередня оплата за Товар до <b>@Model.Trade.DayToPay.ToClientDate()</b>  включно.
+                </p>
+                @*<p>
+                    8. Сторони погодили, що витрати з доставки Товару Покупцю покладаються на: <b>@t</b> (Покупця, Постачальника, або витрати з доставки включено до ціни Товару). Сторони погодили, що розмір витрат Постачальника з доставки Товару у місце призначення Покупця складає __________ грн.
+                </p>*@
+                <p>
+                    6. Ця Специфікація вступає в дію з дати її підписання Сторонами. 
+                </p>
+                <p>
+                    7. Ця Специфікація є невід'ємною частиною Договору поставки  <b>№ @Model.ShowModel.Contract</b>  від <b>@Model.ShowModel.DocCreaDate.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("uk-UA")) року</b>, складена у двох примірниках, які мають однакову юридичну силу, по одному примірнику для кожної із Сторін.
+                </p>
+            </div>
+            <footer class="floater">
+                <div>
+                    <p><b>Від Постачальника:</b></p>
+                    <p>______________/__________/    </p>                  
+                </div>
+                <div>
+                    <p><b>Від Покупця:</b></p>
+                    <p>________________/____________/</p>
+                </div>
+            </footer>
+        </section>
+</body>
+</html>

@@ -1,0 +1,55 @@
+﻿@using TradingPlatform.Models
+@using TradingPlatform.Enums
+@model TradingPlatform.Models.TradeModel.TradeViewModel
+<div class="details-content">
+
+    @*<p>
+        @LocalText.Inst.Get("label", "tradeSeller", "Продавець", "Продавец") - <b>@Model.SellerName</b>
+    </p>*@
+    @*<p>
+        @LocalText.Inst.Get("label", "tradeConditionsProduct", "Товар", "Товар") – <b>@StaticData.Inst.GetCatalogValue(@Model.ProductNomenclature)</b>
+    </p>
+
+    <p>
+        @LocalText.Inst.Get("label", "tradeConditionsProductQuality", "Якість товару", "Качество товара") – <b> @StaticData.Inst.GetCatalogValue(@Model.ProductQuality) </b>
+    </p>
+    <p>
+        @LocalText.Inst.Get("label", "tradeConditionsProductManufact", "Виробник", "Производитель") – <b>@StaticData.Inst.GetCatalogValue(@Model.ProductCountry) (@StaticData.Inst.GetCatalogValue(@Model.ProductManufacturer))</b>
+    </p>
+    <p>
+        <a href="/account/showfile?file=@Model.ProductPassportId" target="_blank">@LocalText.Inst.Get("label", "tradeConditionsPassport", "Паспорт", "Паспорт")</a>
+    </p>*@
+
+    <p>
+        @LocalText.Inst.Get("label", "tradeConditionsProductTransport", "Вид транспортування", "Вид транспортировки") – <b>@StaticData.Inst.GetCatalogValue(@Model.TransportType) </b>
+    </p>
+    <p>
+        @LocalText.Inst.Get("label", "tradeConditionsProductIncotherms", "Умови поставки", "Условия поставки") - <b>@StaticData.Inst.GetCatalogValue(@Model.Incotherms)  @StaticData.Inst.GetCatalogValue(@Model.ShipmentPoint) </b>
+    </p>
+ 
+    <p>
+        @LocalText.Inst.Get("label", "tradeConditionsProductShipmentDate", "Строк поставки", "Сроки поставки") – <b>@Model.DeliveryDateFrom.ToClientDate() - @Model.DeliveryDateTo.ToClientDate()</b>
+    </p>
+    @if (Model.TransportType == "ЖД" || Model.TransportType == "Танк")
+    {
+        <p>
+            @LocalText.Inst.Get("label", "tradeConditionsShipmentTanks", "Умови обороту цистерн ", "Условия оборота цистерн") – @{
+                if (String.IsNullOrEmpty(@Model.TankTherms))
+                {
+                    <b>Нужна информация по формированию условий оборота</b>
+                }
+                else
+                {
+                    <b>@Model.TankTherms</b>
+                }
+            }
+        </p>}
+
+    @*<p>
+        @LocalText.Inst.Get("label", "tradeConditionsPayment", "Умови оплати", "Условия оплаты") - <b>@LocalText.Inst.Get("label", "tradeConditionsPayments", "100% попередня оплата за товар до", "100% предоплата за товар до") @Model.DayToPay.ToClientDate() @LocalText.Inst.Get("text", "vkluchno", "включительно", "включно")</b>
+    </p>*@
+    @*<p>
+        @LocalText.Inst.Get("label", "tradeConditionsContact", "Контактна особа", "Контактное лицо") – <b>@Model.ContactUser</b>
+    </p>*@
+
+</div>

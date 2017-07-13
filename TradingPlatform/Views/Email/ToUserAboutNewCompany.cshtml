@@ -1,0 +1,16 @@
+﻿@model TradingPlatform.Models.NotifyModels.ToUserAboutNewCompany
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+    <p>
+       Надану Вами інформацію щодо компанії "<span class="mail-important-info">@Model.Company</span>" надіслано на розгляд юридичному відділу.
+    </p>
+    <p>
+       Стежити за станом акредитаціі ви можете за <a href="@Model.Link">посиланням</a> та у своїй поштовій скриньці.
+    </p>
+</div>
+

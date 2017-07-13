@@ -1,0 +1,132 @@
+﻿
+@using PerpetuumSoft.Knockout
+@using TradingPlatform.Enums
+@using TradingPlatform.Models
+@model TradingPlatform.Models.TradeModel.TradeViewModel
+
+@{
+    var ko = Html.CreateKnockoutContext();
+}
+
+@*@ko.Initialize(Model)*@
+<table id="js-tradeViewModel" class="table-trading">
+    <tr class="table-header table-header-fixed">
+        <th colspan="8">@LocalText.Inst.Get("lable", "tradeTableFixHeader", "торги з фіксованим обсягом", "торги с фиксированным объемом")</th>
+    </tr>
+    <tr class="table-header table-header-fixed">
+        <th class="trade-width-all-1">№</th>
+        <th class="trade-width-all-2">@LocalText.Inst.Get("lable", "tradeTableConditions", "Основні умови", "Основные условия")</th>
+        <th class="trade-width-fix-1">@LocalText.Inst.Get("lable", "tradeTableLotsCount", "Кількість лотів", "Количество лотов"), @StaticData.Inst.GetDirVal("unit", "sh")</th>
+        <th class="trade-width-fix-2">@LocalText.Inst.Get("lable", "tradeTableLotVolume", "Об’єм лоту", "Объём лота"), @StaticData.Inst.GetDirVal("unit", Model.Unit)</th>
+        <th class="trade-width-all-3">@LocalText.Inst.Get("lable", "tradeTableTotalVolume", "Загальний об’єм", "Общий объём"), @StaticData.Inst.GetDirVal("unit", Model.Unit)</th>
+        <th class="trade-width-all-4">@LocalText.Inst.Get("lable", "tradeTablePrice", "Актуальна ціна", "Актуальная цена"), @LocalText.Inst.Get("text", "uahshort", "грн", "грн")/@StaticData.Inst.GetDirVal("unit", Model.Unit)</th>
+        <th class="trade-width-all-5">@LocalText.Inst.Get("lable", "tradeTableDateTimeEnd", "Дата та час завершення", "Дата и время окончания")</th>
+        <th class="trade-width-all-6">@LocalText.Inst.Get("lable", "tradeTableAction", "Дія", "Действие")</th>
+    </tr>
+    <tr class="table-middle summ">
+        <td rowspan="3"><span class="auction-id">@Html.DisplayFor(model => model.Id)</span></td>
+        <td class="conditions-td">@StaticData.Inst.GetDirVal("product", @Model.ProductName)</td>
+        <td rowspan="3"><span class="lotQuantity">@Html.DisplayFor(model => model.LotsCount)</span></td>
+        <td rowspan="3"><span class="bulkLot">@Html.DisplayFor(model => model.LotVolume)</span></td>
+        <td rowspan="3"><span class="bulkCurrent">@Html.DisplayFor(model => model.TotalVolume)</span></td>
+        <td rowspan="3" class="current-price-td">@Html.DisplayFor(model => model.PriceStart)</td>
+        <td rowspan="3">@Model.DateEnd.ToClientTime()</td>
+        @*Model.IsAuction &&*@
+        <td rowspan="3">
+            <b>@Model.IsActual.ToString() @Model.CanUserBet.ToString()</b>
+            @if (Model.IsActual && Model.CanUserBet && Model.IsOpened)
+            {
+                if (Model.MaxPrice.HasValue)
+                {
+                    <a class="btn btn-primary modal-link" role="button" href="#" onclick="OpenModelTwo('@Url.Action("BetTwo", "Trade", new {trade = Model.Id})', this);">@LocalText.Inst.Get("btn", "tradeTableMakeBet", "Зробити ставку ", "Сделать ставку ")</a>
+                }
+                else
+                {
+                    <a class="btn btn-primary modal-link1" role="button" href="@Url.Action("BetTwo", "Trade", new {trade = Model.Id})">@LocalText.Inst.Get("btn", "tradeTableMakeBet", "Зробити ставку ", "Сделать ставку ")</a>
+                }
+            }
+            @*else if (Model.CanUserBet && !Model.IsAuction)
+                {
+                    <a class="btn btn-primary modal-link1" role="button" href="@Url.Action("TakePart", "Trade", new {trade = Model.Id})">@LocalText.Inst.Get("btn", "tradeTableRegister", "Зробити ставку", "Зарегистрироваться")</a>
+                    <a class="btn btn-primary" role="button" href="@Url.Action("Auction", "Trade", new {trade = Model.Id})">@LocalText.Inst.Get("btn", "tradeGoToTrade", "Перейти", "Перейти")</a>
+                }*@
+            else if ((Model.IsActual || Model.IsFuture) && !Model.CanUserBet && !Model.IsAuction)
+            {
+                <a class="btn btn-primary modal-link1" role="button" href="@Url.Action("TakePart", "Trade", new {trade = Model.Id})">@LocalText.Inst.Get("btn", "tradeTableRegister", "Зареєструватись", "Зарегистрироваться")</a>
+                @*<a class="btn btn-primary" role="button" href="@Url.Action("TakePart", "Trade", new {trade = Model.Id})">@LocalText.Inst.Get("btn", "tradeTableRegister", "Зареєструватись ", "Зарегистрироваться")</a>*@
+            }
+
+        </td>
+    </tr>
+
+    <tr class="table-middle">
+        <td>
+            @StaticData.Inst.GetDirDependentVal("transportTherms", Model.TransportType, Model.ShipmentPoint)
+        </td>
+    </tr>
+    <tr class="table-middle">
+        <td>
+            @StaticData.Inst.GetDirVal("transportTherms", @Model.TransportType)
+        </td>
+    </tr>
+    if (Model.IsActual && Model.CanUserBet && Model.IsAuction)
+        {
+            <tr class="table-bottom">
+                <td colspan="3">
+                    <span class="my-bets-td"> @LocalText.Inst.Get("text", "myBets", "МОЇ СТАВКИ", "МОИ СТАВКИ")</span>
+                </td>
+                <td>ВСТАВИТЬ ЛОТЫ</td>
+                <td>ЦЕНА</td>
+                <td class="current-price-td"></td>
+                <td colspan="2">
+                    на
+                    <span class="no-wrap"> СУММА </span>
+                    грн
+                </td>
+            </tr>
+        }
+
+    <tr>
+            <td colspan="8" class="details">
+
+                <div class="details-trading" style="display: block;">
+                    <div class="details-content">
+
+                        <h5>@LocalText.Inst.Get("text", "betsTableHeader", "Актуальні ставки", "Актуальные ставки")</h5>
+                        <table class="details-table">
+                            <tbody>
+                                <tr>
+                                    <th>@LocalText.Inst.Get("text", "betsTableBetTime", "Час", "Время")</th>
+                                    <th>@LocalText.Inst.Get("text", "betsTableWho", "Хто поставив", "Кто поставил")</th>
+                                    <th>@LocalText.Inst.Get("text", "betsTableBetPrice", "Ціна", "Цена")</th>
+
+                                </tr>
+
+                                @using (var rows = @ko.Foreach(c => c.ActualBets))
+                                {
+                                    <tr>
+                                        <td @rows.Bind.Text(c => c.DateBet)></td>
+                                        <td @rows.Bind.Text(c => c.BuyerName)></td>
+                                        <td @rows.Bind.Text(c => c.Price)></td>
+                                    </tr>
+
+
+                                }
+                                <tr>
+                                    <td><span class="bold-txt">@LocalText.Inst.Get("text", "betsTableSummary", "Всього", "Всего")</span></td>
+                                    <td></td>
+                                    <td></td>
+                                    @*<td></td>*@
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    </div>
+            </td>
+        </tr>
+
+    <tr><td colspan="8" class="table-trade-gap"></td></tr>
+</table>
+@ko.Apply(Model)
+

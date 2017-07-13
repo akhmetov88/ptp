@@ -1,0 +1,670 @@
+﻿@using System.Globalization
+@using TradingPlatform.Enums
+@using TradingPlatform.Models
+@model TradingPlatform.Models.BillModel
+
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; CHARSET=utf-8">
+    <title></title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+
+    <style>
+        #contract-main td {
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        #contract-main th {
+            padding: 16px 8px;
+        }
+        #contract-main td span:first-child {
+            float: left;
+        }
+        #contract-main td span:last-child {
+            float: right;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="contract-main">
+            <table>
+                    <tr>
+                        <th>ДОГОВОР № @Model.ShowModel.Contract</th>
+                        <th>AGREEMENT № @Model.ShowModel.Contract</th>
+                    </tr>
+                    <tr>
+                        <td><span>г. Киев</span><span>@Model.ShowModel.DocCreaDate.ToClientDate()</span></td>
+                        <td><span>Kiev</span><span>@Model.ShowModel.DocCreaDate.ToClientDate()</span></td>
+                    </tr>
+      
+
+                @*<tbody>*@
+                    <tr>
+                        <td>
+                            Компания «@Model.ShowModel.SellerName», (@Model.Seller.ResidenseCountry), именуемая в дальнейшем «Продавец», в лице @Model.Seller.ConfidantName компании @Model.ShowModel.SellerName,   действующего на основании @Model.Seller.ConfidantDocumentType, с одной стороны, и
+                            Компания «@Model.ShowModel.BuyerName», (@Model.Buyer.ResidenseCountry), именуемая в дальнейшем «Покупатель», в лице @Model.Buyer.ConfidantName компании @Model.ShowModel.BuyerName, действующего на основании @Model.Buyer.ConfidantDocumentType, с другой стороны,
+                            совместно именуемые далее - «Стороны», а каждая сторона в отдельности - «Сторона», заключили настоящий Договор о нижеследующем:
+                        </td>
+                        <td>
+                            The Company «@Model.ShowModel.SellerNameEng», (@Model.Seller.ResidenseCountryEng), hereinafter referred to as the «Seller», represented by @Model.Seller.ConfidantNameEng, the @Model.ShowModel.SellerNameEng of the company, acting on the basis of the @Model.Seller.ConfidantDocumentTypeEng, on the one hand, and
+                            The Company «@Model.ShowModel.BuyerNameEng», (@Model.Buyer.ResidenseCountryEng), hereinafter referred to as the «Buyer», represented by ______________________, the ________________ of the company, acting on the basis of the @Model.Seller.ConfidantDocumentTypeEng, on the other hand,
+                            which together are referred to as - the «Parties» and each of the party individually – the «Party», have concluded the present Agreement about the following:
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>1. ПРЕДМЕТ ДОГОВОРА</th>
+                        <th>1. SUBJECT OF THE AGREEMENT</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.1. Продавец обязуется продать, а Покупатель обязуется купить и оплатить нефтепродукты, в том числе, газы углеводородные сжиженные, именуемые в дальнейшем «Товар».
+                            Конкретный вид Товара, его марка, сроки поставки, цена и стоимость отдельных партий Товара оговариваются Сторонами в соответствующих Дополнительных соглашениях/Приложениях, являющихся неотъемлемой частью настоящего Договора. Данные Дополнительные соглашения/ Приложения подписываются Сторонами на каждую партию Товара.
+                        </td>
+                        <td>
+                            1.1. The Seller undertakes to sell, and the Buyer undertakes to buy and pay for oil products, including    hydrocarbon liquefied petroleum gases, hereinafter referred to as the «Goods».
+                            The concrete type of the Goods, its brand, delivery time, price and cost of each shipment of the Goods are stipulated by the Parties in Additional agreements/Appendices, which are an integral part of this Agreement. The Parties sign these Additional agreements/Appendices for each shipment of the Goods.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.2. Условия поставки Товара (партии Товара) оговариваются Сторонами в Дополнительных соглашениях /Приложениях к настоящему Договору, в соответствии с условиями «INCOTERMS 2010». 
+                        </td>
+                        <td>
+                            1.2. The terms of delivery of the Goods (the shipment of the Goods) are agreed by the Parties in Additional agreements/Appendices to this Agreement, in accordance to «INCOTERMS 2010».
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.3. Объемы Товара (далее «объемы»), подлежащие поставке по настоящему Договору, согласуются Сторонами в Дополнительных соглашениях /Приложениях, являющихся неотъемлемой частью настоящего Договора. Каждый объем Товара может быть поставлен одной или несколькими партиями.
+                        </td>
+                        <td>
+                            1.3. Volumes of the Goods (hereinafter referred to as the «volumes»), which are the subject of delivery under the present Agreement, shall be agreed by the Parties in Additional agreements/Appendices, which are the integral part of this Agreement. Each of the volumes of the Goods may be delivered in one or several shipments.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.4. «Партия» - согласованный Сторонами в соответствующем Дополнительном соглашении /Приложении объём Товара, отгруженный по одной или нескольким железнодорожным накладным (СМГС) или по одной или нескольким международным товаротранспортным накладным CMR.
+                            Поставка Товара осуществляется железнодорожным или автомобильным транспортом.
+                        </td>
+                        <td>
+                            1.4.”Shipment” means the volume of the Goods agreed by the Parties in the corresponding Additional Agreement/Appendices and dispatched according to one or several railway bills of lading (SMGS) or one or several international CMR-consignment notes. The shipment of the Goods is executed by railway or by road.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.5. Количество поставляемого Товара подтверждается весом, указанным в соответствующей графе железнодорожных накладных (СМГС) или накладных CMR.
+                        </td>
+                        <td>
+                            1.5. The amount of the Goods delivered shall be attested to by weight, indicated in kilograms in column 18 of railway bills of lading (SMGS) or in column 11 waybills CMR. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>2. КАЧЕСТВО ТОВАРА</th>
+                        <th>2. QUALITY OF THE GOODS</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            2.1. Качество Товара, проданного по настоящему Договору, должно соответствовать ГОСТу и/или ТУ страны производителя Товара, а также ДСТУ, действующим на территории Украины.
+                        </td>
+                        <td>
+                            2.1. The quality of the Goods delivered hereunder must correspond to National Standards (GOST) and/or Technical Specifications (TU) of the country of the Goods’ production, including DSTU applicable in Ukraine.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            2.2. Соответствие качества Товара ГОСТу и/или ТУ страны производителя подтверждается паспортом качества, выданным лабораторией завода на каждую отгруженную железнодорожную или автомобильную цистерну. Паспорт качества на каждую отгруженную железнодорожную или автомобильную цистерну следует вместе с Товаром.
+                        </td>
+                        <td>
+                            2.2. Compliance of the Goods to GOST and/or TU of county of origin shall be attested to by certificate of quality issued by the factory laboratory to each railway/auto tank car dispatched. The certificate of quality for each railway/auto tank car dispatched shall accompany the Goods. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            2.3. Для определения качества и количества поставленного Товара Покупатель имеет право за свой счет произвести анализ качества и/или замер количества, выполненный независимым инспектором. Результаты такого замера являются безусловно принимаемыми обеими Сторонам и применяются для определения окончательного веса проданного Товара и выставления окончательного инвойса Продавца.
+                            В случае, если независимым инспектором будет установлено несоответствие Товара количеству и/или качеству, согласованному Сторонами в этом Договоре и/или в Дополнительных соглашениях/Приложениях, Продавец обязан возместить Покупателю все затраты по оплате услуг независимого инспектора в течение 5-ти банковских дней с момента выставления Покупателем соответствующего требования.
+                        </td>
+                        <td>
+                            2.3. In order to determine the quality and quantity of the Goods delivered, the Buyer shall have the right to conduct, at his own expense, quality analysis and/or measure of quantity, carried out by an independent inspector. Results of such measuring shall be unconditionally accepted by both Parties and applied to determining of the final weight of the Goods sold and issuance of the Seller's final invoice.
+                            If the independent inspector will set the disparity of the quality and/or quantity of the Goods, agreed by the Parties in this Agreement and/or in Additional agreements/Appendices to the present Agreement, the Seller shall reimburse to the Buyer the costs of services of the independent inspector within 5 banking days from the date of the relevant the Buyer requirement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            2.4. По письменному требованию Покупателя, Продавец за счет Покупателя заказывает в Торгово-Промышленной палате страны производителя сертификат происхождения Товара (СТ-1), а также необходимое количество копий сертификата происхождения, заверенных печатью Торгово-Промышленной палаты страны производителя Товара. Сертификат предоставляется на Товар, поставленный в рамках одного Дополнительного соглашения/Приложения к настоящему Договору.
+                            Срок предоставления сертификата - в течение 3 (трех) недель от даты письменного предъявления такого требования от Покупателя Продавцу о предоставлении Сертификата. Сертификат передается Покупателю почтой или курьерской службой.
+                        </td>
+                        <td>
+                            2.4. Upon the Buyer's written request, the Seller, at the Buyer's expense, shall order a Certificate of Origin (CT-1) at the Chamber of Commerce and Industry in the country of producer, as well as the necessary number of copies of the Certificate of Origin, certified by the seal of the Chamber of Commerce and Industry in the country of producer of the Goods. The Certificate shall be issued for the Goods supplied within the scope of one Additional agreement/Appendices to the present Agreement.
+                            The period of time for securing of the Certificate shall be within 3 (three) weeks from the date when a written request from the Buyer to the Seller concerning securing of the Certificate has been issued. The Certificate shall be delivered to the Buyer by mail or by commercial courier.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>3. ЦЕНА</th>
+                        <th>3. PRICE</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            3.1. Если иное не согласовано Сторонами в соответствующем Дополнительном соглашении /Приложении к данному Договору, цена Товара, продаваемого по настоящему Договору, устанавливается в долларах США за одну метрическую тонну. Цена на Товар определяется Сторонами на каждый согласованный к поставке объем Товара и указывается в Дополнительных соглашениях /Приложениях к данному Договору.
+                            В соответствующем Дополнительном соглашении /Приложении к данному Договору Стороны могут согласовать цену Товара в иной валюте.
+                        </td>
+                        <td>
+                            3.1. Unless the contrary is agreed by the Parties in the corresponding Additional agreement/Appendices hereto, the price of the Goods delivered hereunder is specified in US dollars per one metric ton. The price of the Goods is specified by the Parties for each volume of the Goods agreed to be dispatched and is specified in the Additional agreements/Appendices hereto. In the corresponding Additional Agreements/Appendices the Parties can agree the price of the Goods in the other currency.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            3.2. Общая стоимость данного Договора определяется суммой цены всего Товара, поставленного согласно данному Договору.
+                        </td>
+                        <td>
+                            3.2. The total price of this Agreement depends on the total price of all Goods to be delivered hereunder.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>4. УСЛОВИЯ ПЛАТЕЖА</th>
+                        <th>4. PAYMENT TERMS</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            4.1. Покупатель производит предоплату 100 % стоимости Товара, на сумму согласованного в соответствующем Дополнительном соглашении /Приложении объема Товара, банковским переводом в долларах США или иной валюте, которая согласована Сторонами в Дополнительном соглашении/Приложении, на счет Продавца, согласно выставленного счета (инвойса) на оплату, без каких-либо удержаний, в течение 3 (трех) банковских дней с даты выставления инвойса/счета на Товар. Оригинал такого счета (инвойса) Продавец предоставляет Покупателю в течение 2 (двух) недель от даты его выставления почтой или курьерской службой.
+                        </td>
+                        <td>
+                            4.1. The Buyer makes the 100% prepayment of the price of the Goods in the amount of the volume of the Goods specified in the corresponding Additional Agreement/Appendices by the bank transfer in US dollars or the other currency agreed by the Parties in the Additional agreements/Appendices, at the expense of the Seller under the invoice without any delays and during 3 (three) banking days since the date of the invoice for the Goods. The Seller must submit the original copy of the invoice to the Buyer during 2 (two) weeks since the date a copy of the invoice was submitted by post of courier services.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            4.2. Банковские расходы Продавца осуществляются за счет Продавца, банковские расходы Покупателя - за счет Покупателя. 
+                        </td>
+                        <td>
+                            4.2. The Seller's banking expenses shall be covered by the Seller, and the Buyer's banking expenses — by the Byer. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            4.3. Если иное не оговорено Сторонами в соответствующем Дополнительном соглашении/ Приложении, окончательный расчет за фактически поставленный Товар, Покупатель производит в течение 5 (пяти) банковских дней c даты поставки Товара Покупателю. Продавец предоставляет Покупателю окончательный счет (инвойс), в котором будет указан точный вес поставленного Товара, определенный в соответствии с п. 1.5 или п. 2.3. настоящего Договора.
+                            В окончательном счете (инвойсе) Продавца должна быть учтена сумма предоплаты, произведенной Покупателем по настоящему Договору.
+                        </td>
+                        <td>
+                            4.3. Unless the contrary is not specified by the Parties in the Additional agreements/Appendices, the final settlements for the Goods actually delivered is executed by the Buyer during 5 (five) banking banks since the date the Goods were delivered to the Buyer. The Seller provides the Buyer with the final invoice specifying the precise weight of the Goods delivered according to the pos. 1.5 or the pos. 2.3 hereof.
+                            The final invoice of the Seller must include the prepayment made by the Buyer hereunder.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            4.4. По письменному требованию Покупателя, в течение 5 (пяти) банковских дней от даты его предъявления, Продавец обязан возвратить Покупателю излишне перечисленные денежные средства. Продавец возвращает денежные средства в валюте платежей Покупателя.
+                            По письменному согласованию Сторон, излишне переплаченные денежные средства могут быть зачислены в счет будущих платежей Покупателя по настоящему Договору.
+                        </td>
+                        <td>
+                            4.4. Upon the Buyer's written request, within 5 (five) banking days upon its issuance, the Seller shall be obligated to return to the Buyer any overpaid monetary funds. Funds return should be effected in the same currency as funds transfer.
+                            According to the written agreement of the Parties, unnecessarily overpaid funds can be credited against future payments of the Buyer under this Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>5. ПОСТАВКА И ПРИЕМКА ТОВАРА</th>
+                        <th>5. DELIVERY AND ACCEPTANCE OF THE GOODS</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.1. Если поставка Товара осуществляется железнодорожным транспортом, то Покупатель подает Продавцу официальную заявку на заказ плана ж/д перевозок. В заявках на отгрузку Товара в обязательном порядке должны содержаться реквизиты станции назначения, реквизиты грузополучателя, а также ссылка на настоящий Договор.
+                        </td>
+                        <td>
+                            5.1. If the delivery the Goods carried by railway transport, the Buyer shall submit to the Seller an official request for order of plan of railway shipments. Orders for dispatch of the Goods must contain details on the station of destination, details on the consignee, as well as a reference to the present Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.2. Покупатель не позднее 2 (двух) рабочих дней от даты Дополнительного соглашения/Приложения обязуется предоставить Продавцу разнарядку на отгрузку, содержащую все необходимые для отгрузки реквизиты: страна назначения; полное наименование, адрес, железнодорожный код грузополучателя; железнодорожная станция пограничного перехода и ее железнодорожный код; наименование и код станции назначения, подъездной путь; наименование плательщика за транзитные дороги. 
+                        </td>
+                        <td>
+                            5.2. The Buyer no later than 2 (two) working days from the date of Additional agreement/Appendices shall provide to the Seller for shipment distribution list that contains all the details necessary for shipment: the country of destination; full name, address and railway code of the consignee; railway station on the border crossing, its rail code; name and code of the destination station; name of the payer for transit road. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.2.1.  В случае введения запрета железной дорогой станции назначения или грузополучателя, Покупатель обязан в течение 2 (двух) рабочих дней от даты введения запрета, заменить разнарядку на отгрузку (под датой запрета понимается дата, с которой невозможна отгрузка по предоставленной Покупателем разнарядке на отгрузку, подтвержденная телеграммой железной дороги либо письмом грузополучателя).
+                        </td>
+                        <td>
+                            5.2.1.  In the case of the ban, the railway station of destination or consignee of the Goods the Buyer must within two (2) working days from the date of the ban, replace the distribution list for the shipment (date means the date of the ban, which can not be shipped to the shipping instructions provided by Buyer for shipment, confirmed by the telegram railway or the letter of the consignee).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.2.2. Продавец обеспечивает своевременный заказ плана железнодорожных перевозок, налив Товара в специализированные железнодорожные цистерны, включая подачу на эстакаду и транспортировку со станции отправления, указанной в соответствующем Дополнительном соглашении/Приложении к настоящему Договору.
+                        </td>
+                        <td>
+                            5.2.2. The Seller shall ensure a timely order of the railway shipment plan, loading of the Goods in specialised railway tank cars, including putting to loading dock and transportation from the station of departure, as stipulated by the respective Additional agreement/Appendices to the present Agreement. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.3. Продавец обеспечивает экспортное таможенное оформление Товара на станции отправления, с оформлением Грузовой таможенной декларации (ГТД) страны - производителя Товара. Отгрузка осуществляется со станции железной дороги в соответствии с периодом отгрузки, указанным в соответствующем Дополнительном соглашении /Приложении к настоящему Договору.
+                        </td>
+                        <td>
+                            5.3. The Seller shall secure export customs clearance of the Goods at the station of departure, with registration of a customs freight declaration (CFD) of the Goods producer country. The dispatch shall be effected from the railway station in accordance with the dispatch period, stipulated by the respective Additional agreement/Appendices to the present Agreement. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.4. Отгрузка Товара осуществляется в специализированных ж/д цистернах (далее – «цистерны»), техническое состояние которых должно соответствовать техническим условиям и стандартам, в соответствии с требованиями Соглашения о международном железнодорожном грузовом сообщении (СМГС).
+                        </td>
+                        <td>
+                            5.4. The Goods shall be dispatched in specialised railway tank cars (hereinafter referred to as the «tanks»), technical condition of which must meet technical conditions and standards, in compliance with the Agreement on International Goods Transport by Rail (SMGS).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.5. Датой отгрузки Товара считается дата отметки (штемпеля) железнодорожной станции отправления на железнодорожных накладных (СМГС), следующих с Товаром.
+                        </td>
+                        <td>
+                            5.5. The date of marking (stamp) by the Goods departure railway station on railway bills of lading (SMGS), accompanying the Goods, shall be considered as the date of the Goods dispatch.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.6. Датой поставки Товара является дата выполнения Продавцом своих обязательств по поставке Товара в соответствии с базисом поставки, который согласован Сторонами в соответствующем Дополнительном соглашении/Приложении к данному Договору, согласно «INCOTERMS 2010».
+                        </td>
+                        <td>
+                            5.6. The Goods delivery date is the date when the Seller fulfilled its obligations on delivery of the Goods according to the delivery basis approved by the Parties in the corresponding Additional Agreement/ Appendices hereto according to “INCOTERMS 2010”. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.7. Переход прав собственности, рисков утраты и повреждения Товара происходит c даты поставки Товара в соответствии с условиями «INCOTERMS 2010».
+                        </td>
+                        <td>
+                            5.7. The transfer of the property rights, risks of loss and damage of the Goods takes place since the date of the delivery of the Goods according to “INCOTERMS 2010”.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.8. Возврат порожних цистерн производится Покупателем в соответствии с письменной транспортной инструкцией Продавца, которая включает в себя информацию о железнодорожной станции назначения, плательщике железнодорожного тарифа и другую необходимую для осуществления возврата ж/д цистерн информацию.
+                        </td>
+                        <td>
+                            5.8. Empty tank cars shall be returned by the Buyer in accordance with the Seller's written transportation instructions, which shall contain information about the destination railway station, payer of the railway tariff and other information necessary for carrying out of the railway tank cars.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.9. Переадресация цистерн и их использование Покупателем/Грузополучателем без разрешения Продавца не допускается.
+                        </td>
+                        <td>
+                            5.9. Re-addressing of the tank cars and their use by the Buyer/Consignee without the Seller's written permission shall not be acceptable.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.10. Сроки оборота цистерн и штрафные санкции за их нарушение оговариваются Сторонами в соответствующем Дополнительном соглашении/ Приложении к данному Договору.
+                        </td>
+                        <td>
+                            5.10. The terms for the tank turnover and penalties for their violation are approved by the Parties in the corresponding Additional agreements/Appendices hereto. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.11. Покупатель обязан в течение 40 (сорока) календарных дней с даты поставки Товара предоставить Продавцу копии железнодорожных накладных (СМГС) с отметками железнодорожной станции пограничного перехода страны назначения о приеме Товара, отметкой таможенных органов страны назначения, отметками станции назначения.
+                        </td>
+                        <td>
+                            5.11. The Buyer must during 40 (forty) calendar days since the date the Goods were delivered to provide the Seller with the copies of the railway bills of lading (SMGS) with the marks of the railway station of the cross border point of the country of consignment of the acceptance of the Goods, the marks of the customs authorities of the country of consignment, the marks of the station of consignment.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            5.12. Особенности поставки и приемки Товара при поставке автомобильным транспортом. 
+                        </th>
+                        <th>5.12. Features of delivery and acceptance of the Goods which carried by auto transport</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.12.1. Продавец обеспечивает экспортное таможенное оформление Товара в пункте отправления с оформлением Грузовой таможенной декларации (ГТД) страны-производителя Товара. Отгрузка осуществляется с пункта отправления в соответствии с периодом отгрузки, указанным в соответствующем Дополнительном соглашении /Приложении к настоящему Договору.
+                        </td>
+                        <td>
+                            5.12.1. The Seller shall secure export customs clearance of the Goods at the point of departure with registration of a customs freight declaration (CFD) of the Goods producer country. The dispatch shall be effected from the point of departure in accordance with the dispatch period stipulated by the respective Additional agreement/Appendices to the present Agreement. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.12.2. Отгрузка Товара осуществляется в специализированные автоцистерны (далее –«автоцистерны»), техническое состояние которых должно соответствовать техническим условиям и стандартам, в соответствии с требованиями Конвенции CMR.
+                        </td>
+                        <td>
+                            5.12.2. The Goods shall be dispatched in specialised tanker trucks (hereinafter referred to as the «tanker trucks»), technical condition of which must meet technical conditions and standards, in compliance with the Convention CMR. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.12.3. Датой отгрузки Товара является дата оформления международной товаротранспортной накладной (CMR).
+                        </td>
+                        <td>
+                            5.12.3. The date of the Goods to be dispatched is the date the International bill of lading (CMR) is executed.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            5.12.4. Датой поставки Товара является дата выполнения Продавцом своих обязательств по поставке Товара в соответствии с базисом поставки, который согласован Сторонами в соответствующем Дополнительном соглашении/Приложении к данному Договору, согласно «INCOTERMS 2010».
+                        </td>
+                        <td>
+                            5.12.4. The delivery date of the Goods is the date the Seller executed its obligations connected with the delivery of the Goods according to the delivery basis approved by the Parties in the corresponding Additional Agreement/Appendices hereto under “INCOTERMS 2010”.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>6. УВЕДОМЛЕНИЕ О ПОСТАВКЕ</th>
+                        <th>6. NOTIFICATION OF DELIVERY</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>6.1. Продавец обязан сообщить Покупателю по факсимильной связи или по электронной почте в течение 1 (одного) рабочего дня после отгрузки Товара следующее:</p>
+                            <ul>
+                                <li>дату отгрузки Товара;</li>
+                                <li>количество отгруженного Товара</li>
+                                <li>количество и номера цистерн/автоцистерн;</li>
+                                <li>номера ж/д накладных (СМГС)/накладных CMR;</li>
+                                <li>ксерокопию ГТД страны – производителя Товара;</li>
+                                <li>инвойс на отгруженную партию Товара.</li>
+                                <li>паспорт качества на Товар.</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <p>6.1. Within 1 (one) working day after the dispatch of the Goods, the Seller shall be obligated to notify the Buyer, by facsimile or by email, about the following:</p>
+                            <ul>
+                                <li>the date of the Goods dispatch;</li>
+                                <li>the amount of the Goods dispatched;</li>
+                                <li>the quantity and the numbers of tank cars/    tanker trucks;</li>
+                                <li>numbers of railway bills of lading (SMGS)/   waybills (CMR) ;</li>
+                                <li>a copy of CFD of the Goods producer country; </li>
+                                <li>invoice for the shipment of the Goods dispatched. </li>
+                                <li>passport of quality for the Goods.</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            6.2. Покупатель в течение 1 (одного) рабочего дня после прибытия Товара на станцию/пункт назначения обязан сообщить об этом Продавцу по факсимильной связи или по электронной почте.
+                        </td>
+                        <td>
+                            6.2. Within 1 (one) working day upon arrival of the Goods at the station/point of destination, the Buyer must notify the Seller by facsimile or by email about this fact. 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            6.3. В течение 3 (трех) календарных дней с даты отгрузки Товара Продавец направляет Покупателю по факсимильной связи или электронной почтой инструкцию по заполнению граф ж/д накладной (СМГС) на возврат порожних цистерн с указанием станции назначения и плательщика железнодорожного тарифа за пределами страны назначения, грузополучателя и всех иных необходимых для возврата цистерн данных.
+                            В случае не предоставления Продавцом Покупателю инструкции по заполнению граф ж/д накладной (СМГС) на возврат порожних цистерн Покупатель обязан незамедлительно запросить такую инструкцию у Продавца.
+                            Покупатель в течение 1 (одного) рабочего дня после отправления порожних цистерн назначением на станцию возврата, указанную Продавцом, обязан сообщить об этом Продавцу по факсимильной связи или по электронной почте с указанием даты отправления каждой цистерны и номера возвратной ж/д накладной.
+                        </td>
+                        <td>
+                            6.3. Within 3 (three) calendar days from the date of the Goods dispatch, the Seller shall send to the Buyer, by facsimile or email, instructions about filling out of columns in the railway bill of lading (SMGS) for return of empty tank cars, with indication of the destination station and payer of the railway tariff beyond the borders of the destination station, the consignee and all other information required for the return of empty tank cars.
+                            In the case of failure to provide by the Seller to the Buyer instructions for filling graph of railway bills of lading (SMGS) for the return of empty tank cars, the Buyer immediately shall request such instructions from the Seller.
+                            Within 1 (one) working day after the dispatch of empty tank cars with the destination being the station of return, specified by the Seller, the Buyer shall be obligated to notify the Seller, by facsimile or by email, about this fact, with indication of the date of dispatch of each tank car and numbers of the return bills.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>7. ПРЕТЕНЗИИ</th>
+                        <th>7. CLAIMS</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            7.1. Если качество поставленного Товара не соответствует разделу 2 настоящего Договора, претензии по качеству могут быть предъявлены Продавцу в течение 15 рабочих дней от даты поставки.
+                        </td>
+                        <td>
+                            7.1. In case the quality of the Goods delivered does not meet the requirements in Article 2 of the present Agreement, quality claims may be put forward to the Seller within 15 working days from the date of delivery.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            7.2. Если количество поставленного Товара не соответствует весу, указанному в железнодорожной накладной/накладной CMR, претензии по количеству Товара могут быть предъявлены Продавцу в течение 15 рабочих дней от даты поставки.
+                        </td>
+                        <td>
+                            7.2. In case the amount of the Goods delivered is in deviation from the weight, specified in the railway bill of lading/ waybills (CMR), the Goods quantity claims may be put forward to the Seller within 15 working days from the date of delivery.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>8.ИМУЩЕСТВЕННАЯ ОТВЕТСТВЕННОСТЬ</th>
+                        <th>8. PROPERTY RESPONSIBILITY</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            8.1. Покупатель обязан вернуть или обеспечить возврат цистерн в технически исправном состоянии, пригодном для дальнейшей эксплуатации с заполнением всех граф железнодорожных накладных на отправку порожних цистерн в строгом соответствии с инструкцией Продавца по заполнению граф ж/д накладной.
+                            В случае неправильного оформления Покупателем перевозочных документов (заполнения граф ж/д. накладной и т.п.) на возврат порожних цистерн, Покупатель в полном объеме возмещает Продавцу имущественный ущерб, включая штрафы, иные аналогичные выплаты, а также выплаты в возмещение убытков, в течение 5 (пяти) банковских дней с момента направления ему соответствующего письма-требования (Претензии) и счета. Копии документов подтверждающие имущественный ущерб и/или штрафы и/или аналогичные выплаты прилагаются Продавцом к письму-требованию (Претензии). В течение 60 (шестьдесят) дней от даты выставления претензии Покупатель имеет право удостовериться в наличии у Продавца оригиналов вышеуказанных документов.
+                        </td>
+                        <td>
+                            8.1. The Buyer shall be obligated to return, or ensure return, of the tank cars in serviceable condition, suitable for further operation with filling out of all columns in railways bills of lading for dispatch of empty tank cars in strict compliance with the Seller's instructions for filling out of columns in railway bills.
+                            In case of incorrect completion of documents by the Buyer (filling out of columns in the railway bills, etc.) for return of empty tank cars, the Buyer shall compensate the Seller for any injuries in their full amount, including penalties and other similar payments, as well as payments in remedy for losses, within 5 (five) banking days from the moment when a respective letter of demand (Claim) and invoice have been issued to it. Copies of documents testifying to the injuries and/or penalties and/or similar payments shall be attached by the Seller to the letter of demand  (Claim). Within 60 (sixty) days from the date when the claim was put forward, the Buyer shall have the right to verify availability of originals of the aforesaid documents with the Seller.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            8.1.1. В случае неправильного оформления Продавцом перевозочных документов (заполнения граф ж/д. накладной/накладной CMR и т.п.), Продавец в полном объеме возмещает Покупателю имущественный ущерб, включая штрафы, иные аналогичные выплаты, а также выплаты в возмещение убытков, в течение 5 (пяти) банковских дней с момента направления ему соответствующего письма-требования (Претензии) и счета. Копии документов, подтверждающие имущественный ущерб и/или штрафы и/или аналогичные выплаты, прилагаются Покупателем к письму-требованию (Претензии). В течение 60 (шестьдесят) дней с даты выставления претензии Продавец имеет право удостовериться в наличии у Покупателя оригиналов вышеуказанных документов.
+                        </td>
+                        <td>
+                            8.1.1. In case of incorrect completion of documents by the Seller (filling out of columns in the railway bills, waybills (CMR) etc.), the Seller shall compensate to the Buyer for any injuries in their full amount, including penalties and other similar payments, as well as payments in remedy for losses, within 5 (five) banking days from the moment when a respective letter of demand (Claim) and invoice have been issued to it. Copies of documents testifying to the injuries and/or penalties and/or similar payments shall be attached by the Buyer to the letter of demand (Claim). Within 60 (sixty) days from the date when the claim was put forward, the Seller shall have the right to verify availability of originals of the aforesaid documents with the Buyer.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            8.2. Стороны несут ответственность в соответствии с разделом 8 настоящего Договора вне зависимости от вины.
+                        </td>
+                        <td>
+                            8.2. The Parties shall be responsible under Article 8 of the present Agreement regardless of the fault.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>8.3. Ни одна из Сторон не несет ответственности за непрямые, специальные или косвенные убытки.</td>
+                        <td>8.3. Neither of the Parties hereto shall be responsible for collateral, special or indirect losses.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            8.4. В случае нарушения Продавцом сроков отгрузки и/или поставки оплаченного Товара, Продавец выплачивает Покупателю неустойку в размере 0,5 % от стоимости непоставленного/несвоевременно поставленного Товара за каждый день просрочки отгрузки и/или поставки Товара.
+                        </td>
+                        <td>
+                            8.4. If the Seller breaks the shipment terms and/or the terms for the delivery of the Goods paid, the Seller pays the Buyer the penalty in the amount of 0.5% out of the price of the unshipped/untimely delivered Goods for each day of the delay of the shipment and/or delivery of the Goods.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            8.5. В случае нарушения Покупателем сроков оплаты отгруженного и/или поставленного Товара, указанных в Договоре и/или в Дополнительных соглашениях/Приложениях к настоящему Договору, Покупатель выплачивает Продавцу 0,5 % от суммы просроченного платежа за каждый день просрочки оплаты Товара.
+                        </td>
+                        <td>
+                            8.5. If the Buyer breaks the due date for the shipped and/or delivered Goods specified in the Agreement and /or Additional agreements/Appendices hereto, the Buyer pays the Seller the penalty in the amount of 0.5% out of the amount of the delayed payment for each day of the delay.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            8.6. В случае поставки Продавцом Покупателю некачественного Товара (с нарушением раздела 2 настоящего Договора) Продавец выплачивает Покупателю штраф в размере 3 % от стоимости партии Товара, которая поставлена с нарушением требований по качеству, а также возмещает Покупателю прямые убытки, возникшие у Покупателя в связи с поставкой некачественного Товара.
+                        </td>
+                        <td>
+                            8.6. In case of delivery by the Seller to the Buyer bad-quality Goods (in violation of section 2 of this Agreement) the Seller shall pay to the Buyer a penalty at the rate of 3% of the value of the shipment of the Goods, which is delivered with the violation of quality requirements.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            8.7. В случае отказа Покупателя от приемки Товара надлежащего количества и качества, поставка которого выполнена Продавцом надлежащим образом, Покупатель выплачивает Продавцу штраф в размере         3 % от стоимости партии Товара, от приемки которой Покупатель отказался, а также возмещает Продавцу прямые убытки, возникшие у Продавца в связи с отказом Покупателем принять Товар.
+                        </td>
+                        <td>
+                            8.7. If the Buyer refuses to accept the Goods of the proper quality and quantity properly delivered by the Seller, the Buyer pays the Seller the penalty in the amount of 3% out of the price of the shipment of the Goods the Buyer refused to accept and compensates the Seller all direct expenses occurred due to the Buyer’s refusal to accept the Goods.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>9. ФОРС-МАЖОР</th>
+                        <th>9. FORCE MAJEURE</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            9.1. Стороны освобождаются от ответственности за частичное или полное неисполнение обязательств по настоящему Договору, если это неисполнение явилось следствием обстоятельств непреодолимой силы (форс-мажор), непосредственно повлиявших на исполнение данного Договора.
+                        </td>
+                        <td>
+                            9.1. The Parties shall be released from the responsibility for partial or complete non-fulfilment of obligations under the present Agreement, if this non-fulfilment was caused by the force-majeure circumstances (force -majeure), which influence the fulfilment of the present Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            9.2. К форс - мажорным обстоятельствам Cтороны относят:
+                            - Забастовки, локауты, трудовые беспорядки, аварии на предприятиях Cторон;
+                            - Введенные после подписания настоящего Договора запреты на экспорт и (или) импорт Товара, существенные изменения таможенной или налоговой политики государств Сторон, непосредственно затрагивающие их интересы по данной сделке;
+                            - Военные действия, гражданские беспорядки, стихийные бедствия, пожары и иные обстоятельства непреодолимой силы, которые Стороны при всей осмотрительности не могли предвидеть, если они непосредственным образом влияют на возможность исполнения настоящего Договора одной из Сторон.
+                        </td>
+                        <td>
+                            9.2. To force-majeure circumstances belongs:
+                            - Strikes, lock-outs, labour disorders, accidents at the enterprises of the Parties;
+                            - Any prohibitions put on export (and) or import of Goods after signing the present Agreement, essential changes of customs or fiscal policy of the states of the Parties, that influence the fulfilment of the present Agreement;
+                            - Military operations, civil disorders, natural disasters, fires and other force-majeure circumstances, which Parties were not able to foresee in case they influence the fulfilment of the present Agreement by one of the Parties.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            9.3. При наступлении форс-мажорных обстоятельств срок исполнения обязательств по настоящему Договору отодвигается соразмерно времени, в течение которого действовали данные обстоятельства. В случае действия форс - мажорных обстоятельств более 60 дней каждая из Сторон вправе в одностороннем порядке расторгнуть настоящий Договор. При этом, Стороны в течение 10 банковских дней обязаны произвести взаиморасчеты.
+                        </td>
+                        <td>
+                            9.3. In case of force-majeure circumstances the time of performance of obligations under the present Agreement extends by the time of these obligations. If the abovementioned circumstances last for more than 60 days each of the Parties can terminate the present Agreement. In this case, the parties within 10 banking days are required to make settlements.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            9.4. Свидетельствами наступления форс - мажорных обстоятельств признаются заключения Торгово-промышленных палат государств Сторон.
+                        </td>
+                        <td>
+                            9.4. The certificate of Trade and Industrial Chambers of Commerce and Industry of the country on the territory of which force-majeure circumstances happened shall be regarded as the evidence of circumstances of force-majeure.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            9.5. Сторона, для которой возникли форс-мажорные обстоятельства, обязана не позднее 3-х дней со дня их наступления письменно проинформировать другую Сторону об их наступлении и предположительном сроке прекращения. В противном случае она лишается права ссылаться на наступившие обстоятельства в будущем. Копии свидетельств наступления форс-мажорных обстоятельств предоставляются по электронной почте в течение 3 рабочих дней со дня получения оригиналов таких свидетельств. По требованию другой Стороны копии свидетельств наступления форс-мажорных обстоятельств должны быть отправлены курьерской службой в течение 3 рабочих дней со дня получения такого требования.
+                        </td>
+                        <td>
+                            9.5. The Party affected by force-majeure shall notify the other Party in writing within 3 days about all the circumstances and the terms of its termination. Otherwise the Party is not able to appeal the force-majeure. The copies of the evidences of circumstances of force-majeure are provided by e-mail during 3 working days since the day the original documents were received. On demand of the other Party the copies of the evidences of circumstances of force-majeure must be sent by the courier service during 3 working days since the day such demand was received.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>10. ПОРЯДОК РАЗРЕШЕНИЯ СПОРОВ</th>
+                        <th>10. PROCEDURES FOR CONFLICT RESOLUTION</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            10.1. В случае возникновения между Продавцом и Покупателем споров и/или разногласий по вопросам, связанным с настоящим Договором и/или вытекающим из него, Стороны примут все меры к разрешению таких споров и/или разногласий путём переговоров между собой.
+                        </td>
+                        <td>
+                            10.1. In case of emergence of a dispute between the Seller and the Buyer and/or a discrepancy on matters related to the present Agreement or resulting from it, the Parties shall exert every effort to resolve such disputes and/or clear the discrepancies by way of negotiations.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            10.2. В случае невозможности разрешения споров и/или разногласий путём переговоров между Сторонами эти споры и/или разногласия подлежат, с исключением подсудности любым судам, разрешению в Международном коммерческом арбитражном суде при Торгово-промышленной палате Украины (г. Киев), в соответствии с регламентом этого суда с применением норм материального права Украины. Решение арбитража будет являться окончательным и обязательным для обеих Сторон. Производство в арбитражном суде происходит на русском языке или английском языке.
+                        </td>
+                        <td>
+                            10.2. In case it is impossible to resolve such disputes and/or clear the discrepancies by way of negotiations between the Parties, those disputes and/or discrepancies shall be subject, with the exception of jurisdiction under any courts, to resolution at the         International Commercial Arbitration Court at the Ukrainian Chamber of Commerce and Industry (Kiev), in compliance with that court regulations and with application of the material law of Ukraine. Decision by the Court of Arbitration shall be final and binding on both Parties. Proceedings at the Court of Arbitration are conducted in the Russian language or English language.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>11. ДРУГИЕ УСЛОВИЯ</th>
+                        <th>11. MISCELLANEOUS PROVISIONS</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            11.1. Все сборы, налоги и другие расходы, включая таможенные пошлины и сборы, связанные с заключением и выполнением настоящего Договора, взимаемые вне территории страны назначения Товара, оплачиваются Продавцом. Все сборы, налоги и другие расходы, включая таможенные пошлины и сборы, связанные с заключением и выполнением настоящего Договора, взимаемые на территории страны назначения Товара, оплачиваются Покупателем.
+                        </td>
+                        <td>
+                            11.1. All levies, taxes and other expenses, including customs duties in relation with making and fulfilment of the present Agreement, collected outside the territory of the destination country for the Goods, shall be payable by the Seller. All levies, taxes and other expenses, including customs duties in relation with making and fulfilment of the present Agreement, collected on the territory of the destination country for the Goods, shall be payable by the Buyer.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            11.2. Все Приложения и Дополнительные соглашения к настоящему Договору действительны лишь в том случае, если они совершены в письменной форме и подписаны обеими Сторонами. Приложения и Дополнительные соглашения к настоящему Договору, а также иные документы, подписанные Сторонами путем использования факсимильных средств связи или электронной почты, признаются Сторонами и имеют полную юридическую силу до момента обмена Сторонами оригиналами таких документов.
+                            Стороны обязаны осуществить обмен оригиналами документов в течение 10 дней с даты их отправки факсимильными средствами связи или электронной почтой.
+                        </td>
+                        <td>
+                            11.2. All Amendments and Additional agreements hereto are valid if only executed in writing and signed by both Parties. The Appendices and Additional agreements hereto including the other documents signed by the Parties using the facsimile means of communication or e-mail are acknowledged by the Parties and are valid until the Parties exchange of the original documents.
+                            The Parties must exchange of the original documents during 10 days since the date they were sent by fax or e-mail.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            11.3. Ни одна из Сторон не вправе передавать свои права и обязательства по настоящему Договору третьей стороне без письменного согласия другой Стороны.
+                        </td>
+                        <td>
+                            11.3. Neither of the Parties hereto shall have the right to assign its rights and obligations under the present Agreement to any third party without a written consent of the other Party.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            11.4. Все предварительные соглашения, переговоры и переписка между Сторонами по вопросам, изложенным в настоящем Договоре, предшествовавшие его заключению, теряют силу с момента подписания Договора.
+                        </td>
+                        <td>
+                            11.4. All previous agreements, negotiations and correspondence between the Parties on matters set forth in the present Agreement, which preceded its being made and entered into, shall lose their validity on the moment of signing of the present Agreement.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>11.5. Вся информация по настоящему Договору (цены, условия платежей, поставок и т.д.) является конфиденциальной и не подлежит передаче.</td>
+                        <td>11.5. All information concerning the present Agreement (prices, terms of payment, deliveries, etc.) shall be confidential and not subject to disclosure.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            11.6. Настоящий Договор подписан в 2 (двух) экземплярах на русском и английском языках, по одному экземпляру для каждой из Сторон. Оба экземпляра имеют одинаковую юридическую силу. В случае несоответствия и/или разночтений между текстами договора Стороны будут руководствоваться текстом на русском языке.
+                        </td>
+                        <td>
+                            11.6. The present Agreement has been signed in 2 (two) copies in the Russian and English languages, one copy for each of the Parties. Both copies shall have the equal legal force. In case of discrepancy and/or controversy between the Russian and English versions, the Russian version shall prevail.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            11.7. Настоящий Договор вступает в силу с момента подписания Сторонами и действует до 31 декабря 2017 г.
+                            В случае если Стороны за 1 (один) календарный месяц до окончания срока действия данного Договора не уведомили друг друга в письменном виде о намерении прекратить действие Договора, Договор считается автоматически продленным исключительно на один следующий календарный год.
+                        </td>
+                        <td>
+                            11.7. The present Agreement shall become valid at the moment of it signing and shall remain in force until           31 of December 2017.
+                            If the Parties 1 (one) calendar months prior to the expiry date of the Agreement did not notify each other in writing of their intention to terminate the Agreement, the Agreement is considered to be prolonged only for the next calendar year.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>13. ЮРИДИЧЕСКИЕ АДРЕСА И БАНКОВСКИЕ РЕКВИЗИТЫ:</th>
+                        <th>13. LEGAL ADDRESSES AND BANK DETAILS:</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h4>ПРОДАВЕЦ/ THE SELLER:<br />
+                                __________________________________
+                            </h4>
+                        </td>
+                        <td>
+                            <h4>
+                                ПОКУПАТЕЛЬ/ THE BUYER:<br />
+                                ___________________________________
+                            </h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Registered company number @Model.Seller.Code<br />
+                            Address:  @Model.Seller.Address<br />
+                            Bank details:<br />
+                            
+                        </td>
+                        <td>
+                            Registered company number @Model.Buyer.Code<br />
+                            Address:  @Model.Buyer.AddressEng<br />
+                            Bank details:<br />
+                        </td>
+                    </tr>
+                @*</tbody>*@
+
+     
+                    <tr>
+                        <td><h4>ПРОДАВЕЦ/ The SELLER</h4></td>
+                        <td><h4>ПОКУПАТЕЛЬ/ The BUYER </h4></td>
+                    </tr>
+                    <tr>
+                        <td>___________________</td>
+                        <td>___________________</td>
+                    </tr>
+              
+            </table>
+        </div>
+    </div>
+
+    
+</body>
+</html>
+
+
+

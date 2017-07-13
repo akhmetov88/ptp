@@ -1,0 +1,237 @@
+﻿@model List<TradingPlatform.Models.TradeModel.TradeViewModel>
+@{
+    switch (Request.Url.PathAndQuery)
+    {
+        case "/auction-buyer-current":
+            ViewBag.Title = @LocalText.Inst.Get("title", "actualTradeList", "Усі поточні торги", "Все текущие торги");
+            ViewBag.Hint = "trade-current";
+            break;
+        case "/auction-buyer-future":
+            ViewBag.Title = @LocalText.Inst.Get("title", "futureTradeList", "Усі майбутні торги", "Все будущие торги");
+            ViewBag.Hint = "trade-future";
+            break;
+        case "/auction-buyer-past":
+            ViewBag.Title = @LocalText.Inst.Get("title", "pasttradeList", "Усі минулі торги", "Все прошедшие торги");
+            ViewBag.Hint = "trade-past";
+            break;
+        default:
+            ViewBag.Title = @LocalText.Inst.Get("title", "alltradeList", "Усі торги", "Все торги");
+            ViewBag.Hint = "trade";
+            break;
+    }
+}
+<div class="clearfix"></div>
+<div class="create-auction title">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('@ViewBag.Hint')">?</a>
+    <h3>@ViewBag.Title</h3>
+    <hr />
+</div>
+<div>
+    <ul class="nav nav-tabs">
+        <li class="@(Request.Url.PathAndQuery == "/auction-buyer-future" ? "active" : "")"><a href="/auction-buyer-future">@LocalText.Inst.Get("link", "auction-buyer-future", "Майбутні торги", "Будущие торги")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/auction-buyer-current" ? "active" : "")"><a href="/auction-buyer-current">@LocalText.Inst.Get("link", "auction-buyer-current", "Поточні торги", "Текущие торги")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/auction-buyer-past" ? "active" : "")"><a href="/auction-buyer-past">@LocalText.Inst.Get("link", "auction-buyer-past", "Минулі торги", "Прошедшие торги")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/my/trades" ? "active" : "")"><a href="/my/trades">@LocalText.Inst.Get("link", "Trades.Index.My", "Мої торги", "Мои торги")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/approving" ? "active" : "")"><a href="/approving">@LocalText.Inst.Get("link", "Trades.Index.MyOnApproving", "На модерації", "На модерации")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/trade/createtrade" ? "active" : "")"><a href="/trade/createtrade">@LocalText.Inst.Get("link", "Trade.Index.CreateTradeLink", "Створити торги", "Создать торги")</a></li>
+    
+    </ul>
+</div>
+
+@*<div class="create-auction">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('@ViewBag.Hint')">?</a>
+    <h3>@ViewBag.Title</h3>
+    <hr />
+    <ul class="nav nav-tabs">
+        <li class="@(ViewBag.MenuAnchor == "auction-buyer-future" ? "active" : "")"><a href="/auction-buyer-future">@LocalText.Inst.Get("link", "auction-buyer-future", "Майбутні торги", "Будущие торги")</a></li>
+        <li class="@(ViewBag.MenuAnchor == "auction-buyer-current" ? "active" : "")"><a href="/auction-buyer-current">@LocalText.Inst.Get("link", "auction-buyer-current", "Поточні торги", "Текущие торги")</a></li>
+        <li class="@(ViewBag.MenuAnchor == "auction-buyer-past" ? "active" : "")"><a href="/auction-buyer-past">@LocalText.Inst.Get("link", "auction-buyer-past", "Минулі торги", "Прошедшие торги")</a></li>
+        <li><a href="/trade/createtrade">@LocalText.Inst.Get("link", "Trade.Index.CreateTradeLink", "Створити торги", "Создать торги")</a></li>
+    </ul>
+</div>*@
+
+
+@*@if (!User.IsInRole("watcher"))
+            {
+<h4>@Html.ActionLink(@LocalText.Inst.Get("title", "Trades.IndexPage.CreateTrade", "Створити торги", "Создать торги"), "CreateTrade", new { @class = "" })</h4>
+}*@
+@if (@Model != null && Model.Any())
+{
+    if (@Model.Any(c => string.IsNullOrEmpty(c.Filter)) || @Model.Any(c => !string.IsNullOrEmpty(c.Filter) && c.Filter == "actual"))
+     {
+         <div id="current">
+             @*<span class="tab-trading">
+            <a href="@Url.Action("Index","Trade",new {filter="actual"})">@LocalText.Inst.Get("lable", "tradesCurrent", "Поточні торги", "Текущие торги")</a>
+        </span>*@
+             @if (@Model.Any(c => c.IsActual))
+             {
+                 foreach (var trade in Model.Where(c => c.IsActual).ToList().Take((int)ViewBag.Count))
+                 {
+                     <table class="table-trading" id="tradeTable-@trade.Id">
+                         @Html.Partial("Trade/TableView", trade)
+                     </table>
+                 }
+             }
+             else
+             {
+                 <p class="empty-trades"><b>@LocalText.Inst.Get("lable", "tradesEmpty", "тут пусто", "тут пусто")</b></p>
+             }
+         </div>
+     }
+     else if (@Model.Any(c => string.IsNullOrEmpty(c.Filter)) || @Model.Any(c => !string.IsNullOrEmpty(c.Filter) && c.Filter == "future"))
+     {
+         <div id="future">
+             @*<span class="tab-trading">
+            <a href="@Url.Action("Index", "Trade", new {filter = "future"})">@LocalText.Inst.Get("lable", "tradesFutureHeader", "Майбутні торги", "Будущие торги")</a>
+        </span>*@
+
+             @if (@Model.Any(c => c.IsFuture))
+             {
+                 foreach (var trade in Model.Where(c => c.IsFuture).Take((int)ViewBag.Count))
+                 {
+                     <table class="table-trading" id="tradeTable-@trade.Id">
+                         @Html.Partial("Trade/TableView", trade)
+                     </table>
+                 }
+             }
+             else
+             {
+                 <p class="empty-trades"><b>@LocalText.Inst.Get("lable", "tradesEmpty", "тут пусто", "тут пусто")</b></p>
+             }
+
+         </div>
+     }
+     else if (@Model.Any(c => string.IsNullOrEmpty(c.Filter)) || @Model.Any(c => !string.IsNullOrEmpty(c.Filter) && c.Filter == "past"))
+     {
+         <div id="past">
+             @* <span class="tab-trading"><a href="@Url.Action("Index","Trade",new {filter="past"})">@LocalText.Inst.Get("lable", "tradesPastHeader", "Минулі торги", "Прошедшие торги")</a></span>*@
+
+             @if (@Model.Any(c => c.IsPast ))
+             {
+                 foreach (var trade in Model.Where(c => c.IsPast).Take((int)ViewBag.Count))
+                 {
+                     <table class="table-trading" id="tradeTable-@trade.Id">
+                         @Html.Partial("Trade/TableView", trade)
+                     </table>
+                 }
+             }
+             else
+             {
+                 <p class="empty-trades"><b>@LocalText.Inst.Get("lable", "tradesEmpty", "тут пусто", "тут пусто")</b></p>
+             }
+
+         </div>
+     }
+}
+
+else
+{
+    <br />
+    <p class="empty-trades"><b>@LocalText.Inst.Get("lable", "tradesEmpty", "тут пусто", "тут пусто")</b></p>
+ 
+    @*<h4>@Html.ActionLink(@LocalText.Inst.Get("title", "Trades.IndexPage.CreateTrade", "Створити торги", "Создать торги"), "CreateTrade", new { @class = "" })</h4>*@
+}
+
+
+@*<script>
+    //$(function () {
+    //    $('body').on('click', '.details-toggle', function () {
+    //        $(this).find('.show-details').toggle();
+    //        $(this).find('.hide-details').toggle();
+    //        $(this).next('.details-trading').toggle();
+    //    });
+    //});
+
+    function onSuccess() {
+        $('#modal-container').modal('hide');
+    }
+
+
+    //$('[data-countdown]').each(function() {
+    //       var $this = $(this), finalDate = $(this).data('countdown');
+    //       $this.countdown(finalDate, function(event) {
+    //            $this.html(event.strftime('%H:%M:%S'));
+    //           });
+    //     });
+</script>*@
+@*
+        //TODO: move filters to head
+    <div id="trading-filter" class="clearfix">
+            <div class="row">
+                <label class="col-lg-3">Наименование товара</label>
+                <div class="col-lg-4 for-select">
+                    <label for="product-name">
+                        <select name="merchandiseId" id="product-name" class="action_filters" data-form="filter-auctions">
+                            <option value="0" selected="selected">
+                                - все -
+                            </option>
+                            <option value="7" data-metering="т">
+                                Газ сжиженный
+                            </option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-lg-3">Место отгрузки</label>
+                <div class="col-lg-4 for-select">
+                    <label for="shipment-place">
+                        <select name="pointId" id="shipment-place" class="action_filters" data-form="filter-auctions">
+                            <option value="0" selected="selected">
+                                - все -
+                            </option>
+                            <option value="3">
+                                ст. Коростень ЮЗЖД
+                            </option>
+                            <option value="4">
+                                ст. Хутор-Мих. ЮЗЖД
+                            </option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-lg-3">Вид транспортировки</label>
+                <div class="col-lg-4 for-select">
+                    <label for="transport-type">
+                        <select name="transportId" id="transport-type" class="action_filters" data-form="filter-auctions">
+                            <option value="0" selected="selected">
+                                - все -
+                            </option>
+                            <option value="4">
+                                ЖД транспорт
+                            </option>
+                            <option value="5">
+                                Автотранспорт
+                            </option>
+                            <option value="6">
+                                Танк-контейнер
+                            </option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-lg-3">Тип торгов</label>
+                <div class="col-lg-4 for-select">
+                    <label for="trade-type">
+                        <select name="type" id="trade-type" class="action_filters" data-form="filter-auctions">
+                            <option value="ANY" selected="selected">
+                                - все -
+                            </option>
+                            <option value="FIXED">
+                                фиксированный объем
+                            </option>
+                            <option value="VARIABLE">
+                                изменяемый объем
+                            </option>
+                        </select>
+                    </label>
+                </div>
+                <label id="myAuctions-type">
+                    <input name="myAuctions" type="checkbox" class="action_filters checkbox trading-filter-checkbox" id="box" data-form="filter-auctions">
+                    <label for="box"></label>
+                    Показывать только мои торги
+                </label>
+            </div>
+        </div> *@

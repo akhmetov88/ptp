@@ -1,0 +1,307 @@
+﻿@model TradingPlatform.Models.EntityModel.ContragentViewModel
+@{
+    ViewBag.Title = @LocalText.Inst.Get("label", "createContragentNonResident", "Реєстрація юридичної особи-нерезидента", "Регистрация юридического лица-нерезидента");
+}
+@Scripts.Render("~/bundles/jquery")
+
+<div class="create-auction title">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('createcontragentNonResident')">?</a>
+    <h3>@ViewBag.Title</h3>
+    <hr />
+</div>
+@using (Html.BeginForm("Create", "Account", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "form-horizontal", @role = "form", @id = "submitForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(f => f.IsResident)
+
+    @*<div class="form-group">
+        @Html.LabelFor(m => m.ResidenseCountry, LocalText.Inst.Get("label", "Account.CreateNonContragent.ResidenseCountry", "Країна юрисдикції", "Страна юрисдикции"), new { @class = "col-md-6 control-label" })
+        <div class="col-md-6">
+            @Html.DropDownListFor(m => m.ResidenseCountry, ViewBag.Countries as SelectList, new { @class = "form-control auction-value " })
+            
+        </div>
+    </div>*@
+    <div class="form-group">
+        @Html.LabelFor(m => m.LongName, LocalText.Inst.Get("label", "Account.CreateNonContragent.Name", "Назва юридичної особи", "Название юридического лица"), new { @class = "col-md-6 control-label" })
+        <div class="col-md-6">
+            @Html.TextBoxFor(m => m.LongName, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("text", "Account.CreateNonContragent.Name.Placeholder", "ДиджиталОушн, ЛЛЦ") })
+            @*@Html.ValidationMessageFor(m => m.LongName, "", new { @class = "text-danger" })*@
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.LongNameEng, LocalText.Inst.Get("label", "Account.CreateNonContragent.NameEng", "Назва юридичної особи (EN)", "Название юридического лица (EN)"), new { @class = "col-md-6 control-label" })
+        <div class="col-md-6">
+            @Html.TextBoxFor(m => m.LongNameEng, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("text", "Account.CreateNonContragent.NameEng.Placeholder", "DigitalOcean, LLC") })
+            @*@Html.ValidationMessageFor(m => m.LongName, "", new { @class = "text-danger" })*@
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Code, LocalText.Inst.Get("label", "Account.CreateNonContragent.Code", "Ідентифікаційний номер (за наявності)", "Идентификационный номер (при наличии)"), new {@class = "col-md-6 control-label"})
+        <div class="col-md-6">
+            @Html.TextBoxFor(m => m.Code, new {@class = "form-control auction-value", @placeholder = LocalText.Inst.Get("text", "Account.CreateNonContragent.Code.Placeholder", "093799921")})
+            @*@Html.ValidationMessageFor(m => m.Code, "", new { @class = "text-danger" })*@
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label(LocalText.Inst.Get("label", "Account.CreateNonContragent.SertificateDoc", "Документ, що підтвреджує реєстрацію", "Документ, подтверждающий регистрацию"), new { @class = "col-md-6 control-label" })
+        <div class="col-md-6">
+            @Html.TextBoxFor(m => m.edrpou, null, new { @class = "form-control auction-value", @accept = "application/rtf, application/pdf,image/*,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document", @type = "file" })
+            @*@Html.ValidationMessageFor(m => m.confidantDocument, "", new { @class = "text-danger" })*@
+        </div>
+    </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Address, LocalText.Inst.Get("label", "Account.CreateNonContragent.Address", "Адреса", "Адрес"), new { @class = "col-md-6 control-label" })
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.Address, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("text", "Account.CreateNonContragent.Address.placeholder", "03443 Украіна, м.Київ, вул.Ромашка 32", "03443 Украина, г.Киев, ул.Ромашка 32") })
+                @*@Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.AddressEng, LocalText.Inst.Get("label", "Account.CreateNonContragent.AddressEng", "Адреса (EN)", "Адрес (EN)"), new { @class = "col-md-6 control-label" })
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.AddressEng, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("text", "Account.CreateNonContragent.AddressEng.placeholder", "87-135 Brompton Rd, Knightsbridge, London SW1X 7XL, UK") })
+                @*@Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+
+        <div class="sub-title-faq">
+            <h4>@LocalText.Inst.Get("label", "Account.CreateNonContragent.Confidant", "Представник", "Представитель")</h4>
+        </div>
+        @Html.HiddenFor(c => c.IsConfidant, true)
+
+        @*<div class="form-group">
+                @Html.LabelFor(m => m.IsConfidant, LocalText.Inst.Get("label", "contragentHasConfidant", "Документи підписує довірена особа", "Документы подписывает доверенное лицо"), new { @class = "col-md-6 control-label" })
+                <div class="col-md-6">
+                    @Html.CheckBoxFor(m => m.IsConfidant, new { @class = "auction-value", @id = "isConfidant", @onclick = "CheckBlockCCE(this.id, false);" })
+
+                </div>
+            </div>*@
+        @*<div name="isConfidant" style="display: none;">*@
+        <div class="form-group">
+            @Html.LabelFor(m => m.ConfidantName, LocalText.Inst.Get("label", "Account.CreateNonContragent.ConfidantName", "Им’я", "Имя"), new { @class = "col-md-6 control-label" })
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.ConfidantName, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("placeholder", "ceoNameplaceholder", "Стругацький Борис Натанович", "Стругацкий Аркадий Натанович") })
+                @*@Html.ValidationMessageFor(m => m.ConfidantName, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ConfidantNameEng, LocalText.Inst.Get("label", "Account.CreateNonContragent.ConfidantNameEng", "Им’я (EN)", "Имя (EN)"), new { @class = "col-md-6 control-label" })
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.ConfidantNameEng, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("placeholder", "ceoNameplaceholderEng", "Strugacky Boris Natanovich", "Strugacky Arkadiy Natanovich") })
+                @*@Html.ValidationMessageFor(m => m.ConfidantName, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.ConfidantDocumentType, LocalText.Inst.Get("label", "Account.CreateNonContragent.confidantDocTypeName", "Найменування та реквізити документа, що підтверджує повноваження представника (статут, довіреність тощо)", "Наименование и реквизиты документа, который подвтерждает полномочия представителя (устав, доверенность и т.д.)"), new { @class = "col-md-6 control-label" })
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.ConfidantDocumentType, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("placeholder", "confidantDocPlacehold", "Довіреність", "Доверенность") })
+                    @*@Html.ValidationMessageFor(m => m.ConfidantDocumentType, "", new { @class = "text-danger" })*@
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ConfidantDocumentTypeEng, LocalText.Inst.Get("label", "Account.CreateNonContragent.confidantDocTypeNameEng", "Найменування та реквізити документа, що підтверджує повноваження представника (статут, довіреність тощо) (EN)", "Наименование и реквизиты документа, который подвтерждает полномочия представителя (устав, доверенность и т.д.) (EN)"), new { @class = "col-md-6 control-label" })
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.ConfidantDocumentTypeEng, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("placeholder", "confidantDocPlaceholdEng", "Power of Attorney") })
+                    @*@Html.ValidationMessageFor(m => m.ConfidantDocumentType, "", new { @class = "text-danger" })*@
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(LocalText.Inst.Get("label", "Account.CreateNonContragent.contragentConfidantDoc", "Додати документ", "Добавить документ"), new { @class = "col-md-6 control-label" })
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.confidantDocument, null, new { @class = "form-control auction-value", @accept = "application/rtf, application/pdf,image/*,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document", @type = "file" })
+                    @*@Html.ValidationMessageFor(m => m.confidantDocument, "", new { @class = "text-danger" })*@
+                </div>
+            </div>
+            @*</div>*@
+            <div class="sub-title-faq">
+                <h4>@LocalText.Inst.Get("label", "bankBillHeader", "Банківські реквізити", "Банковские реквизиты")</h4>
+            </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.BankBillRequired.BillNumber, LocalText.Inst.Get("label", "Account.CreateNonContragent.BankBillRequired.Number", "Рахунок", "Счет"), new {@class = "col-md-6 control-label"})
+        <div class="col-md-6">
+            @Html.TextBoxFor(m => m.BankBillRequired.BillNumber, new {@class = "form-control auction-value"})
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.BankBillRequired.BankName, LocalText.Inst.Get("label", "Account.CreateNonContragent.BankBillRequired.Name", "Назва банку-кореспондента", "Название банка-корреспондента"), new { @class = "col-md-6 control-label" })
+        <div class="col-md-6">
+            @Html.TextBoxFor(m => m.BankBillRequired.BankName, new { @class = "form-control auction-value"})
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.BankBillRequired.BankNameEng, LocalText.Inst.Get("label", "Account.CreateNonContragent.BankBillRequired.NameEng", "Назва банку-кореспондента (EN)", "Название банка-корреспондента (EN)"), new { @class = "col-md-6 control-label" })
+        <div class="col-md-6">
+            @Html.TextBoxFor(m => m.BankBillRequired.BankNameEng, new { @class = "form-control auction-value" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.BankBillRequired.Address, LocalText.Inst.Get("label", "Account.CreateNonContragent.BankBillRequired.Address", "Адреса", "Адрес"), new { @class = "col-md-6 control-label" })
+        <div class="col-md-6">
+            @Html.TextBoxFor(m => m.BankBillRequired.Address, new
+               {
+                   @class = "form-control auction-value", @*@title = LocalText.Inst.Get("error", "mfoeRROR", "Введіть 6 символів коду", "Введите 6 символов кода"), @placeholder = LocalText.Inst.Get("error", "mfoeRROR", "Введіть 6 символів коду", "Введите 6 символов кода")*@ })
+
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.BankBillRequired.AddressEng, LocalText.Inst.Get("label", "Account.CreateNonContragent.BankBillRequired.AddressEng", "Адреса (EN)", "Адрес (EN)"), new { @class = "col-md-6 control-label" })
+        <div class="col-md-6">
+            @Html.TextBoxFor(m => m.BankBillRequired.AddressEng, new
+       {
+           @class = "form-control auction-value", @*@title = LocalText.Inst.Get("error", "mfoeRROR", "Введіть 6 символів коду", "Введите 6 символов кода"), @placeholder = LocalText.Inst.Get("error", "mfoeRROR", "Введіть 6 символів коду", "Введите 6 символов кода")*@ })
+
+        </div>
+    </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.BankBillRequired.Swift, LocalText.Inst.Get("label", "Account.CreateNonContragent.BankBillRequired.Swift", "SWIFT/BIC", "SWIFT/BIC"), new { @class = "col-md-6 control-label" })
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.BankBillRequired.Swift, new{@class = "form-control auction-value", @*@title = LocalText.Inst.Get("error", "mfoeRROR", "Введіть 6 символів коду", "Введите 6 символов кода"), @placeholder = LocalText.Inst.Get("error", "mfoeRROR", "Введіть 6 символів коду", "Введите 6 символов кода")*@ })
+                </div>
+            </div>
+            <div class="form-group bankbillcert">
+                @Html.Label(LocalText.Inst.Get("label", "Account.CreateNonContragent.BankBillCert", "Довідка банку про відкриття рахунку", "Справка банка об открытии счета"), new { @class = "col-md-6 control-label" })
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.bankbillcert, null, new { @class = "form-control auction-value", @accept = "application/rtf, application/pdf,image/*,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document", @type = "file" })
+                    @Html.ValidationMessageFor(m => m.bankbillcert, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+
+            @Html.Hidden("BankBillRequired.IsPrimary", true)
+            @Html.Hidden("BankBillRequired.IsCorrespondent", false)
+            @Html.Hidden("BankBillOptional.IsCorrespondent", true)
+            @Html.Hidden("BankBillRequired.IsResident", false)
+            @Html.Hidden("BankBillOptional.IsResident", false)
+
+            @*<div class="sub-title-faq">
+                <h4>@LocalText.Inst.Get("label", "Account.CreateNonContragent.BankBen", "Реквізити банку-бенефіцара", "Реквизиты банка-бенефициара")</h4>
+            </div>*@
+
+    <div class="form-group">
+            @Html.LabelFor(m => m.IsOptionalBankBill, LocalText.Inst.Get("label", "Account.CreateNonContragent.IsOptionalBankBill", "Вказати банк-кореспондент", "Указать банк-корреспондент"), new { @class = "col-md-6 control-label" })
+            <div class="col-md-6">
+                @Html.CheckBoxFor(m => m.IsOptionalBankBill, new { @class = "auction-value", @id = "isCorrespondent", @onclick = "CheckBlockCCE(this.id, false);" })
+
+            </div>
+        </div>
+        @*<div class="form-group">
+            @Html.LabelFor(m => m.IsOptionalBankBillEng, LocalText.Inst.Get("label", "Account.CreateNonContragent.IsOptionalBankBill", "Вказати банк-кореспондент", "Указать банк-корреспондент"), new { @class = "col-md-6 control-label" })
+            <div class="col-md-6">
+                @Html.CheckBoxFor(m => m.IsOptionalBankBillEng, new { @class = "auction-value", @id = "isCorrespondent", @onclick = "CheckBlockCCE(this.id, false);" })
+
+            </div>
+        </div>*@
+
+    <div name="isCorrespondent" style="display: none;">
+        <div class="form-group">
+            @Html.LabelFor(m => m.BankBillOptional.BillNumber, LocalText.Inst.Get("label", "Account.CreateNonContragent.BankBillOptional.Number", "Рахунок №", "Счет №"), new { @class = "col-md-6 control-label" })
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.BankBillOptional.BillNumber, new { @class = "form-control auction-value" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.BankBillOptional.BankName, LocalText.Inst.Get("label", "Account.CreateNonContragent.BankBillOptional.Name", "Назва банку", "Название банка"), new { @class = "col-md-6 control-label" })
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.BankBillOptional.BankName, new { @class = "form-control auction-value" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.BankBillOptional.BankNameEng, LocalText.Inst.Get("label", "Account.CreateNonContragent.BankBillOptional.NameEng", "Назва банку (EN)", "Название банка(EN)"), new { @class = "col-md-6 control-label" })
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.BankBillOptional.BankNameEng, new { @class = "form-control auction-value" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.BankBillOptional.Address, LocalText.Inst.Get("label", "Account.CreateNonContragent.BankBillOptional.Address", "Адреса банку", "Адрес банка"), new { @class = "col-md-6 control-label" })
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.BankBillOptional.Address, new
+           {
+               @class = "form-control auction-value", @*@title = LocalText.Inst.Get("error", "mfoeRROR", "Введіть 6 символів коду", "Введите 6 символов кода"), @placeholder = LocalText.Inst.Get("error", "mfoeRROR", "Введіть 6 символів коду", "Введите 6 символов кода")*@ })
+
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.BankBillOptional.AddressEng, LocalText.Inst.Get("label", "Account.CreateNonContragent.BankBillOptional.AddressEng", "Адреса банку (EN)", "Адрес банка (EN)"), new { @class = "col-md-6 control-label" })
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.BankBillOptional.AddressEng, new
+           {
+               @class = "form-control auction-value", @*@title = LocalText.Inst.Get("error", "mfoeRROR", "Введіть 6 символів коду", "Введите 6 символов кода"), @placeholder = LocalText.Inst.Get("error", "mfoeRROR", "Введіть 6 символів коду", "Введите 6 символов кода")*@ })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.BankBillOptional.Swift, LocalText.Inst.Get("label", "Account.CreateNonContragent.BankBillOptional.Swift", "SWIFT/BIC", "SWIFT/BIC"), new { @class = "col-md-6 control-label" })
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.BankBillOptional.Swift, new
+               {
+                   @class = "form-control auction-value", @*@title = LocalText.Inst.Get("error", "mfoeRROR", "Введіть 6 символів коду", "Введите 6 символов кода"), @placeholder = LocalText.Inst.Get("error", "mfoeRROR", "Введіть 6 символів коду", "Введите 6 символов кода")*@ })
+
+            </div>
+        </div>
+    
+    
+    </div>
+
+
+
+                    
+                        <div class="sub-title-faq">
+                            <h4>@LocalText.Inst.Get("label", "contragentAdditionalInfo", "Додатково", "Дополнительно")</h4>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ContragentEmail, LocalText.Inst.Get("label", "contragentEmail", "Email", "Email"), new { @class = "col-md-2 control-label" })
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(m => m.ContragentEmail, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("placeholder", "emailPlacehold", "sales@company.com", "sales@company.com") })
+                                @*@Html.ValidationMessageFor(m => m.ContragentEmail, "", new { @class = "text-danger" })*@
+                            </div>
+
+                            @Html.LabelFor(m => m.ContragentSite, LocalText.Inst.Get("label", "contragentWebSite", "Веб-сайт", "Веб-сайт"), new { @class = "col-md-2 control-label" })
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(m => m.ContragentSite, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("placeholder", "webPlacehold", "http://company.com", "http://company.com") })
+                                @*@Html.ValidationMessageFor(m => m.ContragentSite, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ContragentPhone, LocalText.Inst.Get("label", "contragentPhone", "Телефон", "Телефон"), new { @class = "col-md-2 control-label" })
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(m => m.ContragentPhone, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("placeholder", "phonePlacehold", "+380509379992", "+380509379992") })
+                                @*@Html.ValidationMessageFor(m => m.ContragentPhone, "", new { @class = "text-danger" })*@
+                            </div>
+
+                            @Html.LabelFor(m => m.ContragentFax, LocalText.Inst.Get("label", "contragentFax", "Факс", "Факс"), new { @class = "col-md-2 control-label" })
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(m => m.ContragentFax, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("placeholder", "phonePlacehold", "+380509379992", "+380509379992") })
+                                @*@Html.ValidationMessageFor(m => m.ContragentFax, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+
+
+                        @*<div class="form-group">
+                            @Html.LabelFor(m => m.Files, LocalText.Inst.Get("label", "Account.CreateNonContragent.Files", "Завантажте документи, що підтверджують реєстрацію", "Загрузите документы, подтверждающие регистрацию"), new { @class = "col-md-6 control-label" })
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(m => m.Files, new { @class = "form-control auction-value", @type = "file", @multiple = "multiple" })
+
+                            </div>
+                        </div>*@
+                        <div class="form-group">
+                            <div class="col-xs-2" style="line-height: 40px;">
+                                @Html.ActionLink(LocalText.Inst.Get("link", "back", "Назад", "Назад"), "Index")
+                            </div>
+                            <div class="col-xs-10">
+                                @*<input type="submit" class="btn-submit" value="@LocalText.Inst.Get("btn", "create", "Створити", "Создать")" />*@
+                                <button type="submit" id="submit-button">@LocalText.Inst.Get("btn", "create", "Створити", "Создать")</button>
+                            </div>
+                        </div>
+}
+

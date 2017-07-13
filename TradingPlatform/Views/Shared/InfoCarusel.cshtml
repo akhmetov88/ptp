@@ -1,0 +1,46 @@
+﻿<div class="container"> 
+  <div class="home-carousel-wrapper">
+   <a href="/feedback"><img alt="!" title="@LocalText.Inst.Get("text", "feedbackLink", "Зворотній зв’язок", "Обратная связь")" id="envelop-img" src="@Url.Content("~/Content/images/envelop.png")"></a>
+    <div class="carousel slide" data-ride="carousel" id="carousel" data-interval="10000">
+        <div class="carousel-inner" role="listbox">
+            <div class="item">
+                <div class="carousel-caption carousel-text">
+                    <h4>Petroleum Trading Platform:</h4>
+                    <p>
+                        @LocalText.Inst.Get("text", "carusel1_", "Зараз на майданчику", "Сейчас на площадке") <span id="usersCount"></span> @*@AppState["UsersOnline"].ToString()*@ @LocalText.Inst.Get("text", "carusel1_1", "активних користувачів", "активных пользователей")
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <div class="carousel-caption carousel-text">
+                    <h4>@LocalText.Inst.Get("text", "carusel2", "Підказка", "Подсказка")</h4>
+                    <p>
+                        @LocalText.Inst.Get("text", "carusel3", "Для участі в торгах як покупець у Вас має бути активовано як покупець хоча б одна юридична особа", "Для участия в торгах как покупатель у Вас должно хотя бы одно юридическое лицо активировано как покупатель. Для активации необходимо администратору группы в разделе \"Управление юр.лицами\" подать соответствующую заявку.")
+                    </p>
+                </div>
+            </div>
+            <div class="item active">
+                <div class="carousel-caption carousel-text">
+                    <h4>@LocalText.Inst.Get("text", "caruselAttentionHeader", "Зверніть увагу!", "Обратите внимание!")</h4>
+                    <p>
+                        @LocalText.Inst.Get("text", "caruselAttentionText", "Наразі Електронний Торговий Майданчик працює в режимі тестування", "В данный момент Электронная Торговая Площадка работает в режиме тестирования")
+               
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div id="btns">
+            <ul>
+                <li>
+                    <a class="left carousel-control" href="#carousel" role="button" data-slide="prev"><img src="@Url.Content("~/Content/images/btn-left.jpg")" alt="<="></a>
+                </li>
+                <li>
+                    <a class="right carousel-control" href="#carousel" role="button" data-slide="next"><img src="@Url.Content("~/Content/images/btn-right.jpg")" alt="=>"></a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+  </div>
+</div>

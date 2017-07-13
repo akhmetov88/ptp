@@ -1,0 +1,108 @@
+﻿@using PerpetuumSoft.Knockout
+
+@model TradingPlatform.Areas.Admin.Models.EditCatalogModel
+@Scripts.Render("~/bundles/jquery")
+
+@Styles.Render("~/Content/font-awesome.min.css")
+<script src="@Url.Content("~/Scripts/knockout-3.4.0.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/knockout.mapping-latest.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/perpetuum.knockout.js")" type="text/javascript"></script>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+
+<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+@{
+    var ko = Html.CreateKnockoutContext();
+}
+@ko.Initialize(Model)
+
+<div class="create-auction-input">
+    <h3>Редактирование справочников</h3>
+</div>
+<div data-bind="foreach: { data: Catalogs, as: 'catalog' }">
+    <div data-bind="accordion: {collapsible: true, active: false, heightStyle: 'content'}, template: 'queryTemplate'"></div>
+</div>
+@ko.Html.HyperlinkButton("Добавить справочник", "AddCatalog", "Directory", new { area = "admin" })
+<script id="queryTemplate" type="text/html">
+    <div>
+        <a href="#" data-bind="text: catalog.Code"></a>&nbsp;
+        @*<span data-bind="text: catalog.Ru"></span>&nbsp;*@
+    </div>
+    <div class="row form-inline">
+        <div class="form-group">
+            <input data-bind="value: catalog.Filter, attr:{'placeholder':'filter' }">
+        </div>
+        <div class="form-group">
+            <input data-bind="value: catalog.ru, attr:{'placeholder':'Ru' }">
+        </div>
+        <div class="form-group">
+            <input data-bind="value: catalog.uk, attr:{'placeholder':'Uk' }">
+        </div>
+        <div class="form-group">
+            <input title="СПРОСИ, ПРЕЖДЕ ЧЕМ МЕНЯТЬ" style="background-color: teal" data-bind="value: catalog.Code, attr:{'placeholder':'Название' }">
+        </div>
+
+        <textarea data-bind="value: catalog.DescRu, attr:{'placeholder':'описание РУ' }"></textarea>
+        <textarea data-bind="value: catalog.DescUk, attr:{'placeholder':'Описание УК' }"></textarea>
+        <select data-bind="options: viewModel.Types, value: catalog.Type"></select>
+        <input type="checkbox" data-bind="checked: catalog.IsUsable "/>
+        <div class="btn-group-xs">
+            <button title="Сохранить" data-bind="click : function (){executeOnServer(viewModel,'/admin/directory/save?modelId='+catalog.Id())},attr:{'class':'btn btn-green'}"><i class="fa fa-check" aria-hidden="true"></i></button>
+            <button title="Удалить" data-bind="visible: catalog.CanDelete, click : function (){executeOnServer(viewModel,'/admin/directory/delete?modelId='+catalog.Id())},attr:{'class':'btn btn-danger'}"><i class="fa fa-times" aria-hidden="true"></i></button>
+            <button title="Добавить зависимость" data-bind="click : function (){executeOnServer(viewModel,'/admin/directory/adddependency?parentId='+catalog.Id())},attr:{'class':'btn btn-primary'}"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
+        </div>
+        @*<button data-bind="click : function (){executeOnServer(viewModel,'/admin/directory/adddependency?parentId='+catalog.Id())}">Добавить подсвязь</button>
+
+        <button data-bind="click : function (){executeOnServer(viewModel,'/admin/directory/save?modelId='+catalog.Id())}">Сохранить</button>
+
+        <button data-bind="visible: catalog.CanDelete, click : function (){executeOnServer(viewModel,'/admin/directory/delete?modelId='+catalog.Id())}">Удалить</button>*@
+        @*@ko.Html.HyperlinkButton("Добавить связь", "AddDependency", "Directory", new { area = "admin", parentId = catalog.Id })*@
+        @*<button data-bind="click : addSubitem">Добавить подсвязь</button>*@
+        <div data-bind="foreach: { data: Dependencies, as: 'catalog' } ">
+            <div data-bind="accordion: {collapsible: true, active: false, heightStyle: 'content'}, template: 'queryTemplate' ">
+
+            </div>
+
+        </div>
+    </div>
+</script>
+
+
+<script>
+    ko.bindingHandlers.accordion = {
+        init: function(element, valueAccessor) {
+            var options = valueAccessor() || {};
+            setTimeout(function() {
+                $(element).accordion(options);
+            }, 0);
+
+            //handle disposal (if KO removes by the template binding)
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+                $(element).accordion("destroy");
+                $(element).parent().parent().accordion("refresh");
+            });
+        },
+        update: function(element, valueAccessor) {
+            var options = valueAccessor() || {},
+                existing = $(element).parent().parent().hasClass("ui-accordion");
+            //if it has been reinitialized and our model data changed, then need to recreate until they have a "refresh" method
+            if (existing) {
+                $(element).parent().accordion("refresh");
+                $(element).accordion("destroy").accordion(options);
+                $(element).parent().parent().accordion("refresh");
+                $(element).accordion("refresh");
+            }
+        }
+    };
+
+
+</script>
+@ko.Apply(Model)
+
+@section Scripts{
+    
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+}

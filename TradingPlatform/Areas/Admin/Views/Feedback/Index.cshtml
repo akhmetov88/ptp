@@ -1,0 +1,75 @@
+﻿@model List<TradingPlatform.Data.Feedback>
+
+@{
+    ViewBag.Title = @LocalText.Inst.Get("title", "admin-title", "Зворотній зв'язок", "Обратная связь");
+}
+
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("Index", "Feedback", FormMethod.Get, new { @style = "margin:0px;padding:5px 0px;" }))
+{
+    <div class="row">
+        <div class="col-xs-12">
+            @Html.CheckBox("isCommited", (bool)ViewBag.IsCommited, new { onclick = "handleClick(this);" })<label>&nbsp;&nbsp;@LocalText.Inst.Get("text", "admin-feedback", "відобразити тільки не прочитані", "показать только не прочитанные") </label>
+        </div>
+    </div>
+}
+<table class="table">
+    <tr class="table-header">
+        <td><b>@LocalText.Inst.Get("text", "feedback-tb-date", "Дата", "Дата")</b></td>
+        <td><b>@LocalText.Inst.Get("text", "feedback-tb-from", "Від кого", "От кого")</b></td>
+        <td><b>@LocalText.Inst.Get("text", "feedback-tb-thema", "Тема/Повідомлення", "Тема/Сообщение")</b></td>
+        <td></td>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.Date.ToString("dd.MM.yyyy HH:mm")
+            </td>
+            <td>
+                @item.Name<br />
+                <a href="mailto:@item.Email">@item.Email</a><br />
+                @item.PhoneNumber
+            </td>
+            <td style="text-align:left;">
+                <center><b>@item.Subject</b></center><br />
+                @item.Text
+            </td>
+            <td width="5%">
+                <a class="btn btn-default" href="/feedback/reply/@item.Id" title="Ответить">
+                    <i class="fa fa-edit"></i>
+                </a>
+                @if (!item.IsCommited)
+                {
+                    <a class="btn btn-default" href="#" onclick="CommitFeedback(@item.Id, '@item.Name');">
+                        <i class="fa fa-check fa-lg"></i>
+                    </a>
+                }
+                else
+                {
+                    <i class="fa fa-check-square-o fa-lg"></i>
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+<script>
+    function CommitFeedback(id, name) {
+        if (confirm("Удалить сообщение от " + name + "?")) {
+            $.ajax({
+                type: "POST",
+                url: "/admin/feedback/Commit?id=" + id,
+                success: SuccessDelete
+            });
+        }
+    }
+    function SuccessDelete() {
+        window.location.href = '/Admin/Feedback'
+        window.location.reload();
+    }
+    function handleClick(cb)
+    {
+        $(cb).parents('form').submit();
+    }
+</script>

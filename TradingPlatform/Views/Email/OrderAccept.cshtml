@@ -1,0 +1,45 @@
+﻿@model TradingPlatform.Models.NotifyModels.OrderAccept
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+    <h4>@LocalText.Inst.Get("email", "EmailTemplate.OrderAccept", "Повідомляємо, що Вами успішно укладено угоду на наступних умовах", "Сообщаем, что Вами успешно заключена сделка на следующих условиях", Model.Lang):</h4>
+    <table>
+        <tr>
+            <th>Товар:</th>
+            <td>@Model.UserName</td>
+        </tr>
+        <tr>
+            <th>@LocalText.Inst.Get("email", "EmailTemplate.Amount", "Кількість", "Количество", Model.Lang):</th>
+            <td>@Model.Volume</td>
+        </tr>
+        @*<tr>
+            <th>@LocalText.Inst.Get("email", "EmailTemplate.Price", "Ціна", "Цена", Model.Lang):</th>
+            <td>@Model.Price грн/тн</td>
+        </tr>
+        <tr>
+            <th>@LocalText.Inst.Get("email", "EmailTemplate.Price", "Сума", "Сумма", Model.Lang)</th>
+            <td>@Model.Sum грн</td>
+        </tr>
+        <tr>
+            <th>@LocalText.Inst.Get("email", "EmailTemplate.Seller", "Продавець", "Продавец", Model.Lang):</th>
+            <td>@Model.Seller</td>
+        </tr>
+        <tr>
+            <th>@LocalText.Inst.Get("email", "EmailTemplate.Buyer", "Покупець", "Покупатель", Model.Lang):</th>
+            <td>@Model.Buyer</td>
+        </tr>*@
+        <tr>
+            <th>Номер @LocalText.Inst.Get("email", "EmailTemplate.Tradenumber", "торгів", "торгов", Model.Lang):</th>
+            <td>@Model.OfferNumber</td>
+        </tr>
+    </table>
+
+    <div>
+        <a href="@Model.Link">@LocalText.Inst.Get("email", "EmailTemplate.LookBill", "Подивитись рахунок", "Посмотреть счет", Model.Lang)</a>
+    </div>
+</div>
+

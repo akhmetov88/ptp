@@ -1,0 +1,47 @@
+﻿@model IEnumerable<TradingPlatform.Models.PageModel.HelpClass>
+@{
+    ViewBag.Title = @LocalText.Inst.Get("link", "leftmenu_faq", "Часто виникаючі питання", "Часто задаваемые вопросы");
+}
+
+<div class="clearfix"></div>
+<div class="create-auction title">
+    <h3>@ViewBag.Title</h3>
+    <hr />
+</div>
+
+@foreach (var group in Model)
+{
+    <div class="sub-title-faq">
+        @group.Title
+    </div>
+    foreach (var answer in group.Helps)
+    {
+        <div class="question-container">
+            <div class="question-title">@answer.Title</div>
+            <div class="question-description hidden">
+                @Html.Raw(HttpUtility.HtmlDecode(answer.Value))
+            </div>
+        </div>
+    }
+}
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var hash = window.location.hash;
+            if (hash.length > 0) {
+                $(hash + ' a[href*="' + window.location.hash + '"]').click();
+            }
+
+            if ($('.question-title').length > 0) {
+                $('body').on('click', '.question-title', function (event) {
+                    $('.question-title').not(this).removeClass('active').next().addClass('hidden');
+                    if ($(this).hasClass('active')) {
+                        $(this).removeClass('active').next().addClass('hidden');
+                    } else {
+                        $(this).addClass('active').next().removeClass('hidden');
+                    }
+                });
+            }
+        });
+    </script>
+}

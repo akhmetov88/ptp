@@ -1,0 +1,30 @@
+﻿@model List<TradingPlatform.Models.StuffUserViewModel>
+@{
+    ViewBag.Title = "Roles";
+}
+
+<div class="table table-condensed">
+    <h2>Список пользователей</h2>
+    <table class="table table-responsive table-condensed">
+        <thead>
+        <tr>
+            <th>E-mail</th>
+            <th>Roles</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@String.Join(",",user.Roles)</td>
+            </tr>
+        }
+   
+        </tbody>
+    </table>
+    @Html.ActionLink("Добавить","Create",null,new {@class="btn btn-success"})
+</div>
+
+
+

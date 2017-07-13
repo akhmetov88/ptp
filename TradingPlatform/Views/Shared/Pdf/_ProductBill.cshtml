@@ -1,0 +1,115 @@
+﻿@using System.Globalization
+@using TradingPlatform.Enums
+@using TradingPlatform.Models
+@model TradingPlatform.Models.BillModel
+
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; CHARSET=utf-8">
+    <title></title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css"/>
+</head>
+<body>
+<div class="a4">
+
+    <table class="table" style="font-size:larger">
+        <caption class="text-center" style="margin-bottom: 50px; margin-top: 50px;"> Попередній рахунок на сплату № @Model.ShowModel.BillNumber </caption>
+        <tr>
+            <td><b>Продавець</b></td>
+            <td>
+                <b>@Model.Seller.LongName</b> <br/>
+                @Model.Seller.Address <br/>
+                Код за ЄДРПОУ @Model.Seller.Code, ІПН @Model.Seller.TaxCode, <br/>
+                тел.: @Model.Seller.ContragentPhone <br/>
+                п/р @Model.Seller.BankBillRequired.BillNumber, @Model.Seller.BankBillRequired.BankName, МФО @Model.Seller.BankBillRequired.Mfo <br/>
+                Є платником податку на прибуток на загальних підставах <br/>
+            </td>
+        </tr>
+        <tr style="margin-top: 50px;">
+            <td><b>Покупець</b></td>
+            <td>
+                <b>@Model.Buyer.LongName</b> <br/>
+                @Model.Buyer.Address <br/>
+                Код за ЄДРПОУ @Model.Buyer.Code, ІПН @Model.Buyer.TaxCode, <br/>
+                тел.: @Model.Buyer.ContragentPhone <br/>
+                Є платником податку на прибуток на загальних підставах <br/>
+            </td>
+        </tr>
+
+    </table>
+
+
+
+    <div class="billcaption" style="text-align: center"></div>
+
+    <div class="billcaption">Договір: @Model.ShowModel.Contract</div>
+    <p></p>
+    <div class="billcaption">Додаткова угода № @Model.ShowModel.AddContract</div>
+    <p style="width: 100px; height: 20px;"></p>
+
+    <div class="table">
+        <table class="table table-bordered">
+            <thead>
+            <tr style="background-color: darkolivegreen">
+                <th>№</th>
+                <th>Товар</th>
+                <th colspan="2">Кількість</th>
+                <th>Ціна, грн.</th>
+                <th>Сума, грн.</th>
+            </tr>
+            </thead>
+              
+            <tr>
+                <td>1</td>
+                <td> @StaticData.Inst.GetCatalogValue(@Model.Trade.ProductName);
+             </td>
+                <td>@Model.Bets.Where(c => c.IsActual).Sum(x => x.Volume ?? 0).ToStandartString()</td>
+                <td>т</td>
+                <td>@((Model.Bets.Where(c => c.IsActual).Sum(x => x.Price*x.LotsCount ?? 0)/Model.Bets.Sum(x => x.LotsCount)).ToString("C2", new NumberFormatInfo() {CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 0}))</td>
+                <td>@Model.Bets.Where(c => c.IsActual).Sum(x => x.Volume*x.Price ?? 0).ToStandartString()</td>
+
+            </tr>
+            <tr>
+                <td colspan="5" style="text-align: right">Разом:</td>
+                <td>@(Model.Bets.Where(c => c.IsActual).Sum(x => x.Price*x.Volume ?? 0).ToString("C2", new NumberFormatInfo() {CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 0})) </td>
+            </tr>
+            <tr>
+                <td colspan="5" style="text-align: right">У тому числі ПДВ:</td>
+                <td>@((Model.Bets.Where(c => c.IsActual).Sum(x => x.Price*x.Volume ?? 0)/6).ToString("C2", new NumberFormatInfo() {CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 0}))</td>
+            </tr>
+        </table>
+    </div>
+    Всього товарів на суму:
+
+    <div class="billcaption">
+        @NumberToWords.Summ.ToWords(Model.Bets.Where(c => c.IsActual).Sum(x => x.Price*x.Volume ?? 0), NumberToWords.Currency.Grivna, NumberToWords.Capital.First) <br>
+        У т.ч. ПДВ: @((Model.Bets.Where(c => c.IsActual).Sum(x => x.Price*x.Volume ?? 0)/6).ToString("C2", new NumberFormatInfo() {CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 0})) грн.
+    </div>
+</div>
+
+<style>
+    .billcaption {
+        text-align: left;
+        font-weight: bold;
+        font-size: larger;
+    }
+
+    .a4 {
+        width: 210mm;
+        height: 297mm;
+        /*border-style: solid;
+        border-color: black;*/
+        padding: 20px;
+        margin: 20px;
+        /*border-width: 1px;*/
+    }
+
+    .borderless td, .borderless th, .borderless tr {
+        border: none;
+    }
+</style>
+
+</body>
+</html>

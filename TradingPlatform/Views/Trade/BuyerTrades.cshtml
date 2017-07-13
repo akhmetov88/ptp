@@ -1,0 +1,32 @@
+﻿@model List<TradingPlatform.Models.TradeModel.TradeViewModel>
+
+@{
+    ViewBag.Title = @LocalText.Inst.Get("title", "tradeBuyerList", "Торги покупця", "Торги покупателя");
+}
+<div class="clearfix"></div>
+<div class="create-auction title">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('buyertrades')">?</a>
+    <h3>@ViewBag.Title</h3>
+    <hr />
+</div>
+<script src="~/Scripts/jquery-2.2.4.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+@if (@Model.Any())
+{
+    @*<span class="tab-trading">
+        <a href="@Url.Action("Index","Trade",new {filter="actual"})">@LocalText.Inst.Get("lable", "tradesCurrent", "Поточні торги", "Текущие торги")</a>
+    </span>*@
+
+    foreach (var trade in Model)
+    {
+        <table class="table-trading" id="tradeTable-@trade.Id">
+            @Html.Partial("Trade/TableView", trade)
+        </table>
+    }
+
+
+}
+else
+{
+    <p><b>@LocalText.Inst.Get("lable", "tradesEmpty", "тут пусто", "тут пусто")</b></p> 
+}

@@ -1,0 +1,448 @@
+﻿@using PerpetuumSoft.Knockout
+@model TradingPlatform.Models.TradeModel.NewAuctionViewModel
+@{
+    ViewBag.Title = @LocalText.Inst.Get("title", "editTradeTitle", "Редагування торгів", "Редактирование торгов");
+}
+<link rel="stylesheet" href="~/Scripts/dt/bootstrap-datetimepicker.css" />
+<link rel="stylesheet" href="~/Content/datepick1.css" />
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+<script src="~/Scripts/datepick1.js"></script>
+<script type="text/javascript" src="~/scripts/moment.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="~/scripts/moment-with-locales.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="~/scripts/dt/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="~/scripts/dt/locales/bootstrap-datetimepicker.uk.js" charset="UTF-8"></script>
+<script type="text/javascript" src="~/scripts/dt/locales/bootstrap-datetimepicker.ru.js" charset="UTF-8"></script>
+<script src="@Url.Content("~/Scripts/knockout-3.4.0.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/knockout.mapping-latest.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/perpetuum.knockout.js")" type="text/javascript"></script>
+<script type="text/javascript" src="~/Scripts/bindFile.js"></script>
+@{
+    var ko = Html.CreateKnockoutContext();
+}
+
+@ko.Initialize(Model)
+
+<div class="create-auction title">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('tradecreate')">?</a>
+    <h3>@LocalText.Inst.Get("label", "createTradeHeader", "Створити торг", "Создать торг")</h3>
+    <hr />
+</div>
+
+@using (@ko.Html.Form("EditTrade", "Trade"))
+{
+   <span class="text-danger">@LocalText.Inst.Get("hint","editingTradeDisclaimer","Зверніть увагу, після зміни умов торгу він автоматично буде висланий на розгляд модератором","Обратите внимание, после смены условий торга он будет автоматически выслан на рассмотрение модератором")</span>
+    <div class="create-auction-input">
+        <p>@LocalText.Inst.Get("label", "sellerName", "Продавець", "Продавец")</p>
+        <select @ko.Bind.Options(c => c.ContragentList).OptionsText("LongName", true).Value(c => c.SelectedSeller)></select>
+    </div>
+        <div class="create-auction-input">
+            @ko.Html.TextBox(c => c.Contact).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown)
+        </div>
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "bankBills", "Банківські реквізити", "Банковские реквизиты")</p>
+            @using (var banks = ko.With(c => c.SelectedSeller))
+            {
+                <select id="bank" @banks.Bind.Options(c => c.BankBills).OptionsText("'BankName'").Value(c => @ko.Model.SelectedBank)></select>
+            }
+        </div>
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "tradeType", "Тип торгів", "Тип торгов")</p>
+            @using (var trades = @ko.Foreach(c => c.TradeTypes))
+            {
+                <select @trades.Bind.Options(f => f.Dependencies).OptionsText(LocalText.GetCultureTwoLetter(), true).Value(v => @ko.Model.SelectedTradeType)></select>
+            }
+        </div>
+        <div>
+            <div class="create-auction-input">
+                <p>@LocalText.Inst.Get("label", "tradeBegin", "Дата і час початку торгів", "Дата и время начала торгов")</p>
+                <b data-bind="text: new Date(viewModel.TradeBegin()).toLocaleString(),click: Edit"id="TradeBegin"></b>
+                <input name="TradeBegin" type="hidden" class="form-control auction-value" data-bind="datetimepicker: TradeBegin" autocomplete="off" />
+
+                @*<input id="TradeBegin" class="form-control  auction-value" data-bind="datetimepicker: TradeBegin"/>*@
+            </div>
+            <div class="create-auction-input">
+                <p>@LocalText.Inst.Get("label", "TradeEnd", "Дата і час закінчення торгів", "Дата и время окончания торгов")</p>
+                <b id="TradeEnd" data-bind="text: new Date(viewModel.TradeEnd()).toLocaleString(),click: Edit"></b>
+                <input name="TradeEnd" type="hidden" class="form-control auction-value" data-bind="datetimepicker: TradeEnd" autocomplete="off" />
+            </div>
+            <span class="text-danger" data-bind="visible: (TradeEnd()-TradeBegin()<1700000)">
+                @LocalText.Inst.Get("label", "TradeLengt30hHint", "Різниця між початком та кінцем торгів повинна бути більшою ніж півгодини", "Разница между началом и концом торгов должна превышать полчаса")
+            </span>
+        </div>
+        <div class="sub-title-faq">
+            @LocalText.Inst.Get("label", "infoAboutProduct", "Информация о товаре", "Інформація про товар")
+        </div>
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "productName", "Товар", "Товар")</p>
+            @using (var products = @ko.Foreach(c => c.ProductsList))
+            {
+                <select @products.Bind.Options(c => c.Dependencies).OptionsText(LocalText.GetCultureTwoLetter(), true).Value(c => @ko.Model.SelectedProduct)></select>
+            }
+        </div>
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "nomenclatureProduct", "Номенклатура", "Номенклатура")</p>
+      
+            <select data-bind="options: viewModel.Nomenclatures, optionsText: '@LocalText.GetCultureTwoLetter()', value: viewModel.SelectedNomenclature"></select>
+    
+        </div>
+        <div class="create-auction-input">
+
+            <p>@LocalText.Inst.Get("label", "productQuality", "Якість товару", "Качество товара")</p>
+            @using (var quality = ko.With(c => c.SelectedProduct))
+            {
+                <select data-bind="options: viewModel.Gosts, optionsText: '@LocalText.GetCultureTwoLetter()', value: viewModel.SelectedQuality"></select>
+            }
+        </div>
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "productCountry", "Країна виробництва", "Страна производтсва")</p>
+            @using (var country = @ko.Foreach(c => c.CountryList))
+            {
+                <select @country.Bind.Options(c => c.Dependencies).OptionsText(LocalText.GetCultureTwoLetter(), true).Value(c => @ko.Model.SelectedCountry)></select>
+            }
+        </div>
+    <div class="create-auction-input">
+        <p>@LocalText.Inst.Get("label", "productPlant", "Завод-виробник", "Завод-производитель")</p>
+        @using (var k = ko.With(c => c.SelectedCountry))
+        {
+            <select  @k.Bind.Options(c => c.Dependencies).OptionsText(LocalText.GetCultureTwoLetter(), true).Value(c => @ko.Model.SelectedPlant)></select>
+        }
+    </div>
+    if (@Model.ProductPassportId.HasValue)
+    {
+        <span>@Html.ActionLink(LocalText.Inst.Get("label", "tradeConditionsPassportShow", "Посмотреть паспорт продукта", "Подивитись паспорт продукту"), "ShowFile", "Account", new { file = @Model.ProductPassportId }, new { target = "_blank" })</span>
+
+    }
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "productPassportEdit", "Завантажити новий паспорт якості", "Загрузить новый паспорт качества")</p>
+        </div>
+        <input type="file" data-bind="fileInput: fileData" accept="image/*, application/pdf" class="form-control auction-value" autocomplete="off">
+
+        <div class="sub-title-faq">
+            @LocalText.Inst.Get("label", "transportTherms", "Умови поставки", "Условия поставки")
+        </div>
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "transportType", "Вид транспортування", "Вид транспортировки")</p>
+            @using (var country = @ko.Foreach(c => c.TransportTypes))
+            {
+                <select @country.Bind.Options(c => c.Dependencies).OptionsText(LocalText.GetCultureTwoLetter(), true).Value(c => @ko.Model.TransportTypeSelected)></select>
+            }
+        </div>
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "incoTherms", "Умови поставки згідно Інкотермс 2010:", "Условия поставки согласно Инкотермс 2010:")</p>
+            @using (var inco = @ko.With(c => c.TransportTypeSelected))
+            {
+                <select data-bind="options: viewModel.Incotherms, optionsText: '@LocalText.GetCultureTwoLetter()',  value: viewModel.IncothermSelected"></select>
+             
+            }
+        </div>
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "shipmentPoint", "Місце передачі", "Место передачи")</p>
+            @using (var point = @ko.With(c => c.TransportTypeSelected))
+            {
+                <select data-bind="options: viewModel.Places, optionsText: '@LocalText.GetCultureTwoLetter()',  value: viewModel.TransportPointSelected"></select>
+            }
+        </div>
+
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "deliveryPeriod", "Період поставки", "Период поставки")</p>
+
+
+            <b data-bind="text: new Date(viewModel.DeliveryDateFrom()).toLocaleDateString(),click: Edit" id="DeliveryDateFrom"></b><br/>
+            <input name="DeliveryDateFrom" type="hidden" class="form-control auction-value" data-bind="datePicker: DeliveryDateFrom" autocomplete="off"/>
+
+            <b data-bind="text: new Date(viewModel.DeliveryDateTo()).toLocaleDateString(),click: Edit" id="DeliveryDateTo"></b>
+            <input name="DeliveryDateTo" type="hidden" class="form-control auction-value" data-bind="datePicker: DeliveryDateTo" autocomplete="off"/>
+
+            @*<input type="text" class="form-control auction-value" data-bind="datePicker: DeliveryDateFrom" autocomplete="off"/>
+
+            <input type="text" class="form-control auction-value" data-bind="datePicker: DeliveryDateTo" autocomplete="off" />*@
+        </div>
+          <!-- ko if: viewModel.TransportTypeSelected.Code == 'ЖД' || viewModel.TransportTypeSelected.Code == 'Танк' -->
+    //using (var tank = @ko.If(c => c.TransportTypeSelected.Code == "ЖД" || c.TransportTypeSelected.Code == "Танк"))
+    //{
+        <div>
+            <h5>@LocalText.Inst.Get("label", "tankThermsHeader", "Умови обороту цистерн", "Условия оборота цистерн"):</h5>
+            <div class="create-auction-input">
+                <p>@LocalText.Inst.Get("label", "tankThermsBegin", "Дата початку", "Дата начала"):</p>
+             
+                <select data-bind="options: viewModel.RailwayBegins, optionsText: '@LocalText.GetCultureTwoLetter()',  value: viewModel.RailwayBeginSelected"></select>
+            </div>
+            <div class="create-auction-input">
+                <p>@LocalText.Inst.Get("label", "tankThermsEnd", "Дата кінця", "Дата окончания"):</p>
+                <select data-bind="options: viewModel.RailwayEnds, optionsText: '@LocalText.GetCultureTwoLetter()',  value: viewModel.RailwayEndSelected"></select>
+             
+            </div>
+
+            <div class="create-auction-input">
+                <p>@LocalText.Inst.Get("label", "tankThermsDaysBetween", "Кількість днів між подіями", "Количество дней между событиями")</p>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <input type="number" autocomplete="off" step="1"class="form-control auction-value" required="required" @ko.Bind.Value(c => c.DaysForUptime).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown)>
+                    </div>
+                </div>
+            </div>
+            <span class="text-danger" data-bind="visible: !DaysForUptime">
+                @LocalText.Inst.Get("label", "inputDaysHint", "Введіть максимальну кількість днів простою", "Введите максимальное количествое дней простоя")
+            </span>
+            <div class="create-auction-input">
+                <p>@LocalText.Inst.Get("label", "tankThermsCurrency", "Валюта розрахунку простоїв", "Валюта расчета простоев"):</p>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <select @ko.Bind.Options(c => c.Currencies).Value(c => c.CurrencySelected).OptionsText(LocalText.GetCultureTwoLetter(), true)></select>
+                    </div>
+                </div>
+            </div>
+            <div class="create-auction-input">
+                <p>@LocalText.Inst.Get("label", "tankThermsPenalty", "Розмір штрафу за одинь день простою цистерни", "Размер штрафа за день простоя 1 цистерны"):</p>
+                <div class="row">
+                    <div class="col-lg-4">
+                        @*@ko.Html.TextBox(c=>c.TaxForUpTime)*@
+                        <input type="number" step="1"autocomplete="off" class="form-control auction-value" data-bind="value: TaxForUpTime, valueUpdate : 'afterkeydown' " required="required">
+                    </div>
+                </div>
+            </div>
+        </div>
+    @* } *@
+           <!-- /ko -->
+   
+    <div class="sub-title-faq">
+        @LocalText.Inst.Get("label", "tradePricenVolume", "Об’єм та ціна торгів", "Объем и цена торгов")
+    </div>
+      <!-- ko if: (viewModel.SelectedTradeType.Code() == 'openFixed' || viewModel.SelectedTradeType.Code() == 'closeFixed') -->
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "lotVolume", "Кількість товару в одному лоті,", "Количество товара в одном лоте,") <span class="units">т</span></p>
+            <div class="row">
+                <div class="col-lg-4">
+                    <input type="number" step="1"autocomplete="off"  min="1" class="form-control auction-value" @ko.Bind.Value(c => c.LotVolume).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown)/>
+                </div>
+            </div>
+        </div>
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "lotsCount", "Кількість лотів, шт", "Количество лотов, шт")</p>
+            <div class="row">
+                <div class="col-lg-4">
+                    <input type="number"step="1" min="1" autocomplete="off" class="form-control auction-value" @ko.Bind.Value(c => c.LotsCount).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown)/>
+                </div>
+            </div>
+        </div>
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "tradeComputedVolume", "Загальний обсяг торгів, ", "Общий объем торгов, ")<span class="units">т</span></p>
+            <div class="row">
+                <div class="col-lg-4">
+                    <b @ko.Bind.Text(c => c.LotVolume * c.LotsCount).Value(c => c.TotalVolume)></b>
+                    <input type="hidden" autocomplete="off" @ko.Bind.Value(c => c.TotalVolume) />
+                </div>
+            </div>
+        </div>
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "tradeStartPrice", "Стартова ціна, грн./т. ", "Стартовая цена, грн./т.") <span class="units"></span></p>
+            <div class="row">
+                <div class="col-lg-4">
+                    <input type="number"step="1" autocomplete="off" min="1" class="form-control auction-value" @ko.Bind.Value(c => c.StartPrice).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown)/>
+                </div>
+            </div>
+        </div>
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "tradeSumStep", "Крок по ціні, грн. ", "Шаг по цене, грн ") <span class="units"></span></p>
+            <div class="row">
+                <div class="col-lg-4">
+                    <input type="number" step="1" autocomplete="off" min="1" class="form-control auction-value" @ko.Bind.Value(c => c.PriceStep).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown)/>
+                </div>
+            </div>
+        </div>
+        <!-- /ko -->
+    <div class="create-auction-input">
+        @ko.Html.CheckBox(c => c.HasRedemptionPrice, new { @class = "checkbox", @id = "box" })
+        <label for="box"></label>
+        <p id="redemption-price">@LocalText.Inst.Get("label", "redemptionPrice", "Викупна ціна", "Цена выкупа")</p>
+        <div class="row">
+            <div class="col-lg-4">
+                <input type="number"step="1" autocomplete="off" class="form-control auction-value" @ko.Bind.Enable(c => c.HasRedemptionPrice).Value(c => c.RedemptionPrice) />
+            </div>
+        </div>
+    </div>
+
+        <div class="create-auction-input">
+            <p>@LocalText.Inst.Get("label", "paymentTherms", "Умови оплати", "Условия оплаты")</p>
+            <div class="row">
+                <div class="col-lg-4">
+                    @LocalText.Inst.Get("label", "paymentDeadline", "100% оплати до", "100% оплаты до")
+                    <b data-bind="text: new Date(viewModel.DayToPay()).toLocaleDateString(),click: Edit" id="DayToPay"></b>
+                    <input name="DayToPay" type="hidden" class="form-control auction-value" data-bind="datePicker: DayToPay" autocomplete="off" />
+                 @*   <input class="form-control  auction-value" autocomplete="off" data-bind="datePicker: DayToPay" />*@
+                </div>
+            </div>
+        </div>
+        <div>
+            <button type="submit" class="btn-submit" id="submitBtn"><i id="load" class="fa fa-spinner fa-3x fa-spin-hover"></i>@LocalText.Inst.Get("button", "editTradeBtn", "Редагувати", "Редактировать")</button>
+            <!-- /ko -->
+        </div>
+}
+
+<script type="text/javascript">
+
+    ko.bindingHandlers.datetimepicker = {
+        init: function (element, valueAccessor, allBindingsAccessor) {
+            var options = allBindingsAccessor().dateTimePickerOptions || {
+                autoclose: true,
+                todayBtn: true,
+                'format': 'dd.mm.yyyy hh:ii',
+                language: 'uk',
+                startDate: new Date(),
+                minuteStep: 30,
+                initialDate: new Date()
+            };
+            $(element).datetimepicker(options).on("changeDate", function (ev) {
+                var observable = valueAccessor();
+                observable(ev.date);
+            });
+        },
+        update: function (element, valueAccessor) {
+            ko.utils.unwrapObservable(valueAccessor());
+        }
+    };
+
+    ko.bindingHandlers.datePicker = {
+        init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+            var unwrap = ko.utils.unwrapObservable;
+            var dataSource = valueAccessor();
+            var binding = allBindingsAccessor();
+            var options = {
+                keyboardNavigation: true,
+                todayHighlight: true,
+                autoclose: true,
+                //daysOfWeekDisabled: [0, 6],
+                format: 'dd.mm.yyyy',
+                language: 'uk'
+            };
+            if (binding.datePickerOptions) {
+                options = $.extend(options, binding.datePickerOptions);
+            }
+            $(element).datepicker(options);
+            $(element).datepicker('update', dataSource());
+            $(element).on("changeDate", function (ev) {
+                var observable = valueAccessor();
+                if ($(element).is(':focus')) {
+                    // Don't update while the user is in the field...
+                    // Instead, handle focus loss
+                    $(element).one('blur', function (ev) {
+                        var dateVal = $(element).datepicker("getDate");
+                        observable(dateVal);
+                    });
+                }
+                else {
+                    observable(ev.date);
+                }
+            });
+            //handle removing an element from the dom
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                $(element).datepicker('remove');
+            });
+        },
+        update: function (element, valueAccessor) {
+            var value = ko.utils.unwrapObservable(valueAccessor());
+            //   $(element).datepicker('update', value);
+        }
+    };
+
+
+    ko.bindingHandlers.option = {
+        update: function (element, valueAccessor) {
+            var value = ko.utils.unwrapObservable(valueAccessor());
+            ko.selectExtensions.writeValue(element, value);
+        }
+    };
+    
+
+    viewModel.Nomenclatures = ko.computed(function () {
+        var product = viewModel.SelectedProduct;
+        if (product === null || product === undefined) return null;
+        return ko.utils.arrayFilter(product.Dependencies(), function (dep) {
+            return dep.Type() === 'Nomenclature';
+        });
+    }, viewModel);
+
+    viewModel.Gosts = ko.computed(function () {
+        var product = viewModel.SelectedProduct;
+        if (product === null || product === undefined) return null;
+        return ko.utils.arrayFilter(product.Dependencies(), function (dep) {
+            return dep.Type() === 'GOST';
+        });
+    }, viewModel);
+    viewModel.Incotherms = ko.computed(function () {
+        var product = viewModel.TransportTypeSelected;
+        if (product === null || product === undefined) return null;
+        return ko.utils.arrayFilter(product.Dependencies(), function (dep) {
+            return dep.Type() === 'Incotherms';
+        });
+    }, viewModel);
+    viewModel.Places = ko.computed(function () {
+        var product = viewModel.TransportTypeSelected;
+        if (product === null || product === undefined) return null;
+        return ko.utils.arrayFilter(product.Dependencies(), function (dep) {
+            return dep.Type() === 'ShipmentPoint';
+        });
+    }, viewModel);
+
+    viewModel.RailwayBegins = ko.computed(function () {
+        var product = viewModel.RailwayTransportTherms()[0].Dependencies()[0];
+        if (product === null || product === undefined) return null;
+        return ko.utils.arrayFilter(product.Dependencies(), function (dep) {
+            return dep.Type() === 'TransporTherm';
+        });
+    }, viewModel);
+
+    viewModel.RailwayEnds = ko.computed(function () {
+        var product = viewModel.RailwayTransportTherms()[0].Dependencies()[1];
+        if (product === null || product === undefined) return null;
+        return ko.utils.arrayFilter(product.Dependencies(), function (dep) {
+            return dep.Type() === 'TransporTherm';
+        });
+    }, viewModel);
+
+    viewModel.Edit = function (data, event) {
+        //var area = document.getElementById(event.target.id);
+        document.getElementsByName(event.target.id)[0].setAttribute('type', 'text');
+        $('#'+event.target.id).hide();
+        //area.hide();
+    }
+    viewModel.executeOnServer = function (model, url) {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: ko.mapping.toJSON(model),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+          
+            success: function (data) {
+                if (data.Success === true) {
+                    window.location.href = data.redirectUrl;
+                } else {
+                    alert("Error: " + data.responseText);
+                }
+            },
+            error: function (error) {
+                console.log(error);
+                alert("@LocalText.Inst.Get("error","createTradeError", "Виникла помилка, спробуйте пізніше", "Возникла ошибка, поробуйте позже")");
+            }
+        });
+    };
+
+    var $loading = $('#load').hide();
+    $(document)
+      .ajaxStart(function () {
+          $loading.show();
+      })
+      .ajaxStop(function () {
+          $loading.hide();
+      });
+
+    $('form').on('submit', function () {
+        OpenHelpDialog("noclose");
+    });
+
+</script>
+
+@ko.Apply(Model)
+

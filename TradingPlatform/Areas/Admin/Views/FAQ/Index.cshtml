@@ -1,0 +1,84 @@
+﻿@model IEnumerable<TradingPlatform.Models.PageModel.HelpGroupViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+@using (Html.BeginForm())
+{
+        <div class="col-xs-6">
+            @Html.DropDownList("groupId", (List<SelectListItem>)ViewBag.Group, new { @class = "form-control selectbox-js", hashidden = "true" })
+        </div>
+        <div class="col-xs-6">
+            <input type="submit" value="Фильтр" class="btn" />
+        </div>
+}
+        <div class="col-xs-12">
+            <table class="table table-hover">
+                <tr>
+                    <th class="col-xs-1 text-center">Сортировка</th>
+                    <th class="col-xs-3 text-center">Якорь/Группа/Вопрос</th>
+                    <th class="col-xs-5 text-center">Ответ</th>
+                    <th class="col-xs-1 text-center">
+                        <a class="btn btn-default" href="@Url.Action("CreateGroup", "FAQ", new { area = "Admin" })" title="Создать группу">
+                            <i class="fa fa-plus fa-lg"></i>
+                        </a>
+                    </th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr class="active">
+                        <td>@Html.DisplayFor(model => item.OrderId)</td>
+                        <td colspan="2">
+                            <div class="text-left"><b>#@Html.DisplayFor(model => item.Hashtag)</b></div>
+                            <div class="text-left"><b>Ru: </b>@Html.DisplayFor(model => item.TitleRu)</div>
+                            <div class="text-left"><b>Ua: </b>@Html.DisplayFor(model => item.TitleUa)</div>
+                        </td>
+                        <td>
+                            <a class="btn btn-default" href="@Url.Action("Create", "FAQ", new { area = "Admin", groupId = item.Id })" title="Добавить позицию">
+                                <i class="fa fa-plus fa-lg"></i>
+                            </a>
+                            <a class="btn btn-default" href="@Url.Action("EditGroup", "FAQ", new { area = "Admin", id = item.Id })" title="Редактировать">
+                                <i class="fa fa-pencil fa-lg"></i>
+                            </a>
+                            <a class="btn btn-default" href="@Url.Action("DeleteGroup", "FAQ", new { area = "Admin", id = item.Id })" title="Удалить позицию">
+                                <i class="fa fa-trash-o fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    foreach (var help in item.Helps)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(model => help.OrderId)</td>
+                            <td>
+                                <div class="text-left"><b>#@Html.DisplayFor(model => help.Hashtag)</b></div>
+                                <hr />
+                                <div class="text-left"><b>Ru: </b>@Html.DisplayFor(model => help.TitleRu)</div>
+                                <hr />
+                                <div class="text-left"><b>Ua: </b>@Html.DisplayFor(model => help.TitleUa)</div>
+                            </td>
+                            <td>
+                                <div class="text-left"><b>Ru: </b>@Html.Raw(help.Ru)</div>
+                                <hr />
+                                <div class="text-left"><b>Ua: </b>@Html.Raw(help.Ua)</div>
+                            </td>
+                            <td>
+                                <a class="btn btn-default" href="@Url.Action("Edit", "FAQ", new { area = "Admin", id = help.Id})" title="Редактировать">
+                                    <i class="fa fa-pencil fa-lg"></i>
+                                </a>
+                                <a class="btn btn-default" href="@Url.Action("Delete", "FAQ", new { area = "Admin", id = help.Id })" title="Удалить позицию"
+                                   onclick="return confirm('Вы уверены, что хотите удалить этот элемент?');">
+                                    <i class="fa fa-trash-o fa-lg"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+
+                }
+            </table>
+        </div>
+    </div>
+</div>

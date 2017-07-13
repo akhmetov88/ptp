@@ -1,0 +1,18 @@
+﻿@model TradingPlatform.Models.NotifyModels.RebetMail
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+    <p>
+        @LocalText.Inst.Get("text", "EmailTemplate.YourBet", "Повідомляємо, що Вашу ставку", "Сообщаем, что Ваша ставка", Model.Lang) <span class="mail-important-info">@Model.BetId</span> 
+        в торгах <span class="mail-important-info">@Model.TradeNumber</span> @LocalText.Inst.Get("text", "EmailTemplate.BetSlaughtered", "перебито", "перебита", Model.Lang) 
+        @LocalText.Inst.Get("text", "EmailTemplate.ByCompany", "компранією", "компанией", Model.Lang) @Model.RebetterName.
+    </p>
+    <p>
+        <a href="@Model.Link">@LocalText.Inst.Get("text", "EmailTemplate.GoToBiddings", "Перейти до торгiв", "Перейти к торгам", Model.Lang)</a>
+    </p>
+</div>
+

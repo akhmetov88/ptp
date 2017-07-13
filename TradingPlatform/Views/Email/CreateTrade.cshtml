@@ -1,0 +1,21 @@
+﻿@model TradingPlatform.Models.NotifyModels.CreateTrade
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+    <p>
+        @LocalText.Inst.Get("text", "EmailTemplate.newTradeCreatedNotif", "Повідомляємо, що на Petroleum Trading Platform оголошено нові торги", "Сообщаем, что на Petroleum Trading Platform объявлены новые торги", ViewBag.Lang) 
+        <span class="mail-important-info">@Model.TradeNumber</span>.
+    </p>
+    <p>
+        @LocalText.Inst.Get("email", "EmailTemplate.newTradeBegin", "Початок торгів о", "Начало торгов в", ViewBag.Lang) @Model.TradeDate.
+    </p>
+    <p>
+        @LocalText.Inst.Get("email", "EmailTemplate.newTradeMoreInfo", "Для більш детальної інформації Ви можете пройти за", "Для более подробной информации Вы можете пройти по", ViewBag.Lang) 
+        <a href="@Model.Link">@LocalText.Inst.Get("email", "EmailTemplate.Link", "посиланням", "ссылке", Model.Lang)</a>
+    </p>
+</div>
+

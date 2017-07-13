@@ -1,0 +1,128 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model IEnumerable<TradingPlatform.Data.Token>
+
+@{
+    ViewBag.Title = LocalText.Inst.Get("title", "TokenPageTitle", "Редагування ключів", "Редактирование ключей");
+    AjaxOptions ajaxOptions = new AjaxOptions
+    {
+        UpdateTargetId = "tableBody",
+        OnSuccess = "OnSuccess",
+        OnBegin = "OnBegin(this)"
+    };
+    var pagedlist = (IPagedList)Model;
+}
+
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("Index", "Token", FormMethod.Get, new { @style = "margin:0px;padding:5px 0px;" }))
+{
+    <div class="row">
+        <div class="col-xs-6">
+            <span class="pull-left" style="line-height: 34px;">Найти:&nbsp;&nbsp;&nbsp;</span>
+            <input type="text" id="search" name="search" class="form-control" style="width: 80%;" value="@ViewBag.Search" />
+        </div>
+        <div class="col-xs-2">
+            <input type="submit" value="@LocalText.Inst.Get("btn", "Forward", "Перейти", "Перейти")" class="btn" style="line-height: 23px;"/>
+        </div>
+        <div class="col-xs-4 text-info" id="GenerateMessage">
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-xs-12">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        @LocalText.Inst.Get("title", "key", "Ключ", "Ключ")
+                    </th>
+                    <th>
+                        @LocalText.Inst.Get("title", "rus", "Рос", "Рус")
+                    </th>
+                    <th>
+                        @LocalText.Inst.Get("title", "ukr", "Укр", "Укр")
+                    </th>
+                    <th>
+                        <a class="btn btn-default" href="javascript:EditDbresource(0)">
+                            <i class="fa fa-pencil fa-lg"></i>
+                            <i class="fa fa-refresh  fa-spin fa-lg hidden"></i>
+                            <i class="fa fa-check fa-lg hidden"></i>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    using (Ajax.BeginForm("Edit", null, ajaxOptions, new { @id = "form-" + item.Id, @dataId = item.Id }))
+                    {
+                        <tr data-id="@item.Id">
+                            <td>
+                                @item.Key
+                            </td>
+                           
+                            @if (item.Key.Contains("help"))
+                            {
+                                <td>@Html.TextArea("Ru", item.Ru, new { @class = "form-control" })</td>
+                                <td>@Html.TextArea("Uk", item.Uk, new { @class = "form-control" })</td>
+                            }
+                            else
+                            {
+                                <td>@Html.TextBox("Ru", item.Ru, new { @class = "form-control" })</td>
+                                <td>@Html.TextBox("Uk", item.Uk, new { @class = "form-control" })</td>
+                            }
+                            <td>
+                                @Html.Hidden("Id", item.Id)
+                                @Html.Hidden("Key", item.Key)
+                                <a class="btn btn-default" href="#" onclick="return EditDbresource(@item.Id);">
+                                    <i class="fa fa-pencil fa-lg"></i>
+                                    <i class="fa fa-refresh  fa-spin fa-lg hidden"></i>
+                                    <i class="fa fa-check fa-lg hidden"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        @if (pagedlist.PageCount > 1)
+        {
+            <div class="notification-wrap clearfix">
+                @Html.PagedListPager(pagedlist, page => Url.Action("Index", "Token", new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+            </div>
+        }
+    </div>
+</div>
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        function OnBegin(t) {
+            $('tr[data-id="' + $(t).attr('dataId') + '"] .fa-pencil').addClass('hidden');
+            $('tr[data-id="' + $(t).attr('dataId') + '"] .fa-refresh').removeClass('hidden');
+        };
+        function OnSuccess(data) {
+            if (data.Success) {
+                $('tr[data-id="' + data.Id + '"] .fa-refresh').addClass('hidden');
+                $('tr[data-id="' + data.Id + '"] .fa-check').removeClass('hidden');
+                setTimeout(function () {
+                    $('tr[data-id="' + data.Id + '"] .fa-check').addClass('hidden');
+                    $('tr[data-id="' + data.Id + '"] .fa-pencil').removeClass('hidden');
+                }, 3000)
+            }
+        };
+        function EditDbresource(id) {
+            if (id == 0) {
+                $.each($('form[id*="form-"]'), function (index, value) {
+                    $(value).submit();
+                });
+                return false;
+            } else {
+                $('#form-' + id).submit();
+                return false;
+            }
+        }
+        function OnSuccessRes(data) {
+            $('#GenerateMessage').html(data.Message);
+        }
+    </script>
+}

@@ -1,0 +1,62 @@
+﻿@model TradingPlatform.Models.OfferModels.OrderViewModel
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true"><img src="~/Content/images/modal-close-btn.png"></span>
+    </button>
+    <h4 class="modal-title" id="">@LocalText.Inst.Get("title", "Offers.AcceptOrder", "Погодити заявку", "Утвердить заявку")</h4>
+</div>
+@if (Model.IsForSeller)
+{
+    using (@Ajax.BeginForm("AcceptOrder", "Offers", FormMethod.Post, new AjaxOptions() { OnSuccess = "onTwoModelSuccess", OnFailure = "onFailure(data)" }))
+    {
+        <div class="modal-body accept-order-offer-modal" style="overflow-y: visible; min-height: 80px;">
+                <div class="form-group">
+                    <h3>@LocalText.Inst.Get("text", "Offers.Order.AcceptTitle", "Погоджусь з наступними умовами: ", "Соглашаюсь со следующими условиями: ")</h3>
+                    @Html.HiddenFor(c => c.BuyerId)
+                    @Html.HiddenFor(c => c.Id)
+                    @Html.HiddenFor(c => c.TradeId)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(c => c.Price, @LocalText.Inst.Get("text", "Offers.Order.AcceptOrderPrice", "Ціна продожу", "Цена продажи"))
+                    <span>@Html.DisplayFor(c => c.Price, new { @class = "form-control col-sm-6 col-lg-6" });</span>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(c => c.Volume, @LocalText.Inst.Get("text", "Offers.Order.AcceptOrderVolume", "Об’єм продажу", "Объем продажи"))
+                    <span>@Html.DisplayFor(c => c.Volume, new { @class = "col-sm-6 col-lg-6" });</span>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(c => c.Sum, @LocalText.Inst.Get("text", "Offers.Order.AcceptOrderSum", "На суму", "На сумму"))
+                    <span>@Html.DisplayFor(c => c.Sum, new { @class = "col-sm-6 col-lg-6" });</span>
+                </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <button type="submit" id="leaveBtn">Ок</button>
+        </div>
+        <div id="errorModal" class="text-danger"></div>
+    }
+}
+else
+{
+    <div class="modal-body" style="overflow-y: visible; min-height: 80px;">
+        <h3>Что-то пошло не так</h3>
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("form").submit(function () {
+            var elem = $("#leaveBtn");
+            elem.attr("disabled", "disabled");
+            var oldval = elem.html();
+            // elem.disabled = true;
+            elem.html('<i class="fa fa-spinner fa-spin fa-3x"></i>');
+            setTimeout(function () {
+                elem.attr('disabled', false);
+                elem.html(oldval);
+                $('.close').click();
+            }, 1000);
+
+        });
+    });
+</script>

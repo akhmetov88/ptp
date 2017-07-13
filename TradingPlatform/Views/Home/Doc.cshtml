@@ -1,0 +1,15 @@
+﻿@model TradingPlatform.Models.ViewModel.ContentView
+
+@{
+    Layout = null;
+}
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; CHARSET=utf-8">
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+</head>
+<body>
+    @Html.Raw(HttpUtility.HtmlDecode(Model.HtmlContent))
+</body>
+</html>

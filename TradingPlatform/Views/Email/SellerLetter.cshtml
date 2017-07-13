@@ -1,0 +1,19 @@
+﻿@model TradingPlatform.Models.NotifyModels.SellerLetter
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+    <p>
+        @LocalText.Inst.Get("email", "EmailTemplate.BaseNotification", "Повідомляємо, що", "Уведомляем, что", Model.Lang) @LocalText.Inst.Get("text", "EmailTemplate.ByCompany", "компранією", "компанией", Model.Lang) 
+        <span class="mail-important-info">@Model.Company</span>, @LocalText.Inst.Get("text", "EmailTemplate.ConductBidding", "що проводила торги", "которая проводила торги", Model.Lang) 
+        № <span class="mail-important-info">@Model.TradeId</span> @LocalText.Inst.Get("text", "EmailTemplate.SuccessContract", "успішно заключено угоди щодо купівлі-продажу з", "успешно заключены договора по купле-продаже с", Model.Lang) 
+        <span class="mail-important-info">@Model.BuyersCount</span> @LocalText.Inst.Get("text", "EmailTemplate.Buyers", "покупцями", "покупателями", Model.Lang).
+    </p>
+    <p>
+        <a href="@Model.Link">@LocalText.Inst.Get("email", "EmailTemplate.SeeTradeResult", "Щоб ознайомитись із результатами торгів пройдіть за посиланням", "Результаты торгов можно посмотреть пройдя по этой ссылке", Model.Lang)</a>
+    </p>
+</div>
+

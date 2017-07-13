@@ -1,0 +1,18 @@
+﻿@model TradingPlatform.Models.UploadTradePassportModel
+@{
+    ViewBag.Title = "UploadFile";
+}
+
+
+@using (Html.BeginForm("Upl", "Account", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "form-horizontal", @role = "form", @id = "submitForm" }))
+{
+    @Html.TextBoxFor(c => c.ProductPassport, new
+{
+    @class = "form-control auction-value",
+    @accept = "application/pdf,image/*,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    @type = "file",
+    @required = "required"
+})
+    @Html.HiddenFor(c => c.TradeNumber)
+    <input type="submit" value="OK"/>
+}

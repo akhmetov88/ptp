@@ -1,0 +1,89 @@
+﻿@model TradingPlatform.Models.ViewModel.ContentView
+
+@{
+    ViewBag.Title = "Редактирование контента";
+}
+
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("Index", "Content", FormMethod.Get, new { @style = "margin:0px;padding:5px 0px;" }))
+{
+<div class="row">
+    <div class="col-xs-4">
+        @Html.DropDownList("page", (List<SelectListItem>)ViewBag.PageList, new { @class = "form-control auction-value" })
+    </div>
+    <div class="col-xs-3">
+        @Html.DropDownList("lang", (List<SelectListItem>)ViewBag.LangList, new { @class = "form-control" })
+    </div>
+    <div class="col-xs-3">
+        <button type="submit" class="btn">Перейти</button>
+        @*<input type="submit" value="Перейти" class="btn"/>*@
+    </div>
+</div>
+}
+@section scripts {
+    <script src="~/Scripts/tinymce/tinymce.min.js"></script>
+    <script>
+        tinymce.init({
+            selector: '#txtContentHtmlArea',
+            plugins: [
+              'advlist autolink lists link image charmap print preview anchor',
+              'searchreplace visualblocks code fullscreen',
+              'insertdatetime media table contextmenu paste code'
+            ],
+            toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+
+        });
+        function GetHTML() {
+            $('#HtmlContent').val(tinyMCE.activeEditor.getContent());
+        }
+    </script>
+}
+@using (Html.BeginForm())
+{    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.Lang)
+        @Html.HiddenFor(model => model.Alias)
+        @Html.HiddenFor(model => model.HtmlContent)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.KeyWords, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.KeyWords, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.KeyWords, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descriptions, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Descriptions, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Descriptions, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <textarea id="txtContentHtmlArea" class="col-xs-12" style="min-height:500px">
+                    @Html.Raw(Model.HtmlContent)
+                </textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-12 pull-right">
+                <button type="submit" onclick="GetHTML();">Сохранить</button>
+                @*<input type="submit" value="Сохранить" onclick="GetHTML();"/>*@
+            </div>
+        </div>
+    </div>
+}

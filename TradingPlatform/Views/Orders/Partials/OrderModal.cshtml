@@ -1,0 +1,83 @@
+﻿
+@model TradingPlatform.Models.TradeModel.UserOrderViewModel
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true"><img src="~/Content/images/modal-close-btn.png"></span>
+    </button>
+    <h4 class="modal-title" id="">@LocalText.Inst.Get("title", "Offers.Order", "Подати заявку", "Подать заявку")</h4>
+</div>
+@if (Model.Contragent.Any())
+{
+    using (@Ajax.BeginForm("Order", "Orders", FormMethod.Post, new AjaxOptions() { OnSuccess = "onTwoModelSuccess", OnFailure = "onFailure(data)" }))
+    {
+        @*<div class="modal-body" style="overflow-y: visible; min-height: 80px;">
+            <div class="row">
+                <div class="form-group">
+                    <label class="control-label col-sm-6 col-lg-6">@LocalText.Inst.Get("text", "Offers.Order.ContragentChoose", "Виберіть юридичну особу, від якої Ви будете подавати заявку", "Выберите юридическое лицо, от которого Вы будете подавать заявку")</label>
+                    @Html.DropDownListFor(c => c.SelectedContragent, Model.Contragent, new { @class = "form-control col-sm-6 col-lg-6" })
+                    @Html.Hidden("OfferId", Model.OfferId)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(c=>c.Price, @LocalText.Inst.Get("text", "Offers.Order.ChoosePrice", "Запропонуйте ціну", "Предложите цену"))
+                    @Html.TextBoxFor(c => c.Price, new { @class = "form-control col-sm-6 col-lg-6" });
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(c => c.Volume, @LocalText.Inst.Get("text", "Offers.Order.ChooseVolume", "Вкажіть об’єм", "Укажите объем"))
+                    @Html.TextBoxFor(c => c.Volume, new { @class = "form-control col-sm-6 col-lg-6" });
+                </div>
+            </div>
+
+        </div>*@
+
+        <div class="modal-body order-offer-modal">
+            <div>
+                <label>@LocalText.Inst.Get("text", "Offers.Order.ContragentChoose", "Виберіть юридичну особу, від якої Ви будете подавати заявку", "Выберите юридическое лицо, от которого Вы будете подавать заявку"):</label>
+                @Html.DropDownListFor(c => c.SelectedContragent, Model.Contragent)
+                @Html.Hidden("OfferId", Model.OfferId)
+            </div>
+            <div>
+                @Html.LabelFor(c => c.Price, @LocalText.Inst.Get("text", "Offers.Order.ChoosePrice", "Запропонуйте ціну", "Предложите цену"))
+                @Html.TextBoxFor(c => c.Price, htmlAttributes: new {@type="number", @step="0.1" })
+            </div>
+            <div>
+                @Html.LabelFor(c => c.Volume, @LocalText.Inst.Get("text", "Offers.Order.ChooseVolume", "Вкажіть об’єм", "Укажите объем"))
+                @Html.TextBoxFor(c => c.Volume, htmlAttributes: new {@type="number", @min="1"  })
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="submit" id="leaveBtn">Ок</button>
+        </div>
+        <div id="errorModal" class="text-danger"></div>
+    }
+}
+else
+{
+    <div class="modal-body" style="overflow-y: visible; min-height: 80px;">
+        <div class="row container-fluid">
+            @LocalText.Inst.Get("error", "userCanNotTakePart", "У вас немає авторизованих юридичних осіб", "У вас нет авторизированных юрлиц")
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button id="CancelModal" class="btn-cancel" data-dismiss="modal">Ok</button>
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("form").submit(function () {
+            var elem = $("#leaveBtn");
+            elem.attr("disabled", "disabled");
+            var oldval = elem.html();
+            // elem.disabled = true;
+            elem.html('<i class="fa fa-spinner fa-spin fa-3x"></i>');
+            setTimeout(function () {
+                elem.attr('disabled', false);
+                elem.html(oldval);
+                $('.close').click();
+            }, 1000);
+
+        });
+    });
+</script>

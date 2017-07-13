@@ -1,0 +1,124 @@
+﻿@using System.Globalization
+@using TradingPlatform.Enums
+@using TradingPlatform.Models
+@model TradingPlatform.Models.TradeModel.TradeViewModel
+@{
+    ViewBag.Title = @LocalText.Inst.Get("title", "Orders.Title", "Пропозиції продавців", "Предложения продавцов");
+}
+<tr class="table-header table-header-fixed">
+    <th colspan="8">
+        @LocalText.Inst.Get("lable", "Orders.TableHeader", "пропозиція", "предложение")
+    </th>
+</tr>
+<tr class="table-header table-header-fixed">
+    <th style="width: 5%;">№</th>
+    <th style="width: 25%;">@LocalText.Inst.Get("lable", "Orders.Conditions", "Основні умови", "Основные условия")</th>
+    <th style="width: 10%">@LocalText.Inst.Get("lable", "Orders.TotalVolume", "Загальний об’єм", "Общий объём"), @StaticData.Inst.GetCatalogValue(@Model.Unit)</th>
+    <th style="width: 10%">@LocalText.Inst.Get("lable", "Orders.AvailableVolume", "Доступний об’єм", "Доступный объём"), @StaticData.Inst.GetCatalogValue(@Model.Unit)</th>
+    <th style="width: 20%">@LocalText.Inst.Get("lable", "Orders.Price", "Ціна", "Цена"), @StaticData.Inst.GetCatalogValue(@Model.PriceCurrency) / @StaticData.Inst.GetCatalogValue(@Model.Unit) </th>
+    @if (Model.IsActual)
+    {
+        <th style="width: 10%;">@LocalText.Inst.Get("lable", "Orders.countdownToEnd", "До кінця", "До конца")</th>
+        <th style="width: 10%;">@LocalText.Inst.Get("lable", "Orders.tradeTableAction", "Дія", "Действие")</th>
+    }
+    else
+    {
+        <th style="width: 20%;" colspan="2">@LocalText.Inst.Get("lable", "Orders.countdown0", "Завершено", "Завершен")</th>
+    }
+
+</tr>
+<tr class="table-middle summ">
+    <td rowspan="3"><span class="auction-id">@Html.DisplayFor(model => model.Id)</span></td>
+    <td class="conditions-td">
+        @StaticData.Inst.GetCatalogValue(@Model.ProductName)
+    </td>
+    <td rowspan="3"><span>@Html.DisplayFor(model => model.TotalVolume)</span></td>
+    <td rowspan="3"><span>@Html.DisplayFor(model => model.VolumeAvailable)</span></td>
+    @if (Model.IsActual)
+    {
+        if (Model.TradeType == TradeTypes.quotation.ToString())
+        {
+            <td rowspan="3" class="current-price-td" title="@Model.DifferencialPriceDesc" data-toggle="tooltip">@StaticData.Inst.GetCatalogValue(@Model.DifferencialPriceText)</td>
+        }
+        else
+        {
+            <td rowspan="3" class="current-price-td">@Model.PriceStart.ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 2 })</td>
+        }
+
+        <td rowspan="3"><span data-countdown="@Model.DateEnd.ToServerTicks()" class="text-orange"></span><p>@Model.DateEnd.ToClientTime()</p></td>
+        if (Model.GroupId != User.Identity.GetUserGroup())
+        {
+            <td rowspan="3">
+                <a class="btn btn-primary btn-green modal-link1" role="button" href="@Url.Action("Order", "Orders", new {offer = Model.Id, _ = DateTime.Now.Ticks})">@LocalText.Inst.Get("lable", "Orders.Index.OrderVolumeInOffer", "Купити", "Купить")</a>
+            </td>
+        }
+        else
+        {
+            <td rowspan="3">
+
+            </td>
+        }
+    }
+    else
+    {
+        if (Model.Orders!=null&&Model.Orders.Any())
+        {
+            <td rowspan="3" class="current-price-td">@Model.Orders.ToList().Average(c => c.Volume).ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 2 })</td>
+        }
+        else
+        {
+            <td rowspan="3" class="current-price-td">@Model.PriceStart.ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 2 })</td>
+        }
+        <td rowspan="3" colspan="2" style="min-width: 120px;"><span class="text-orange">@LocalText.Inst.Get("text", "Orders.OfferIsEnd", "Пропозиція неактуальна", "Предложение неактуально")</span><p>@Model.DateEnd.ToClientTime()</p></td>
+    }
+
+</tr>
+
+<tr class="table-middle">
+    <td>
+        @StaticData.Inst.GetCatalogValue(Model.ShipmentPoint)
+    </td>
+
+</tr>
+<tr class="table-middle">
+    <td>
+        @StaticData.Inst.GetCatalogValue(Model.TransportType)
+    </td>
+</tr>
+
+<tr>
+    <td colspan="8" class="table-trade-gap details-trading">
+        <a class="collapsed details-toggle" data-toggle="collapse" data-parent="#accordion" href="#details-@Model.Id" aria-expanded="true" aria-controls="details-@Model.Id">
+            @LocalText.Inst.Get("label", "Orders.Index.Details", "Детальніше", "Подробней") <i class="fa fa-angle-double-down" aria-hidden="true"></i><i class="fa fa-angle-double-up" aria-hidden="true"></i>
+        </a>
+        <div class="collapse details-content" id="details-@Model.Id">
+    
+            @if (Model.IsActual)
+            {
+                <h5>@LocalText.Inst.Get("text", "Orders.OrderView.ListOfORders", "Поточні пропозиції продавців", "Текущие предложения продавцов")</h5>
+                if (Model.Orders != null && Model.Orders.Any())
+                {
+                    @Html.Partial("~/Views/Orders/Partials/OrdersTable.cshtml", Model.Orders)
+                }
+                else
+                {
+                    <b>@LocalText.Inst.Get("text", "Orders.OfferView.ListOfORdersEmpty", "Тут буде список відгуків покупців на дану заявку", "Тут будет список откликов продавцов на эту заявку")</b>
+                }
+            }
+            else
+            {
+                <h5>@LocalText.Inst.Get("text", "Orders.historyMyBets", "Мої пропозиції", "Мои предложения")</h5>
+                if (@Model.Orders != null&& Model.Orders.Any())
+                {
+                    @Html.Partial("~/Views/Orders/Partials/OrdersTable.cshtml", Model.Orders.Except(Model.Orders.Where(c => !User.Identity.GetUserContragents().Contains(c.BuyerId))).ToList())
+
+                }
+            }
+
+            
+
+        </div>
+</tr>
+<tr>
+    <td colspan="8" class="table-trade-gap"></td>
+</tr>

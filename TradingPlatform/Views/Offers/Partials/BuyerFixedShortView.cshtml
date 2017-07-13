@@ -1,0 +1,254 @@
+﻿@using TradingPlatform.Enums
+@using TradingPlatform.Models
+@using System.Globalization
+@using System.Linq;
+@model TradingPlatform.Models.TradeModel.TradeViewModel
+<tr class="table-header table-header-fixed">
+    <th colspan="8">
+        @if (User.Identity.IsRegisteredToTrade(Model.AllContragentIds.ToList()))
+            {
+            <div class="my-trade-label">
+                <div class="text">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    @LocalText.Inst.Get("btn", "tradeTableFixHeaderMyLabel", "Мої торги", "Мои торги")
+                </div>
+                <div class="right"></div>
+            </div>
+        }
+        @if (Model.TradeType == TradeTypes.closeFixed.ToString())
+        {
+            @LocalText.Inst.Get("lable", "tradeTableFixClosedHeader", "анонімні торги з фіксованим обсягом лоту", "анонимные торги с фиксированным объемом лота")
+        }
+        @if (Model.TradeType == TradeTypes.openFixed.ToString())
+        {
+            @LocalText.Inst.Get("lable", "tradeTableFixOpenedHeader", "публічні торги з фіксованим обсягом лоту", "публичные торги с фиксированным объемом лота")
+        }
+    </th>
+</tr>
+<tr class="table-header table-header-fixed">
+    <th style="width: 5%;">№</th>
+    <th style="width: 25%;">@LocalText.Inst.Get("lable", "tradeTableConditions", "Основні умови", "Основные условия")</th>
+    <th style="width: 10%;">@LocalText.Inst.Get("lable", "tradeTableLotsCount", "Кількість лотів", "Количество лотов"),шт</th>
+    <th style="width: 10%">@LocalText.Inst.Get("lable", "tradeTableLotVolume", "Об’єм лоту", "Объём лота"), @StaticData.Inst.GetCatalogValue(@Model.Unit)</th>
+    <th style="width: 10%">@LocalText.Inst.Get("lable", "tradeTableTotalVolume", "Загальний об’єм", "Общий объём"), @StaticData.Inst.GetCatalogValue(@Model.Unit)</th>
+    <th style="width: 20%">@LocalText.Inst.Get("lable", "tradeTablePrice", "Актуальна ціна", "Актуальная цена"), @StaticData.Inst.GetCatalogValue(@Model.PriceCurrency) / @StaticData.Inst.GetCatalogValue(@Model.Unit) </th>
+    @if (@Model.IsApproved)
+    {
+        if (Model.IsFuture)
+        {
+            <th style="width: 10%;">@LocalText.Inst.Get("lable", "countdownToBegin", "До початку", "До начала")</th>
+            <th style="width: 10%;">@LocalText.Inst.Get("lable", "tradeTableAction", "Дія", "Действие")</th>
+
+        }
+        if (Model.IsActual)
+        {
+            <th style="width: 10%;">@LocalText.Inst.Get("lable", "countdownToEnd", "До кінця", "До конца")</th>
+            <th style="width: 10%;">@LocalText.Inst.Get("lable", "tradeTableAction", "Дія", "Действие")</th>
+        }
+        if (Model.IsPast)
+        {
+            <th style="width: 20%;" colspan="2">@LocalText.Inst.Get("lable", "countdown0", "Завершено", "Завершен")</th>
+        }
+    }
+    else
+    {
+        <th style="width: 10%" colspan="2">@LocalText.Inst.Get("lable", "tradeOnApprovingTh", "На схваленні", "На одобрении")</th>
+    }
+
+</tr>
+<tr class="table-middle summ">
+    <td rowspan="3"><span class="auction-id">@Html.DisplayFor(model => model.Id)</span></td>
+    <td class="conditions-td">
+        @StaticData.Inst.GetCatalogValue(@Model.ProductName)
+    </td>
+    <td rowspan="3"><span class="lotQuantity">@Html.DisplayFor(model => model.LotsCount)</span></td>
+    <td rowspan="3"><span class="bulkLot">@Html.DisplayFor(model => model.LotVolume)</span></td>
+    <td rowspan="3"><span class="bulkCurrent">@Html.DisplayFor(model => model.TotalVolume)</span></td>
+    @if (@Model.IsApproved)
+    {
+        if (Model.IsFuture)
+        {
+            <td rowspan="3" class="current-price-td">@Model.PriceStart.ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 2 })</td>
+
+            <td rowspan="3"> <span data-countdown="@Model.DateBegin.ToServerTicks()" class="text-orange"></span><p>@Model.DateBegin.ToClientTime()</p></td>
+            <td rowspan="3">
+                @if (User.Identity.IsRegisteredToTrade(Model.AllContragentIds.ToList()))
+                {
+                    <a class="btn btn-primary btn-orange modal-link1" role="button" href="@Url.Action("Leave", "Trade", new {trade = Model.Id})">
+                        @LocalText.Inst.Get("btn", "tradeTableLeaveButton", "Відмовитись", "Отказаться")
+                    </a>
+                }
+                else
+                {
+                    <a class="btn btn-primary btn-green modal-link1" role="button" href="@Url.Action("TakePart", "Trade", new {trade = Model.Id})">@LocalText.Inst.Get("btn", "tradeTableJoin", "Прийняти участь", "Принять участие")</a>
+                }
+            </td>
+        }
+        if (Model.IsActual)
+        {
+            <td rowspan="3" class="current-price-td">@Model.PriceStart.ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 2 })</td>
+
+            <td rowspan="3"><span data-countdown="@Model.DateEnd.ToServerTicks()" class="text-orange"></span><p>@Model.DateEnd.ToClientTime()</p></td>
+            <td rowspan="3">
+                @if (User.Identity.IsRegisteredToTrade(Model.AllContragentIds.ToList()))
+                {
+                    if (Model.ActualBets.Sum(c => c.LotsCount) < Model.LotsCount)
+                    {
+                        if (Model.MaxPrice.HasValue)
+                        {
+                            <a class="btn btn-primary btn-green" role="button" href="#" onclick="OpenModelTwo('@Url.Action("BetTwo", "Trade", new {trade = Model.Id})', this);">@LocalText.Inst.Get("btn", "tradeTableMakeBet", "Зробити ставку", "Сделать ставку")</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-primary btn-green modal-link1" role="button" href="@Url.Action("BetTwo", "Trade", new {trade = Model.Id, _ = DateTime.Now.Ticks})">@LocalText.Inst.Get("btn", "tradeTableMakeBet", "Зробити ставку", "Сделать ставку")</a>
+                        }
+                    }
+                    else
+                    {
+                        <span>@LocalText.Inst.Get("text", "maxBetsCount", "Ставки зроблено", "Ставки сделаны")</span>
+                    }
+                }
+                else
+                {
+                    <a class="btn btn-primary btn-green modal-link1" role="button" href="@Url.Action("TakePart", "Trade", new {trade = Model.Id})">@LocalText.Inst.Get("btn", "tradeTableJoin", "Прийняти участь", "Принять участие")</a>
+                }
+
+            </td>
+        }
+        if (Model.IsPast)
+        {
+            if (@Model.ActualBets.Any())
+            {
+                <td rowspan="3" class="current-price-td">@Model.ActualBets.ToList().Average(c => c.Price.Value).ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 2 })</td>
+            }
+            else
+            {
+                <td rowspan="3" class="current-price-td">@Model.PriceStart.ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 2 })</td>
+            }
+            <td rowspan="3" colspan="2" style="min-width: 120px;"><span class="text-orange">@LocalText.Inst.Get("text", "tradeFinished", "Торги завершено", "Торг завершен")</span><p>@Model.DateEnd.ToClientTime()</p></td>
+
+        }
+    }
+    @if(!@Model.IsApproved)
+    {
+        if (User.IsInRole("trader"))
+        {
+            <td rowspan="3" class="current-price-td">@Model.PriceStart.ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 2 })</td>
+            <td rowspan="3"> <span class="text-orange">@LocalText.Inst.Get("text", "tradeOnAprovingText", "Торги ще не підтверджено", "Торг еще не утвержден")</span> </td>
+        }
+        if(User.IsInRole("root"))
+        {
+            <td rowspan="3" class="current-price-td">@Model.PriceStart.ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 2 })</td>
+            <td rowspan="3">@Html.ActionLink(" ", "EditTrade", "Trade", new {id = @Model.Id}, new {@class = "btn btn-primary btn-default glyphicon glyphicon-edit", @aria_hidden = "true", @title=@LocalText.Inst.Get("btn", "EditTrade", "Редагувати", "Изменить условия")})
+
+            <button data-toggle="modal" data-target="#approveTrade" class="@(@Model.IsPreapproved?"btn btn-danger":"btn btn-green")" onclick="ApproveTrade(@Model.Id)" title="@(@Model.IsPreapproved? LocalText.Inst.Get("btn", "ApproveTrade", "Підтвердити", "Подтвердить"): LocalText.Inst.Get("btn", "waitforacceptinf", "Очікується підтвердження продавцем", "Ожидается подтверждение продавцом"))"><span  class="@(@Model.IsPreapproved? "glyphicon glyphicon-time" :"glyphicon glyphicon-ok")" aria-hidden="true"></span></button>
+            </td>
+        }
+    }
+
+
+</tr>
+
+<tr class="table-middle">
+    <td>
+        @StaticData.Inst.GetCatalogValue(Model.ShipmentPoint)
+    </td>
+
+</tr>
+<tr class="table-middle">
+    <td>
+        @StaticData.Inst.GetCatalogValue(Model.TransportType)
+    </td>
+</tr>
+@if (User.Identity.IsRegisteredToTrade(Model.AllContragentIds.ToList()) && !Model.IsFuture)
+{
+    if (Model.IsApproved)
+    {
+        <tr class="table-bottom">
+            <td colspan="2">
+                <span class="my-bets-td"> @LocalText.Inst.Get("text", "myBets", "МОЇ СТАВКИ", "МОИ СТАВКИ"):</span>
+            </td>
+            @{
+                var count = Model.ActualBets.Count(x => x.IsCurrentUserBet && (x.IsActual || x.IsRedemption));
+                var volume = Model.LotVolume.Value * count;
+            }
+            <td>@count</td>
+            <td>@Html.DisplayFor(model => model.LotVolume)</td>
+            <td>@volume.ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 0 })</td>
+            <td class="current-price-td">
+                @if (Model.ActualBets.Any(c => c.IsCurrentUserBet))
+                {
+                    @Model.ActualBets.Where(c => c.IsCurrentUserBet).Average(c => c.Price.Value).ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 2 })
+                }
+                else
+                {
+                    <span>0</span>
+                }
+            </td>
+            <td colspan="2">
+                @LocalText.Inst.Get("text", "myBetsSummResult", "на суму:", "на сумму:")
+                <br />
+                @Model.ActualBets.Where(x => x.IsCurrentUserBet && (x.IsActual || x.IsRedemption)).Sum(x => x.Sum).ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 0 })
+       @StaticData.Inst.GetCatalogValue(@Model.PriceCurrency)
+            </td>
+        </tr>
+                    }
+                }
+
+<tr>
+    <td colspan="8" class="table-trade-gap details-trading">
+        <a class="collapsed details-toggle" data-toggle="collapse" data-parent="#accordion" href="#details-@Model.Id" aria-expanded="true" aria-controls="details-@Model.Id">
+            @LocalText.Inst.Get("label", "tradeConditionsTableHeader", "Умови аукціону", "Условия аукциона") <i class="fa fa-angle-double-down" aria-hidden="true"></i><i class="fa fa-angle-double-up" aria-hidden="true"></i>
+        </a>
+        <div class="collapse details-content" id="details-@Model.Id">
+
+            @if (Model.IsActual && User.Identity.IsRegisteredToTrade(Model.AllContragentIds.ToList()))
+            {
+                <h5>@LocalText.Inst.Get("text", "betsTableHeader", "Актуальні ставки", "Актуальные ставки")</h5>
+
+                if (Model.TradeType == TradeTypes.openFixed.ToString())
+                {
+                    @Html.Partial("Trade/_OpenTradeBets", Model.ActualBets)
+                }
+                if (Model.TradeType == TradeTypes.closeFixed.ToString())
+                {
+                    @Html.Partial("Trade/_ClosedTradeBets", Model.ActualBets)
+                }
+            }
+            else
+            {
+                if (@User.IsInRole("watcher"))
+                {
+                    if (Model.IsFuture)
+                    {
+                        <h5>@LocalText.Inst.Get("title", "createTradeHistoryTitleFutue", "Тут буде відображено хід торгів", "Тут будет отображен ход торгов");</h5>
+                    }
+                    if (Model.IsActual)
+                    {
+                        <h5>@LocalText.Inst.Get("title", "createTradeHistoryTitleActual", "Хід торгів", "Ход торгов");</h5>
+                        @Html.Partial("_BetsHistorySeller", Model.ActualBets.Where(x => x.IsActual || x.IsRedemption).ToList())
+                    }
+                    if (Model.IsPast)
+                    {
+                        <h5>@LocalText.Inst.Get("title", "createTradeHistoryTitlePast", "Історія торгів", "История торгов");</h5>
+                        @Html.Partial("_BetsHistorySeller", Model.ActualBets.Where(x => x.IsActual || x.IsRedemption).ToList())
+
+                    }
+                }
+                else
+                {
+                    if (Model.IsApproved)
+                    {
+                        <h5>@LocalText.Inst.Get("text", "historyMyBets", "Мої ставки", "Мои ставки")</h5>
+                        @Html.Partial("Trade/_BuyerBetsPastTrade", Model.ActualBets.Where(x => x.IsCurrentUserBet && (x.IsActual || x.IsRedemption)).ToList())
+                    }
+                }
+            }
+
+            @Html.Partial("Trade/TermsView", Model)
+
+        </div>
+</tr>
+<tr>
+    <td colspan="8" class="table-trade-gap"></td>
+</tr>

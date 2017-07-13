@@ -1,0 +1,23 @@
+﻿{
+  "short_name": "PTP",
+  "name": "Petroleum Trading Platform ",
+  "icons": [
+    {
+      "src": "/content/images/PTP_logo_1x.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "/content/images/PTP_logo_2x.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/content/images/PTP_logo_4x.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "/?utm_source=homescreen",
+  "gcm_sender_id": ""
+}

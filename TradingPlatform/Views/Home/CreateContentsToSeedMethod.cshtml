@@ -1,0 +1,18 @@
+﻿@model List<TradingPlatform.Models.ViewModel.ContentView>
+@{
+    Layout=null;
+}
+@foreach (var m in Model)
+{
+    <p>
+        new Content()
+            {
+                Lang = "@m.Lang",
+                Alias = "@m.Alias",
+                Descriptions = "@m.Descriptions",
+                HtmlContent = "@m.HtmlContent",
+                KeyWords = "@m.KeyWords",
+                Title = "@m.Title"
+            },
+    </p>
+}

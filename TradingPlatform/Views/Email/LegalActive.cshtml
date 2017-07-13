@@ -1,0 +1,22 @@
+﻿@model TradingPlatform.Models.NotifyModels.LegalActive
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+    <p>
+        @LocalText.Inst.Get("email", "contragentPerson", "Юридична особа", "Юридическое лицо") <span class="mail-important-info">@Model.Company</span> 
+        @LocalText.Inst.Get("email", "contragentSuccessRegistration", "успішно зареєстрована на торговому майданчику Petroleum Trading Platform як", "успешно зарегистрировано на торговой площадке Petroleum Trading Platform как") 
+        <span class="mail-important-info">@Model.Role</span>.
+    </p>
+    <p>
+        @LocalText.Inst.Get("email", "canParticipateInBidding", "Тепер Ви можете приймати участь в торгах представляючи цю юридичну особу. Отримати більш детальну інформацію про торги Ви можете у розділі", "Теперь Вы можете участвовать в торгах от имени этого юридического лица. Более детальную информацию о торгах можете посмотреть в разделе") 
+        <a href="https://ptp.ua/">@LocalText.Inst.Get("text", "Rules", "Правила та інструкції", "Правила и инструкции")</a>.
+    </p>
+    <p>
+        <span class="mail-important-info">@LocalText.Inst.Get("email", "giveDocsReminder", "Нагадуємо Вам про необхідність протягом п'яти календарних днів направити поштою на адресу ТОВ 'БФ Цертус' 04053 м. Київ, провулок Киянівський, будинок 3-7 оригінали двох примірників підписаного Вами договору про надання послуг", "Напоминаем Вам о необходимости в течении пяти календарных дней направить почтой по адресу ООО 'БФ Цертус', 04053 г. Киев, проулок Кияновский, дом 3-7 оригиналы двух экземпляров подписанного Вами договора о пердоставлении услуг")</span>.
+    </p>
+</div>
+

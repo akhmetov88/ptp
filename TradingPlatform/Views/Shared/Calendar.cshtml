@@ -1,0 +1,26 @@
+﻿@model List<TradingPlatform.Models.CalendarModel>
+
+<ul>
+
+    @for (var i = 1; i < Model.Count(); i++)
+    {
+        if (Model[i].Active)
+        {
+            <li class="active">@Model[i].Day.ToUpper()</li>
+        }
+        else
+        {
+            <li>@Model[i].Day.ToUpper()</li>
+        }
+
+    }
+    @if (Model.First().Active)
+    {
+    <li class="active">@Model.First().Day.ToUpper()</li>
+    }
+    else
+    {
+    <li>@Model.First().Day.ToUpper()</li>
+    }
+    <li id="time"></li> 
+</ul>

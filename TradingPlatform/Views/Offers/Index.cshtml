@@ -1,0 +1,37 @@
+﻿@model IEnumerable<TradingPlatform.Models.TradeModel.TradeViewModel>
+@{
+    ViewBag.Title = @LocalText.Inst.Get("title", "Offers.IndexPage.Title", "Пропозиції продавців", "Предложения продавцов");
+}
+<div class="clearfix"></div>
+<div class="create-auction title">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('offers')">?</a>
+    <h3>@ViewBag.Title</h3>
+    <hr />
+</div>
+<div>
+    <ul class="nav nav-tabs">
+        <li class="@(Request.Url.PathAndQuery == "/offers" ? "active" : "")"><a href="/offers">@LocalText.Inst.Get("link", "Offers.Index.ActualLink", "Актуальні пропозиції", "Актуальные предложения")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/offers/index?actual=false" ? "active" : "")"><a href="/offers/index?actual=false">@LocalText.Inst.Get("link", "Offers.Index.NotActualLink", "Архів пропозицій", "Архив предложений")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/my/offers" ? "active" : "")"><a href="/my/offers">@LocalText.Inst.Get("link", "Offers.Index.My", "Мої пропозиції", "Мои предложения")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/offers/create" ? "active" : "")"> <a href="/offers/create">@LocalText.Inst.Get("title", "Offers.IndexPage.CreateOffer", "Запропонувати", "Предложить")</a></li>
+    </ul>
+</div>
+
+@if (Model!=null&&Model.Any())
+{
+    foreach (var offer in Model)
+    {
+        <table class="table-trading" id="tradeTable-@offer.Id">
+            @Html.Partial("~/Views/Offers/_OfferTable.cshtml", offer)
+        </table>
+
+    }
+}
+else
+{
+    <br/>
+    <p class="empty-trades">@LocalText.Inst.Get("title", "Offers.IndexPage.Empty", "Нажаль, актуальних пропозицій немає", "К сожалению, актуальных предложений нет");</p>
+    <hr />
+    @*@Html.ActionLink(@LocalText.Inst.Get("title", "Offers.IndexPage.CreateOffer", "Запропонувати", "Предложить"), "Create")*@
+    @*@Html.ActionLink(@LocalText.Inst.Get("title", "Offers.IndexPage.CreateOffer", "Подивитись історію", "Посмотреть историю"), "Index",new { actual=false})*@
+}

@@ -1,0 +1,212 @@
+﻿@using System.Globalization
+@using Microsoft.AspNet.Identity
+@using TradingPlatform.Models
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#" lang="@LocalText.GetCultureName()">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://ptp.ua/" rel="canonical" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <title>@ViewBag.Title</title>
+    <link rel="canonical" href="https://ptp.ua">
+    <meta name="keywords" content="електронний торговий майданчик, аукціон нафтопродуктів">
+    <meta name="description" content="Petroleum Trading Platform (PTP) - це новий прогресивний спеціалізований інструмент для взаємодії учасників ринку нафтопродуктів. Він являє собою розвинений у всьому світі вид співпраці - В2В електронний майданчик для торгівлі нафтопродуктами.">
+
+
+    <link rel="author" href="https://plus.google.com/u/0/100796265741947349123">
+
+    <link rel="alternate" href="http://ptp.ua/uk" hreflang="uk-UA" />
+    <link rel="alternate" href="http://ptp.ua/ru" hreflang="ru-RU" />
+
+    <link rel="author" href="https://plus.google.com/u/0/100796265741947349123">
+    @Styles.Render("~/bundle/css")
+  
+    @RenderSection("css", required: false)
+
+
+    <!--FBM-->
+
+    <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
+    
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "",
+            authDomain: "",
+            databaseURL: "",
+            storageBucket: "",
+            messagingSenderId: ""
+        };
+        firebase.initializeApp(config);
+    </script>
+
+
+    
+</head>
+<body>
+    <div id="top-wrapper">
+        @Html.Partial("TopNav3")
+        @Html.Partial("Lang")
+    </div>
+
+
+    @*}*@
+    <div id="middle">
+        <!-- <div id="middle-bg"></div> -->
+        <div class="container">
+            <div id="main">
+                <div id="aside">
+                    <table width="100%" cellspacing="1" cellpadding="0" style="border-collapse: collapse; margin-top: 5px; margin-bottom: 5px; border: 0"><tr><td align="center" style="font-family:tahoma;font-size:10px;padding:4px;color:#000000;border: 1px solid #000000; vertical-align: top; padding: 3 3 3 3" bgcolor="#cde1fd"><a href="https://bin.ua" title="BIN.ua - Сервер финансовой информации и новостей"><b>Курс НБУ</b></a></td></tr><tr><td style="border: 1px solid #000000; vertical-align: top; padding: 0"><iframe width="100%" height="76" scrolling="no" frameborder="0" src="https://bin.ua/cgi-bin/nbu-inform-text.pl?currencies=USD,EUR,RUB"></iframe></td></tr></table>
+                    <table width="100%" cellspacing="1" cellpadding="0" style="border-collapse: collapse; margin-top: 5px; margin-bottom: 5px; border: 0"><tr><td align="center" style="font-family:tahoma;font-size:10px;padding:4px;color:#000000;border: 1px solid #000000; vertical-align: top; padding: 3 3 3 3" bgcolor="#cde1fd"><a href="https://bin.ua" title="BIN.ua - Сервер финансовой информации и новостей"><b>Курс обмена валют</b></a></td></tr><tr><td style="border: 1px solid #000000; vertical-align: top; padding: 0"><iframe width="100%" height="76" scrolling="no" frameborder="0" src="https://bin.ua/cgi-bin/cash-inform-text.pl?currencies=USD,EUR,RUB" style="margin:0"></iframe></td></tr></table>
+                    @*@Html.Partial("LeftMenu")
+
+                    @Html.Partial("Banner")*@
+                </div>
+                <div id="content">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+
+        @*Telegram Logp*@
+        <div id="telegram-popup-notif">
+            <span>@LocalText.Inst.Get("text", "telegram-popup", "Будьте в курсі усіх подій у Телеграмі", "Будьте в курсе всех событий в Телеграме")</span>
+        </div>
+        <div id="telegram-logo">
+            <a href="http://t.me/ptpua"><i class="fa fa-telegram fa-3x" aria-hidden="true" title="Приєднуйтесь до нас у Telegram"></i></a>
+        </div>
+        @*End telegram logo*@
+
+        
+        @*To up arrow*@
+
+        <div id="arrow-to-top">
+            <a href="#" title="@LocalText.Inst.Get("link", "to_top_arrow", "До гори", "Наверх")"><i class="fa fa-arrow-circle-up fa-3x" aria-hidden="true"></i></a>
+        </div>
+
+        @*End to up*@
+
+        <div class="footer-item">
+            <h4>@LocalText.Inst.Get("link", "footerInfo", "Інформація", "Информация")</h4>
+            <ul>
+                <li class="active"><a href="/about">@LocalText.Inst.Get("link", "footer_about", "Про нас", "О нас")</a></li>
+                <li><a href="/rules">@LocalText.Inst.Get("link", "footer_rules", "Правила та інструкції", "Правила и инструкции")</a></li>
+                <li><a href="/trade">@LocalText.Inst.Get("link", "footer_trade", "Торги", "Торги")</a></li>
+                <li><a href="/feedback">@LocalText.Inst.Get("link", "footer_feedback", "Зворотній зв’язок", "Обратная связь")</a></li>
+            </ul>
+        </div>
+        <div class="footer-item">
+            <h4>@LocalText.Inst.Get("link", "footerUsersService", "Обслуговування клієнтів", "Обслуживание клиентов")</h4>
+            <ul>
+                <li><a href="/account/register">@LocalText.Inst.Get("link", "footer_register", "Реєстрація", "Регистрация")</a></li>
+                <li><a href="/account/login">@LocalText.Inst.Get("link", "footer_login", "Увійти в профіль", "Войти в профиль")</a></li>
+                <li><a href="/therms">@LocalText.Inst.Get("link", "footer_userules", "Умови використання", "Условия использования")</a></li>
+                <li><a href="/privacypolicy">@LocalText.Inst.Get("link", "footer_privacypolicy", "Політика конфіденційності", "Политика конфиденциальности")</a></li>
+            </ul>
+        </div>
+
+        @*<div class="footer-phone-number">
+            <div>+380(44)354-33-46</div>
+        </div>*@
+
+        <!--
+                <div class="text-center" style="margin-bottom:15px">
+
+
+                </div>
+        -->
+
+        <div id="footer-logo" class="">
+            <img alt="Petroleum Trading Platform" src="@Url.Content("~/Content/images/logo-footer.png")">
+        </div>
+
+    </div>
+
+    <div id="copyright">
+        <div class="container-fluid">
+            <div class="copyright-txt row" style="">
+                @*<div class="col-sm-6">
+                </div>*@
+                @DateTime.UtcNow.Year   @Html.Raw(LocalText.Inst.Get("text", "footer_copy", $"&copy;  ETП ЭТП Petroleum trading platform. Всі права захищено.", $"&copy; ЭТП Petroleum trading platform. Все права защищены."))
+                
+            </div>
+        </div>
+    </div>
+    <div id="modal_two_form" class="modal fade modal-dialog" tabindex="-1" role="dialog">
+    </div>
+    <div id="modal_two_overlay"></div><!-- Пoдлoжкa -->
+    <div id="modal-container" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    <div id="help-modal-container" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="inner">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><img alt="X" src="~/Content/images/modal-close-btn.png"></span>
+                        </button>
+                        <span class="help-icon">?</span>
+                        <h4 class="modal-title">
+                            <span>@LocalText.Inst.Get("text", "help-title", "довідка", "справка")</span>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for approving trade-->
+    <div class="modal fade" id="approveTrade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                @using (Html.BeginForm("AcceptTrade", "Trade"))
+                {
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">@LocalText.Inst.Get("text", "approveingTradeHeader", "Підтвердження умов торгів", "Подтверждение условий торгов")</h4>
+                    </div>
+                    <div class="modal-body">
+                        <b>@LocalText.Inst.Get("text", "approveingTradeText1", "Я ознайомився з умовами торгів № ", "Я ознакомлен с условиями торгов № ")</b><b id="approveTradeIdText"></b><b>&nbsp;@LocalText.Inst.Get("text", "approveingTradeText2", "та погоджуюся з ними", "и соглашаюсь с ними")</b>
+                        <input type="hidden" id="approveTradeId" name="approveTradeId" value="" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit">OK</button>
+                        @*<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>*@
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+    
+
+<input type="hidden" id="token" value=""/>
+    <span id="tokenSubmit"></span>
+    @*@Styles.Render("~/content/css")*@
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/main")
+    <script src="~/signalr/hubs"></script>
+    @Scripts.Render("~/Scripts/bootstrap-multiselect.js")
+    <script src="~/Scripts/ads.js"></script>
+    @RenderSection("scripts", required: false)
+    
+</body>
+</html>

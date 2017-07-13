@@ -1,0 +1,185 @@
+﻿@using System.Globalization
+@using TradingPlatform.Enums
+@using TradingPlatform.Models
+@model TradingPlatform.Models.BillModel
+
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; CHARSET=utf-8">
+    <title></title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+</head>
+<body>
+
+
+        <div class="container">
+            <div id="contract-doc">
+            <table>
+                <thead>
+                <tr>
+                    <td>Дополнительное соглашение № @Model.ShowModel.AddContract</td>
+                    <td>Additional Agreement № @Model.ShowModel.AddContract</td>
+                </tr>
+                <tr>
+                    <td>к Договору № @Model.ShowModel.Contract</td>
+                    <td>To the Agreement № @Model.ShowModel.Contract</td>
+                </tr>
+                <tr>
+                    <td>от @Model.ShowModel.DocCreaDate.ToClientDate()</td>
+                    <td>dd @Model.ShowModel.DocCreaDate.ToClientDate()</td>
+                </tr>
+                <tr>
+                    <td><span>г. Киев</span><span>@Model.Trade.DateEnd.ToClientDate()</span></td>
+                    <td><span>Kiev</span><span>@Model.Trade.DateEnd.ToClientDate()</span></td>
+                </tr>
+                </thead>
+                
+                <tbody>
+                <tr>
+                    <td> @Model.ShowModel.SellerName, именуемая в дальнейшем «Продавец», в лице Представителя компании @Model.Seller.ConfidantName, действующего на основании @Model.Seller.ConfidantDocumentType, с одной стороны,
+                     и @Model.ShowModel.BuyerName, именуемая в дальнейшем «Покупатель», в лице @Model.Buyer.ConfidantName, действующего на основании @Model.Buyer.ConfidantDocumentType,
+                     с другой стороны, далее совместно именуемые Стороны, согласовали настоящее Дополнительное соглашение о нижеследующем:
+                    </td>
+                    <td>@Model.ShowModel.SellerNameEng, hereinafter referred to as the «Seller», represented by @Model.Seller.ConfidantNameEng,
+                     the representative of the company, acting on the basis of the @Model.Seller.ConfidantDocumentTypeEng on the @Model.Seller.ConfidantDocumentTypeEng on the one hand, and @Model.ShowModel.BuyerNameEng,
+                     hereinafter reffered to as the Buyer represented by @Model.Buyer.ConfidantNameEng,
+                     acting on the basis of @Model.Buyer.ConfidantDocumentTypeEng on the other hand both hereinafter reffered to as the Parties have concluded the present Additional Agreement about the following:
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        1. В соответствии с п. 1.1 настоящего Договора Продавец обязуется поставить, а Покупатель принять и оплатить, следующие нефтепродукты:  @StaticData.Inst.GetCatalogValue(@Model.Trade.ProductName) (@StaticData.Inst.GetCatalogValue(@Model.Trade.ProductNomenclature),
+                         производства @StaticData.Inst.GetCatalogValue(@Model.Trade.ProductManufacturer) @StaticData.Inst.GetCatalogValue(@Model.Trade.ProductCountry), именуемые в дальнейшем "Товар".
+                    </td>
+                    <td>
+                        1. In accordance with the p. 1.1. of the present Agreement the Seller is to sell and the Buyer is to buy and pay for the following oil products:
+                        @StaticData.Inst.GetCatalogValue(@Model.Trade.ProductName) (@StaticData.Inst.GetCatalogValue(@Model.Trade.ProductNomenclature), produced by @StaticData.Inst.GetCatalogValue(@Model.Trade.ProductManufacturer) @StaticData.Inst.GetCatalogValue(@Model.Trade.ProductCountry), hereinafter reffered to as the Goods.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        2. Согласованный объём Товара, отгружаемый по настоящему Дополнительному соглашению, составляет ОБЪЕМ ЦИФРАМИ т (ОБЪЕМ БУКВАМИ, + КИЛОГРАММ) +/- 10% в опционе Продавца. Поставка товара осуществляется с @Model.Trade.DeliveryDateFrom.ToString("dd-MM-yyyy") по @Model.Trade.DeliveryDateTo.ToString("dd-MM-yyyy").
+                    </td>
+                    <td>
+                        2. The agreed volume of the Goods shipped under the present Additional Agreement amounts to ОБЪЕМ ЦИФРАМИ т (ОБЪЕМ БУКВАМИ, + КИЛОГРАММ)) +/- 10% in the Seller's option. The shipment of the Goods shall be performed from @Model.Trade.DeliveryDateFrom.ToString("dd-MM-yyyy") to @Model.Trade.DeliveryDateTo.ToString("dd-MM-yyyy").
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        3. Товар поставляется на условиях @StaticData.Inst.GetCatalogValue(@Model.Trade.Incotherms) @StaticData.Inst.GetCatalogValue(@Model.Trade.ShipmentPoint)
+                    </td>
+                    <td>
+                        3. The Goods are to be supplied on the @StaticData.Inst.GetCatalogValue(@Model.Trade.Incotherms) basics @StaticData.Inst.GetCatalogValue(@Model.Trade.ShipmentPoint)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        4. Цена Товара, поставляемого по настоящему Дополнительному соглашению, составляет
+                        @if (Model.Trade.TradeType == TradeTypes.closeFixed.ToString() || Model.Trade.TradeType == TradeTypes.openFixed.ToString())
+                        {
+                            <span>@Model.Bets.Average(c => c.Price) (БУКВАМИ) за 1 @Model.Trade.Unit.  Стоимость Товара, поставляемого по настоящему Дополнительному соглашению, составляет SUM (СУММА ЬУКВАМИ).</span>
+                        }
+                        else if (Model.Trade.TradeType == TradeTypes.quotation.ToString())
+                        {
+                            <span>Стоимость Товара, поставляемого по настоящему Дополнительному соглашению,рассчитывается по ФОРМУЛЕ: @StaticData.Inst.GetCatalogDesc(@Model.Trade.DifferencialPriceDateTypeDesc) значение котировки @StaticData.Inst.GetCatalogValue(@Model.Trade.DifferencialPriceText) плюс размер премии, предложенной Покупателем: (РАЗМЕР ПРЕМИИ) за 1 @StaticData.Inst.GetCatalogValue(@Model.Trade.Unit)</span>
+                        }
+
+                    </td>
+
+
+                    <td>
+                        @if (Model.Trade.TradeType == TradeTypes.closeFixed.ToString() || Model.Trade.TradeType == TradeTypes.openFixed.ToString())
+                        {
+                            <span>@Model.Bets.Average(c => c.Price) (БУКВАМИ) за 1 @Model.Trade.Unit.  Стоимость Товара, поставляемого по настоящему Дополнительному соглашению, составляет SUM (СУММА ЬУКВАМИ).</span>
+                        }
+                        else if (Model.Trade.TradeType == TradeTypes.quotation.ToString())
+                        {
+                            <span>Стоимость Товара, поставляемого по настоящему Дополнительному соглашению,рассчитывается по ФОРМУЛЕ: @StaticData.Inst.GetCatalogDesc(@Model.Trade.DifferencialPriceDateTypeDesc) значение котировки @StaticData.Inst.GetCatalogValue(@Model.Trade.DifferencialPriceText) за 1 @StaticData.Inst.GetCatalogValue(@Model.Trade.Unit)</span>
+                        }
+
+                        4. The price of the Goods supplied under the present Additional Agreement is 295,00 (Two hundred ninety five US dollars 00 cents) for one ton. The cost of the Goods, supplied under the present Additional Agreement is 54 899,80 (Fifty four thousand eight hundred ninety nine US dollars 80 cents).
+
+
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        5. Покупатель производит 100% оплату за Товар до @Model.Trade.DayToPay.ToString("dd-MM-yyyy").
+                    </td>
+                    <td>
+                        5. Buyer provides a 100% payment for the Goods not later than @Model.Trade.DayToPay.ToString("dd-MM-yyyy"). 
+                    </td>
+
+
+                </tr>
+
+
+                <tr>
+                    <td>
+                        6. Окончательный расчет за фактически поставленный Товар (возврат переплаты или доплата) Продавец и Покупатель осуществляют в соответствии условиями настоящего Договора.
+                    </td>
+                    <td>
+                        6. The final payment for the actually delivered Goods (rebate or additional payment) shall be done by the Seller and the Buyer in accordance with the provisions of the present Agreement.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        7. Договорные обязательства Продавца по количеству, в рамках настоящего Дополнительного соглашения к Договору, считаются выполненными по фактически отгруженным партиям Товара до июня 2016 года включительно.
+                    </td>
+                    <td>
+                        7. Contractual obligations of the Seller in quantity under this Additional Agreement to the Agreement shall be deemed satisfied by actually shipped consignments until June 2016 inclusive.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        8. Настоящее Дополнительное соглашение является неотъемлемой частью Договора №@Model.ShowModel.Contract от @Model.ShowModel.DocCreaDate.ToClientDate() и действует от его даты подписания. Во всем остальном, что не предусмотрено настоящим Дополнительным соглашением, действуют положения вышеуказанного Договора.
+                    </td>
+                    <td>
+                        8. This Additional Agreement is considered to be an integral part of the Agreement №@Model.ShowModel.Contract dated @Model.ShowModel.DocCreaDate.ToClientDate() and is valid from the date of its signing. In all other cases not provided in this Additional Agreement, the provisions of the Agreement are valid.
+                    </td>
+                </tr>
+                </tbody>
+
+                <tfoot>
+                <tr>
+                    <td>За Продавца/On behalf of the Seller</td>
+                    <td>За Покупателя/On behalf of the Buyer</td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+        </div>
+       
+    <style>
+       #contract-doc td, th {
+            vertical-align: top;
+        }
+
+       #contract-doc td {
+            padding: 8px;
+        }
+      #contract-doc  thead {
+            color: black;
+            text-align: center;
+            background-color: lightgray;
+        }
+      #contract-doc  thead tr:last-child td span:first-child {
+            float: left;
+        }
+      #contract-doc  thead tr:last-child td span:last-child {
+            float: right;
+        }
+
+      #contract-doc  tfoot {
+            text-align: center;
+            color: black;
+            background-color: lightgray;
+        }
+    </style>
+</body>
+</html>
+

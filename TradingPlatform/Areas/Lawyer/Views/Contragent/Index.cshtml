@@ -1,0 +1,50 @@
+﻿@model IEnumerable<TradingPlatform.Data.Contragent>
+
+@{
+    ViewBag.Title = @LocalText.Inst.Get("title", "ContragentRequestList", "Заявки на аккредитацію", "Заявки на аккредитацию");
+    ViewBag.Hint = @LocalText.Inst.Get("help", "approveHint", "ИНФО", @"ИНФО");
+}
+
+<div class="create-auction title">
+    <a class="ref" href="#hint" data-toggle="collapse">?</a>
+    <h3>@ViewBag.Title</h3>
+    <div id="hint" class="collapse">
+        <hr style="margin-bottom: 0px;" />
+        @ViewBag.Hint
+    </div>
+    <hr />
+</div>
+<table class="table">
+    <tr class="table-header">
+        <th style="width:5%">
+            @LocalText.Inst.Get("text", "contragent_accr", "Акредитація", "Аккредитация")
+        </th>
+        <th>
+            @LocalText.Inst.Get("text", "contragent_name", "Найменування", "Наименование")
+        </th>
+        <th>
+            @LocalText.Inst.Get("text", "contragent_date", "Дата", "Дата")
+        </th>
+        <th>
+            @LocalText.Inst.Get("text", "action", "Дія", "Действие")
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr class="table-middle">
+        <td>
+            @Html.DisplayFor(modelItem => item.IsApproved)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LongName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateDate)
+        </td>
+        <td>
+           @Html.RouteLink(LocalText.Inst.Get("link", "more", "Детальніше", "Подробно"), "administration-request-details", new { id = item.Id })
+        </td>
+    </tr>
+}
+
+</table>

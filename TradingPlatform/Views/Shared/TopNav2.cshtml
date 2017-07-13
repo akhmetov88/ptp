@@ -1,0 +1,139 @@
+﻿@using TradingPlatform.Enums
+@using TradingPlatform.Models
+
+<nav id="top-nav">
+
+    <div id="mob-logo">
+        <a href="/" title="На главную"><img src="~/Content/images/logo.png" alt="PTP" /></a>
+    </div>
+    
+    @Html.Partial("Lang")
+
+    <div id="mobile-nav-wrapper">
+        <ul>
+            <li class="nav-dropdown">
+                <span>Правила</span><span class="caret"></span>
+                @*<a class="topmenu @(ViewBag.MenuAnchor == "trade" ? "active" : "")" href="/trade">@LocalText.Inst.Get("link", "topmenu_trade", "ТОРГИ", "ТОРГИ")</a>*@
+                <ul class="nav-dropdown-content">
+                    <li><a href="/accreditationrules">@LocalText.Inst.Get("text", "Menu.accreditationrules", "Акредитація", "Аккредитация")</a></li>
+                    <li><a href="/howituse">@LocalText.Inst.Get("text", "Menu.howituse", "Як цим користуватись", "Как этим пользоваться")</a></li>
+                    <li><a href="/faq">@LocalText.Inst.Get("text", "Menu.Faq", "Часті питання", "Частые вопросы")</a></li>
+                    <li><a href="/documents">@LocalText.Inst.Get("text", "Menu.Docs", "Типові документи", "Типовые документы")</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-dropdown">
+                <span>@LocalText.Inst.Get("text", "Marketplace", "Торговий майданчик", "Торговая площадка")</span><span class="caret"></span>
+                @*<a class="topmenu @(ViewBag.MenuAnchor == "trade" ? "active" : "")" href="/trade">@LocalText.Inst.Get("link", "topmenu_trade", "ТОРГИ", "ТОРГИ")</a>*@
+                <ul class="nav-dropdown-content has-sec">
+
+                    @*<li><a href="/offers">@LocalText.Inst.Get("text", "offers", "Пропозиції", "Предложения")</a></li>*@
+                    <li class="nav-second-dropdown">
+                        <a>@LocalText.Inst.Get("text", "offers", "Пропозиції", "Предложения")<span class='caret'></span></a>
+                        <ul>
+                            <li><a href="/offers/create">@LocalText.Inst.Get("link", "create", "Створити", "Создать")</a></li>
+                            <li><a href="/offers">@LocalText.Inst.Get("link", "current", "Поточні", "Текущие")</a></li>
+                            <li><a href="/offers/?actual=false">@LocalText.Inst.Get("link", "history", "Історія", "История")</a></li>
+                            <li><a href="/trade/alldocs?filter=offers">@LocalText.Inst.Get("link", "docs", "Документи", "Документы")</a></li>
+                        </ul>
+                    </li>
+
+                    @*<li><a href="/orders">@LocalText.Inst.Get("text", "proposal", "Заявки", "Заявки")</a></li>*@
+                    <li class="nav-second-dropdown">
+                        <a>@LocalText.Inst.Get("text", "proposal", "Заявки", "Заявки")<span class='caret'></span></a>
+                        <ul>
+                            <li><a href="/orders/create">@LocalText.Inst.Get("link", "create", "Створити", "Создать")</a></li>
+                            <li><a href="/orders">@LocalText.Inst.Get("link", "current", "Поточні", "Текущие")</a></li>
+                            <li><a href="/orders/?actual=false">@LocalText.Inst.Get("link", "history", "Історія", "История")</a></li>
+                            <li><a href="/trade/alldocs?filter=orders">@LocalText.Inst.Get("link", "docs", "Документи", "Документы")</a></li>
+                        </ul>
+                    </li>
+
+                    @*<li><a href="/trade">@LocalText.Inst.Get("text", "trades", "Торги", "Торги")</a></li>*@
+                    <li class="nav-second-dropdown">
+                        <a>@LocalText.Inst.Get("text", "trades", "Торги", "Торги")<span class='caret'></span></a>
+                        <ul>
+                            <li><a href="/trade/createtrade">@LocalText.Inst.Get("link", "create", "Створити", "Создать")</a></li>
+                            <li><a href="/auction-buyer-future">@LocalText.Inst.Get("link", "auction-buyer-future", "Майбутні торги", "Будущие торги")</a></li>
+                            <li><a href="/auction-buyer-current">@LocalText.Inst.Get("link", "auction-buyer-current", "Поточні торги", "Текущие торги")</a></li>
+                            <li><a href="/auction-buyer-past">@LocalText.Inst.Get("link", "auction-buyer-past", "Минулі торги", "Прошедшие торги")</a></li>
+                            <li>@Html.ActionLink(@LocalText.Inst.Get("link", "approvingLinkTrader", "Торги на модерації", "Торги на модерации"), "TradesOnApproving", "Trade")</li>
+                            <li><a href="/trade/alldocs?filter=trades">@LocalText.Inst.Get("link", "docs", "Документи", "Документы")</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-dropdown">
+                <span>@LocalText.Inst.Get("text", "topmenu_info", "Інформація", "Информация")</span><span class="caret"></span>
+                <ul class="nav-dropdown-content">
+                    <li><a href="/therms">@LocalText.Inst.Get("link", "footer_userules", "Умови використання", "Условия использования")</a></li>
+                    <li><a href="/about">@LocalText.Inst.Get("link", "footer_about", "Про нас", "О нас")</a></li>
+                    <li><a href="/contacts">@LocalText.Inst.Get("label", "topmenu_contacts", "Наші контакти", "Наши контакты")</a></li>
+                    <li><a href="/feedback">@LocalText.Inst.Get("link", "footer_feedback", "Зворотній зв’язок", "Обратная связь")</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <div id="auth">
+                <a href="/account/Register" title="@LocalText.Inst.Get("link", "regssterLink", "реєстрація", "регистрация")"><span class="glyphicon glyphicon-user"></span>@LocalText.Inst.Get("link", "regssterLink", "реєстрація", "регистрация")</a>
+                <a href="/account/Login" title="@LocalText.Inst.Get("link", "loginLink", "вхід", "вход")"><span class="glyphicon glyphicon-log-in"></span>@LocalText.Inst.Get("link", "loginLink", "вхід", "вход")</a>
+            </div>
+            <ul id="auth">
+                <li>
+                    <a href="/account/Register" title="@LocalText.Inst.Get("link", "regssterLink", "реєстрація", "регистрация")">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <span class="log">@LocalText.Inst.Get("link", "regssterLink", "реєстрація", "регистрация")</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/account/Login" title="@LocalText.Inst.Get("link", "loginLink", "вхід", "вход")">
+                        <span class="glyphicon glyphicon-log-in"></span>
+                        <span class="log">@LocalText.Inst.Get("link", "loginLink", "вхід", "вход")</span>
+                    </a>
+                </li>
+            </ul>
+        }
+        else
+        {
+
+            using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm"/*, @class = "navbar-right"*/ }))
+            {
+                @Html.AntiForgeryToken()
+
+            }
+
+            <div id="auth">
+                <a id="aut"><span id="user">@User.Identity.GetUserNamen(new ApplicationDbContext())</span></a>
+                <a href="javascript:document.getElementById('logoutForm').submit()"><span class="glyphicon glyphicon-log-out"></span>@LocalText.Inst.Get("link", "logoffLink", "вихід", "выход")</a>
+            </div>
+            <ul id="auth">
+                <li id="aut">
+                    <a id="aut" title="@LocalText.Inst.Get("text", "user_setings", "ПРОФІЛЬ КОРИСТУВАЧА", "ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ")">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <span class="log">Профиль</span>
+                    </a>
+                    <ul>
+                        <li><span id="user">@User.Identity.GetUserNamen(new ApplicationDbContext())</span></li>
+                        <li class="@(ViewBag.MenuAnchor == "user-setings-entities" ? "active" : "")"><a href="/user-setings-entities">@LocalText.Inst.Get("link", "user-setings-entities", "Юридичні особи", "Юридические лица")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "user-setings-profile" ? "active" : "")"><a href="/user-setings-profile">@LocalText.Inst.Get("link", "user-setings-profile", "Профіль користувача", "Профиль пользователя")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "user-setings-password" ? "active" : "")"><a href="/user-setings-password">@LocalText.Inst.Get("link", "user-setings-password", "Зміна пароля", "Смена пароля")</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:document.getElementById('logoutForm').submit()" title="@LocalText.Inst.Get("link", "logoffLink", "вихід", "выход")">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        <span class="log">@LocalText.Inst.Get("link", "logoffLink", "вихід", "выход")</span>
+                    </a>
+                </li>
+            </ul>
+        }
+    </div>
+
+    <div class="icon">
+        &#9776;
+    </div>
+
+</nav>

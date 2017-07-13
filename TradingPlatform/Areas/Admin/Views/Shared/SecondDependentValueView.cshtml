@@ -1,0 +1,24 @@
+﻿@model TradingPlatform.Models.DirectoryModel.SecondDependentValueViewModel
+
+<tr data-id="@Model.Code" class="active">
+    <td colspan="2">
+        @Html.TextBox("ru", Model.ru, new { @class = "form-control" })
+        <hr />
+        @Html.TextBox("DescriptionRu", Model.DescriptionRu, new { @class = "form-control" })
+
+    </td>
+    <td colspan="2">
+        @Html.TextBox("uk", Model.uk, new { @class = "form-control" })
+        <hr />
+        @Html.TextBox("DescriptionUk", Model.DescriptionUk, new { @class = "form-control" })
+    </td>
+    <td>
+        @Html.Hidden("Id", Model.Id)
+        @Html.Hidden("Code", Model.Code)
+        <a class="btn btn-default" href="#" onclick="return EditDir(@Model.Code);">
+            <i class="fa fa-pencil fa-lg"></i>
+            <i class="fa fa-refresh  fa-spin fa-lg hidden"></i>
+            <i class="fa fa-check fa-lg hidden"></i>
+        </a>
+    </td>
+</tr>

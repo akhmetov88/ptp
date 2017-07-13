@@ -1,0 +1,96 @@
+﻿@using System.Globalization
+@using TradingPlatform.Enums
+@model List<TradingPlatform.Models.EntityModel.BetViewModel>
+@{
+    ViewBag.Title = @LocalText.Inst.Get("title", "createTradeHistoryTitle", "Історія торгів", "История торгов");
+}
+<table class="details-table">
+    <tbody>
+        <tr>
+            <th>@LocalText.Inst.Get("text", "betsTableBetTime", "Час", "Время")</th>
+            <th>@LocalText.Inst.Get("text", "betsTableBuyers", "Пкупці", "Покупатели")</th>
+            <th>@LocalText.Inst.Get("text", "betsTableLotsCount", "Кількість лотів", "Количество лотов")</th>
+            <th>@LocalText.Inst.Get("text", "betsTableVolume", "Об’єм", "Объём")</th>
+            <th>@LocalText.Inst.Get("text", "betsTableBetPrice", "Ціна", "Цена")</th>
+            <th>@LocalText.Inst.Get("text", "betsTableSum", "Сума", "Сумма")</th>
+            <th>@LocalText.Inst.Get("text", "betsTableBet", "Ставка", "Ставка")</th>
+        </tr>
+        @if (Model.Count > 0)
+        {
+            foreach (var row in Model)
+            {
+                <tr class="@(row.IsCurrentUserBet ? "mybet" : "")">
+                    <td>@row.DateBet.ToClientTime()</td>
+                    <td>@Html.DisplayFor(b => row.BuyerName)</td>
+                    <td>@Html.DisplayFor(c => row.LotsCount)</td>
+                    <td>@row.Volume.Value.ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " " })</td>
+                    <td>@row.Price.Value.ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " " })</td>
+                    <td>@row.Sum.ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " " })</td>
+                    <td>
+                        @if (row.IsRedemption) { @LocalText.Inst.Get("text", "betsTableRedemptioText", "викуплена", "выкуплена") }
+                        
+                        @if (!row.IsRedemption && row.IsActual) { @LocalText.Inst.Get("text", "betsTableHistoryText", "виграла", "выиграла") }
+                        @if (!row.IsRedemption && !row.IsActual) { @LocalText.Inst.Get("text", "betsTableReBetText", "перебита", "перебита") }
+                    </td>
+                </tr>
+            }
+
+            <tr class="result">
+                <td></td>
+                <td class="summary"><span class="bold-txt">@LocalText.Inst.Get("text", "betsTableSummary", "Всього", "Всего"):</span></td>
+                <td>@Model.Sum(c => c.LotsCount)</td>
+                <td>@Model.Sum(c => c.Volume)</td>
+                <td>
+                    @if (Model.Count > 0)
+                         {
+                             @Model.Average(c => c.Price.Value).ToString("C", new NumberFormatInfo() {CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 2})
+                         }
+                         else
+                         {
+                             <text>0</text>
+                         }
+                </td>
+                <td>@Model.Sum(c => c.Sum).ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " " })</td>
+                <td></td>
+            </tr>
+            <tr class="result">
+                <td></td>
+                <td class="summary"><span class="bold-txt">@LocalText.Inst.Get("text", "betsTableRedemptioSummary", "Викуплено", "Выкуплено"):</span></td>
+                <td>@Model.Where(x => x.IsRedemption).Sum(c => c.LotsCount)</td>
+                <td>@Model.Where(x => x.IsRedemption).Sum(c => c.Volume)</td>
+       
+                    @if (Model.Any(x => x.IsRedemption))
+                    {
+                    <td>
+                        @Model.Where(x => x.IsRedemption).Average(c => c.Price.Value).ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 2 })
+                    </td>
+                    }
+                    else
+                    {
+                        <td>0</td>
+                    }
+             
+                <td>@Model.Where(x => x.IsRedemption).Sum(c => c.Sum).ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " " })</td>
+                <td></td>
+            </tr>
+            <tr class="result">
+                <td></td>
+                <td class="summary"><span class="bold-txt">@LocalText.Inst.Get("text", "betsTableHistorySummary", "Виграло", "Выиграло"):</span></td>
+                <td>@Model.Where(x => !x.IsRedemption && x.IsActual).Sum(c => c.LotsCount)</td>
+                <td>@Model.Where(x => !x.IsRedemption && x.IsActual).Sum(c => c.Volume)</td>
+                @if (Model.Any(x => !x.IsRedemption && x.IsActual))
+                {
+                    <td>@Model.Where(x => !x.IsRedemption && x.IsActual).Average(c => c.Price.Value).ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 2 })</td>
+                }
+                else
+                {
+                    <td>0</td>
+                }
+                <td>@Model.Where(x => !x.IsRedemption && x.IsActual).Sum(c => c.Sum).ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " " })</td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+  <url>
+    <loc>https://ptp.ua/</loc>
+  </url>
+  <url>
+    <loc>https://ptp.ua/rules</loc>
+  </url>
+ 
+  <url>
+    <loc>https://ptp.ua/feedback</loc>
+  </url>
+  <url>
+    <loc>https://ptp.ua/account/register</loc>
+  </url>
+  <url>
+    <loc>https://ptp.ua/account/login</loc>
+  </url>
+  <url>
+    <loc>https://ptp.ua/accreditationrules</loc>
+  </url>
+  <url>
+    <loc>https://ptp.ua/faq</loc>
+  </url>
+  <url>
+    <loc>https://ptp.ua/documents</loc>
+  </url>
+  
+  <url>
+    <loc>https://ptp.ua/about</loc>
+  </url>
+  <url>
+    <loc>https://ptp.ua/therms</loc>
+  </url>
+  <url>
+    <loc>https://ptp.ua/privacypolicy</loc>
+  </url>
+  <url>
+    <loc>https://ptp.ua/howituse</loc>
+  </url>
+  <url>
+    <loc>https://ptp.ua/account/forgotpassword</loc>
+  </url>
+  <url>
+    <loc>https://ptp.ua/content/docs/offer.pdf</loc>
+    <lastmod>2016-07-31T21:24:04+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ptp.ua/content/docs/conf.uk.pdf</loc>
+    <lastmod>2016-07-31T20:56:46+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ptp.ua/content/docs/serviceBill.pdf</loc>
+    <lastmod>2016-07-31T20:56:47+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ptp.ua/content/docs/contractService.pdf</loc>
+    <lastmod>2016-07-31T20:56:46+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ptp.ua/content/docs/tradeBill.pdf</loc>
+    <lastmod>2016-07-31T20:56:47+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ptp.ua/content/docs/tradeDoc.pdf</loc>
+    <lastmod>2016-07-31T21:20:25+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ptp.ua/content/docs/tradeDocAddon.pdf</loc>
+    <lastmod>2016-07-31T21:20:25+00:00</lastmod>
+  </url>
+</urlset>

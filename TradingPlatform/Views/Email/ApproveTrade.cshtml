@@ -1,0 +1,20 @@
+﻿@model TradingPlatform.Models.NotifyModels.ApproveTrade
+
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+
+    <p>
+        @LocalText.Inst.Get("text", "NotifThat", "Повідомляємо, що створені Вами торги", "Уведомляем, что созданные Вами торги", ViewBag.Lang) <span class="mail-important-info">@Model.ContragentName</span> 
+        @LocalText.Inst.Get("text", "PtpOperatorApprove", "схвалено оператором РТР", "одобрены оператором РТР", ViewBag.Lang).
+    </p>
+    <p>
+        @LocalText.Inst.Get("text", "TradeCreationLastStep", "Залишився один крок - Вам необхідно підтвердити свою готовність проводити торги в розділі ", "Остался один шаг - Вам необходимо подтвердить свою готовность проводить торги в разделе ", @ViewBag.Lang)
+        <a href="https://ptp.ua/trade/tradesonapproving">@LocalText.Inst.Get("text", "EmailTemplate.TradesOnModeration", "Торги на модерації", "Торги на модерации", ViewBag.Lang)</a>
+    </p>
+</div>
+

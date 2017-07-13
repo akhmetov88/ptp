@@ -1,0 +1,14 @@
+﻿@model TradingPlatform.Models.NotifyModels.DeactiveMail
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+    <p>
+        @LocalText.Inst.Get("text", "EmailTemplate.ContragentNotif", "Пвідомляємо, що юридичну особу", "Уведомляем, что юрилическое лицо", Model.Lang) @Model.ContragentName 
+        @LocalText.Inst.Get("text", "EmailTemplate.ContragentDeacredit", "тимчасово деакредитовано в зв'язку зі зміною інформації", " временно деакредитировано в связи со сменой информации", Model.Lang).
+    </p>
+</div>
+

@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = @LocalText.Inst.Get("label", "feedbackHeader", "Зворотній зв’язок", "Обратная связь");
+}
+
+<div class="create-auction title">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('feedback')">?</a>
+    <h3>@ViewBag.Title</h3>
+    <hr />
+</div>
+<h2>
+    @LocalText.Inst.Get("text","feedbackOk","Ваше звернення прийнято, ми зв’яжемося з Вами найближчим часом", "Ваше обращение принято, мы свяжемся с Вами в ближайшее время")
+</h2>

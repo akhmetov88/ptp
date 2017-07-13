@@ -1,0 +1,103 @@
+﻿@using TradingPlatform.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = @LocalText.Inst.Get("title", "auth", "Авторизація", "Авторизация");
+}
+
+<div class="create-auction title">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('login')">?</a>
+    <h3>@ViewBag.Title</h3>
+    <hr />
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <section id="loginForm">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "submitForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control auction-value", @placeholder = "E-mail*", @autofocus = "" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control auction-value", placeholder = "Пароль*" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                if (@Model.ShowOffert)
+                {
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <span class="text-danger">
+                                    @LocalText.Inst.Get("text", "Account.Login.AcceptOffert",
+                                        "Увага, щоб продовжити користування ЕТМ, треба ознайомитись з офертою:",
+                                        "Внимание, чтобы продолжить использование ЭТП, необходимо ознакомиться с офертой:")
+                                </span>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <a href="~/Content/docs/offerta.pdf" target="_blank">
+                                    <i class="fa fa-file-text-o fa-4x" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                       
+                    </div>
+<style>
+input[type=checkbox]
+{
+  -ms-transform: scale(2); 
+  -moz-transform: scale(2); 
+  -webkit-transform: scale(2); 
+  -o-transform: scale(2);
+  padding: 10px;
+}
+.marg {
+    margin-top: 12px;
+}
+
+</style>
+                    <div class="form-group">
+                        <div class="row marg" >
+                            <div class="col-md-8">
+                                @Html.LabelFor(c => c.IsAccepted, @LocalText.Inst.Get("label", "Account.Login.AcceptOffertLabel",
+                            "Погоджуюсь з вищевикладеним:",
+                            "Согласен с вышеописанным:"))
+                            </div>
+                            <div class="col-md-4 text-center">
+                                @Html.CheckBoxFor(c => c.IsAccepted)
+                            </div>
+                        </div>
+                       
+                   
+                    </div>
+                }
+                @*<div class="form-group">
+                        <div class="col-md-12">
+                            <label>
+                                <input type="checkbox" class="checkbox auction-value" id="RememberMe" name="RememberMe" checked="">
+                                <label for="RememberMe" class="control-label"></label>
+                                <span style="vertical-align: top;">&nbsp;&nbsp;@LocalText.Inst.Get("label", "RememberMe", "запам'ятати мене", "Запомнить меня")</span>
+                            </label>
+                        </div>
+                    </div>*@
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <a href="/account/ForgotPassword" id="forgot-pass">@LocalText.Inst.Get("label", "forgotPassword", "Забули пароль?", "Забыли пароль?")</a>
+                        @*<input type="submit" value="@LocalText.Inst.Get("btn","btnLogin","Вхід","Вход")" />*@
+                        <button type="submit" id="submit-button">@LocalText.Inst.Get("btn", "btnLogin", "Вхід", "Вход")</button>
+                    </div>
+                </div>
+            }
+        </section>
+
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,152 @@
+﻿@{if (User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole("watcher"))
+        {
+            <div class="aside-element">
+                <h3>ТОРГИ</h3>
+
+                <ul>
+                    <li class="@(ViewBag.MenuAnchor == "auction-buyer-future" ? "active" : "")"><a href="/auction-buyer-future">@LocalText.Inst.Get("link", "auction-buyer-future", "Майбутні торги", "Будущие торги")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "auction-buyer-current" ? "active" : "")"><a href="/auction-buyer-current">@LocalText.Inst.Get("link", "auction-buyer-current", "Поточні торги", "Текущие торги")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "auction-buyer-past" ? "active" : "")"><a href="/auction-buyer-past">@LocalText.Inst.Get("link", "auction-buyer-past", "Минулі торги", "Прошедшие торги")</a></li>
+                </ul>
+            </div>
+        }
+        @*if (User.IsInRole("byer") /*|| User.IsInRole("root")*/)
+        {
+
+            if (!User.IsInRole("watcher"))
+            {
+                <div class="aside-element">
+                    <h3>@LocalText.Inst.Get("text", "auction_buyer", "ТОРГИ ПОКУПЦЯ", "ТОРГИ ПОКУПАТЕЛЯ")</h3>
+                 
+                    <ul>
+                        <li class="@(ViewBag.MenuAnchor == "auction-buyer-future" ? "active" : "")"><a href="/auction-buyer-future">@LocalText.Inst.Get("link", "auction-buyer-future", "Майбутні торги", "Будущие торги")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "auction-buyer-current" ? "active" : "")"><a href="/auction-buyer-current">@LocalText.Inst.Get("link", "auction-buyer-current", "Поточні торги", "Текущие торги")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "auction-buyer-past" ? "active" : "")"><a href="/auction-buyer-past">@LocalText.Inst.Get("link", "auction-buyer-past", "Минулі торги", "Прошедшие торги")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "auction-buyer" ? "active" : "")"><a href="/auction-buyer">@LocalText.Inst.Get("link", "auction-buyer", "Торги покупця", "Торги покупателя")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "auction-buyer-documents" ? "active" : "")"><a href="/auction-buyer-documents">@LocalText.Inst.Get("link", "auction-buyer-documents", "Документи покупця", "Документы покупателя")</a></li>
+                    </ul>
+                </div>
+            }
+        }
+        if (User.IsInRole("trader") /*|| User.IsInRole("root")*/)
+        {
+            <div class="aside-element">
+                <h3>@LocalText.Inst.Get("text", "auction_seller", "ТОРГИ ПРОДАВЦЯ", "ТОРГИ ПРОДАВЦА")</h3>
+          
+                <ul>
+                    <li class="@(ViewBag.MenuAnchor == "auction-seller-create" ? "active" : "")"><a href="/auction-seller-create">@LocalText.Inst.Get("link", "auction-seller-create", "Створення торгів", "Создание торгов")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "auction-seller" ? "active" : "")"><a href="/auction-seller">@LocalText.Inst.Get("link", "auction-seller", "Торги продавця", "Торги продавца")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "auction-seller-history" ? "active" : "")"><a href="/auction-seller-history">@LocalText.Inst.Get("link", "auction-seller-history", "Історія продажів", "История продаж")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "auction-seller-documents" ? "active" : "")"><a href="/auction-seller-documents">@LocalText.Inst.Get("link", "auction-seller-documents", "Документи продаж", "Документы продаж")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "approving" ? "active" : "")">@Html.ActionLink(@LocalText.Inst.Get("link", "approvingLinkTrader", "Торги на модерації", "Торги на модерации"),"TradesOnApproving","Trade")</li>
+                </ul>
+            </div>
+        }*@
+        if (User.IsInRole("root") || User.IsInRole("admin") || User.IsInRole("contragent") || User.IsInRole("user"))
+        {
+            if (!User.IsInRole("watcher"))
+            {
+                <div class="aside-element">
+                    <h3>@LocalText.Inst.Get("text", "user_setings", "ПРОФІЛЬ КОРИСТУВАЧА", "ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ")</h3>
+                    <ul>
+                        <li class="@(ViewBag.MenuAnchor == "user-setings-entities" ? "active" : "")"><a href="/user-setings-entities">@LocalText.Inst.Get("link", "user-setings-entities", "Юридичні особи", "Юридические лица")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "user-setings-profile" ? "active" : "")"><a href="/user-setings-profile">@LocalText.Inst.Get("link", "user-setings-profile", "Профіль користувача", "Профиль пользователя")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "user-setings-password" ? "active" : "")"><a href="/user-setings-password">@LocalText.Inst.Get("link", "user-setings-password", "Зміна пароля", "Смена пароля")</a></li>
+                        @*<li class="@(ViewBag.MenuAnchor == "user-setings-notifications" ? "active" : "")"><a href="/user-setings-notifications">@LocalText.Inst.Get("link", "user-setings-notifications", "Оповіщення", "Оповещения")</a></li>*@
+                    </ul>
+                </div>
+
+                @*<div class="aside-element">
+                    <h3>@LocalText.Inst.Get("text", "offers", "Пропозиції", "Предложения")</h3>
+                    <ul>
+                        <li class="@(ViewBag.MenuAnchor == "" ? "active" : "")"><a href="/offers/create">@LocalText.Inst.Get("link", "create", "Створити", "Создать")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "" ? "active" : "")"><a href="/offers">@LocalText.Inst.Get("link", "current", "Поточні", "Текущие")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "" ? "active" : "")"><a href="/offers/?actual=false">@LocalText.Inst.Get("link", "history", "Історія", "История")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "" ? "active" : "")"><a href="/trade/alldocs?filter=offers">@LocalText.Inst.Get("link", "docs", "Документи", "Документы")</a></li>
+                    </ul>
+                </div>
+
+                <div class="aside-element">
+                    <h3>@LocalText.Inst.Get("text", "proposal", "Заявки", "Заявки")</h3>
+                    <ul>
+                        <li class="@(ViewBag.MenuAnchor == "" ? "active" : "")"><a href="/orders/create">@LocalText.Inst.Get("link", "create", "Створити", "Создать")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "" ? "active" : "")"><a href="/orders">@LocalText.Inst.Get("link", "current", "Поточні", "Текущие")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "" ? "active" : "")"><a href="/orders/?actual=false">@LocalText.Inst.Get("link", "history", "Історія", "История")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "" ? "active" : "")"><a href="/trade/alldocs?filter=orders">@LocalText.Inst.Get("link", "docs", "Документи", "Документы")</a></li>
+                    </ul>
+                </div>*@
+
+                <div class="aside-element">
+                    <h3>@LocalText.Inst.Get("text", "trades", "Торги", "Торги")</h3>
+                    <ul>
+                        <li class="@(ViewBag.MenuAnchor == "" ? "active" : "")"><a href="/trade/createtrade">@LocalText.Inst.Get("link", "create", "Створити", "Создать")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "auction-buyer-future" ? "active" : "")"><a href="/auction-buyer-future">@LocalText.Inst.Get("link", "auction-buyer-future", "Майбутні торги", "Будущие торги")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "auction-buyer-current" ? "active" : "")"><a href="/auction-buyer-current">@LocalText.Inst.Get("link", "auction-buyer-current", "Поточні торги", "Текущие торги")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "auction-buyer-past" ? "active" : "")"><a href="/auction-buyer-past">@LocalText.Inst.Get("link", "auction-buyer-past", "Минулі торги", "Прошедшие торги")</a></li>
+                        <li class="@(ViewBag.MenuAnchor == "approving" ? "active" : "")">@Html.ActionLink(@LocalText.Inst.Get("link", "approvingLinkTrader", "Торги на модерації", "Торги на модерации"), "TradesOnApproving", "Trade")</li>
+                        <li class="@(ViewBag.MenuAnchor == "" ? "active" : "")"><a href="/trade/alldocs?filter=trades">@LocalText.Inst.Get("link", "docs", "Документи", "Документы")</a></li>
+                    </ul>
+                </div>
+            }
+        }
+        if (User.IsInRole("root") || User.IsInRole("admin") || User.IsInRole("lawyer"))
+        {
+            <div class="aside-element">
+                <h3>@LocalText.Inst.Get("text", "administration","Адміністрування", "Администрирование")</h3>
+                <ul>
+                    <li class="@(ViewBag.MenuAnchor == "administration-request" ? "active" : "")"><a href="/administration-request">@LocalText.Inst.Get("link", "administration-request", "Заявки юр.осіб", "Заявки юр. лиц")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "administration-request-history" ? "active" : "")"><a href="/administration-request-history">@LocalText.Inst.Get("link", "administration-request-history","Історія заявок", "История заявок")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "administration-content" ? "active" : "")"><a href="/administration-content">@LocalText.Inst.Get("link", "administration-content", "Контент", "Контент")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "administration-tocken" ? "active" : "")"><a href="/administration-tocken">@LocalText.Inst.Get("link", "administration-tocken", "Ключі", "Ключи")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "administration-email" ? "active" : "")"><a href="/administration-email">@LocalText.Inst.Get("link", "administration-email", "Листи", "Письма")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "directory" ? "active" : "")"><a href="/directory">@LocalText.Inst.Get("link", "directory", "Довідники", "Справочники")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "administration-help" ? "active" : "")"><a href="/administration-help">@LocalText.Inst.Get("link", "administration-help", "Підказки", "Подсказки")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "administration-feedback" ? "active" : "")"><a href="/administration-feedback">@LocalText.Inst.Get("link", "administration-feedback", "Зворотній зв'язок", "Обратная связь")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "administration-faq" ? "active" : "")"><a href="/administration-faq">@LocalText.Inst.Get("link", "administration-faq", "FAQ", "FAQ")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "sendmails" ? "active" : "")"><a href="/sendmails">@LocalText.Inst.Get("link", "sendmails", "Розсилка", "Рассылка")</a></li>
+                    <li class="@(ViewBag.MenuAnchor == "approving" ? "active" : "")">@Html.ActionLink(@LocalText.Inst.Get("link", "approving", "Документи продаж", "Документы продаж"), "TradesOnApproving", "Trade")</li>
+                </ul>
+            </div>
+        }
+    }
+}
+@*<div class="aside-element">
+    <h3>@LocalText.Inst.Get("text", "leftmenu_header", "Для інформації", "Для информации")</h3>
+    <ul>
+        <li class="@(ViewBag.MenuAnchor == "accreditation" ? "active" : "")"><a href="/accreditationrules">@LocalText.Inst.Get("link", "leftmenu_rules", "Правила акредитації","Правила аккредитации")</a></li>
+        <li class="@(ViewBag.MenuAnchor == "faq" ? "active" : "")"><a href="/FAQ">@LocalText.Inst.Get("link", "leftmenu_faq","Часто виникаючі питання", "Часто задаваемые вопросы")</a></li>
+        <li class="@(ViewBag.MenuAnchor == "documents" ? "active" : "")"><a href="/documents">@LocalText.Inst.Get("link", "leftmenu_docs", "Типові документи","Типовые документы")</a></li>
+        <li class="@(ViewBag.MenuAnchor == "feedback" ? "active" : "")"><a href="/feedback">@LocalText.Inst.Get("link", "leftmenu_feedback", "Задати питання","Задать вопрос")</a></li>
+    </ul>
+</div>*@
+
+@*<div class="aside-element">
+    <h3>ПРАВИЛА</h3>
+    <ul>
+        <li><a href="/accreditationrules">@LocalText.Inst.Get("text", "Menu.accreditationrules", "Акредитація", "Аккредитация")</a></li>
+        <li><a href="/howituse">@LocalText.Inst.Get("text", "Menu.howituse", "Як цим користуватись", "Как этим пользоваться")</a></li>
+        <li><a href="/faq">@LocalText.Inst.Get("text", "Menu.Faq", "Часті питання", "Частые вопросы")</a></li>
+        <li><a href="/documents">@LocalText.Inst.Get("text", "Menu.Docs", "Типові документи", "Типовые документы")</a></li>
+    </ul>
+</div>*@
+
+@*<div class="aside-element">
+    <h3>@LocalText.Inst.Get("text", "Marketplace", "Торговий майданчик", "Торговая площадка")</h3>
+    <ul>
+        <li><a href="/offers">@LocalText.Inst.Get("text", "offers", "Пропозиції", "Предложения")</a></li>
+        <li><a href="/orders">@LocalText.Inst.Get("text", "proposal", "Заявки", "Заявки")</a></li>
+        <li><a href="/trade">@LocalText.Inst.Get("text", "trades", "Торги", "Торги")</a></li>
+    </ul>
+</div>*@
+
+<div class="aside-element">
+    <h3>@LocalText.Inst.Get("text", "topmenu_info", "Інформація", "Информация")</h3>
+    <ul>
+        <li><a href="/therms">@LocalText.Inst.Get("link", "footer_userules", "Умови використання", "Условия использования")</a></li>
+        <li><a href="/about">@LocalText.Inst.Get("link", "footer_about", "Про нас", "О нас")</a></li>
+        <li><a href="/contacts">@LocalText.Inst.Get("label", "topmenu_contacts", "Наші контакти", "Наши контакты")</a></li>
+        <li><a href="/feedback">@LocalText.Inst.Get("link", "footer_feedback", "Зворотній зв’язок", "Обратная связь")</a></li>
+    </ul>
+</div>

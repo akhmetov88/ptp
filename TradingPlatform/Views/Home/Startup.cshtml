@@ -1,0 +1,108 @@
+﻿@model TradingPlatform.Models.RegisterViewModel
+@{
+    ViewBag.Title = @LocalText.Inst.Get("label", "Home.Startup.Title", "Старт", "Старт");
+    Layout = "~/Views/Shared/_StartupLayout.cshtml";
+}
+@*<div class="create-auction title">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('register')">?</a>
+    <h3>@ViewBag.Title</h3>
+    <hr />
+</div>*@
+@using (Html.BeginForm("Startup", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "submitForm" }))
+{
+
+    <h2>Похоже, это первый запуск. Надо создать супер пользователя</h2>
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @*<span class="text-danger">@LocalText.Inst.Get("password", "AttentionPass", "Увага! Довжина паролю - не менше восьми символів. Букви в паролі повинні бути тільки з латинського алфавіту. В паролі повинна бути хоча б одна велика буква, хоча б одна маленька буква і хоча б одна цифра", "Внимание! Длина пароля не менее восьми символов. Буквы в пароле должны быть только из латинского алфавита. В пароле должна быть хотя бы одна заглавная буква, хотя бы одна строчная буква и хотя бы одна цифра.")</span>*@
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name, LocalText.Inst.Get("label", "userName", "Им’я", "Имя"), new { @class = "col-md-3 control-label" })
+        <div class="col-md-9">
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("label", "userNamelaceholder", "Іванов Іван Тимофійович", "Тимофеев Иван Иванович") })
+            @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Email, LocalText.Inst.Get("label", "userEmail", "Email", "Email"), new { @class = "col-md-3 control-label" })
+        <div class="col-md-9">
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("label", "userEmailPlaceholder", "ivanov@company.com", "ivanov@company.com") })
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Phone, LocalText.Inst.Get("label", "userPhone", "Телефон", "Телефон"), new { @class = "col-md-3 control-label" })
+        <div class="col-md-9">
+            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control auction-value", @title = "", @placeholder = "+380509379992" })
+            @*<div class="user_phone">
+                    <input type="text" placeholder="(___) ___ __ __" id="Phone" name="Phone" class="form-control auction-value" required title="Формат: (050) 937 99 92" pattern="[0-9_-]{10}" />
+                </div>*@
+            @*@Html.TextBoxFor(m => m.Phone, new { @type="tel", @class = "", @placeholder = "(___) ___ __ __", , title = "" })*@
+            @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password, LocalText.Inst.Get("label", "userPass", "Пароль", "Пароль"), new { @class = "col-md-3 control-label" })
+        <div class="col-md-9">
+
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control auction-value pwd", @placeholder = LocalText.Inst.Get("label", "userPassPlaceholdeкr", "Прописні, строкові букви і цифри", "Прописные, строчные буквы и цифры"), @title = @LocalText.Inst.Get("password", "AttentionPass", "Увага! Довжина паролю - не менше восьми символів. Букви в паролі повинні бути тільки з латинського алфавіту. В паролі повинна бути хоча б одна велика буква, хоча б одна маленька буква і хоча б одна цифра", "Внимание! Длина пароля не менее восьми символов. Буквы в пароле должны быть только из латинского алфавита. В пароле должна быть хотя бы одна заглавная буква, хотя бы одна строчная буква и хотя бы одна цифра.") })
+            <div class="progress">
+                <div class="progress-bar progress-bar-danger" id="password-progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0">
+                    <span class="sr-only">0% Complete (danger)</span>
+                    <span id="progress-bar-text" style="color: #000;"></span>
+                </div>
+            </div>
+            @*@Html.ValidationMessageFor(m => m.Password, LocalText.Inst.Get("hunt","PasswordRequirements", "Пароль повинен складатись з маленьких та великих латинських символів і містити цифри (мінімальна довжина - 6 символів)", "Пароль должен состоять из маленьких и больших латинских символов и содержать цифры (минимальная длина - 6 символов)"), new { @class = "text-danger" })*@
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password, LocalText.Inst.Get("label", "userConfirmPass", "Підтвердження паролю", "Подтверждение пароля"), new { @class = "col-md-3 control-label" })
+        <div class="col-md-9">
+            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control auction-value", @placeholder = LocalText.Inst.Get("label", "passConfirmPassPlaceholder", "Те ж саме, що і в полі вище", "То же, что и в поле выше") })
+            @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Ip, LocalText.Inst.Get("label", "Home.Startup.AllowedIp", "Дозволений IP", "Разрешенный IP"), new { @class = "col-md-3 control-label" })
+        <div class="col-md-5">
+            @Html.TextBoxFor(m => m.Ip, new { @class = "form-control auction-value", @placeholder = "192.168.1.137" })
+            @Html.ValidationMessageFor(m => m.Ip, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-4">
+            <div class="btn btn-green" onclick="setIp()">Использовать текущий</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ConfirmIp, LocalText.Inst.Get("label", "Home.Startup.AllowedIpConfirm", "Підтвердіть дозволений IP", "Подтвердите разрешенный IP"), new { @class = "col-md-3 control-label" })
+        <div class="col-md-5">
+            @Html.TextBoxFor(m => m.ConfirmIp, new { @class = "form-control auction-value", @placeholder = "192.168.1.137" })
+            @Html.ValidationMessageFor(m => m.ConfirmIp, "", new { @class = "text-danger" })
+        </div>
+      
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-12">
+                <button type="submit">@LocalText.Inst.Get("button", "Home.Startup.CreateSuperUser", "Створити", "Создать")</button>
+            </div>
+        </div>
+    </div>
+
+}
+<script>
+    function setIp() {
+        var ip = '@Model.DetectedIp';
+        if (ip.length > 0) {
+            $('#Ip').val(ip);
+            $('#ConfirmIp').val(ip);
+        } else {
+            alert('Ip address not detected');
+        }
+    }
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+}

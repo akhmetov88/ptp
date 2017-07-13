@@ -1,0 +1,62 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model IEnumerable<TradingPlatform.Models.DirectoryModel.DirectoryViewModel>
+@{
+    ViewBag.Title = LocalText.Inst.Get("title", "DirectoryPageTitle", "Редагування довідників", "Редактирование справочников");
+    var pagedlist = (IPagedList)Model;
+}
+
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("Index", "Directory", FormMethod.Get, new { @style = "margin:0px;padding:5px 0px;" }))
+{
+    <div class="row">
+        <div class="col-xs-6">
+            <span class="pull-left" style="line-height: 34px;">Найти:&nbsp;&nbsp;&nbsp;</span>
+            <input type="text" id="search" name="search" class="form-control" style="width: 80%;" value="@ViewBag.Search" />
+        </div>
+        <div class="col-xs-2">
+            <input type="submit" value="@LocalText.Inst.Get("btn", "Forward", "Перейти", "Перейти")" class="btn" style="line-height: 23px;" />
+        </div>
+        <div class="col-xs-4 text-info" id="GenerateMessage">
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-xs-12">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        @LocalText.Inst.Get("title", "code", "Код", "Код")
+                    </th>
+                    <th colspan="2">
+                        @LocalText.Inst.Get("title", "rus", "Рос", "Рус")
+                    </th>
+                    <th colspan="2">
+                        @LocalText.Inst.Get("title", "ukr", "Укр", "Укр")
+                    </th>
+                    <th>
+                        <a class="btn btn-default" href="javascript:EditDir(0)">
+                            <i class="fa fa-pencil fa-lg"></i>
+                            <i class="fa fa-refresh  fa-spin fa-lg hidden"></i>
+                            <i class="fa fa-check fa-lg hidden"></i>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    @Html.Partial("DirectoryView", item) 
+                }
+            </tbody>
+        </table>
+        @if (pagedlist.PageCount > 1)
+        {
+            <div class="notification-wrap clearfix">
+                @Html.PagedListPager(pagedlist, page => Url.Action("Index", "Directory", new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+            </div>
+        }
+    </div>
+</div>
+

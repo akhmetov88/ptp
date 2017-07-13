@@ -1,0 +1,158 @@
+﻿@using PerpetuumSoft.Knockout
+@model TradingPlatform.Areas.Admin.Models.EditCatalogModel
+@Scripts.Render("~/bundles/jquery")
+<script src="@Url.Content("~/Scripts/bootstrap.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/knockout-3.4.0.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/knockout.mapping-latest.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/perpetuum.knockout.js")" type="text/javascript"></script>
+
+@{
+    var ko = Html.CreateKnockoutContext();
+}
+@ko.Initialize(Model)
+
+<div class="create-auction-input">
+    <h3>Редактирование справочников</h3>
+</div>
+<div class="container-fluid">
+    <div class="accordion-group">
+        <div class="panel panel-default" style="cursor: pointer;" data-toggle>
+            <div data-bind="foreach: { data: Catalogs, as: 'catalog' }">
+                <div data-bind="bootstrapAccordion: { item: 'panel-group', openItem: 0 }, template: 'queryTemplate'"></div>
+            </div>
+        </div>
+    </div>
+</div>
+    @ko.Html.HyperlinkButton("Добавить справочник", "AddCatalog", "Directory", new { area = "admin" })
+<script id="queryTemplate" type="text/html">
+
+    <div class="panel-group">
+        <div class="panel panel-default" data-toggle>
+            <div class="panel-heading">
+                <h4 class="panel-title" data-bind="text: catalog.Code"></h4>
+            </div>
+        </div>
+        <div class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class="form-inline">
+                    <div class="form-group row">
+                        <div class="container">
+                            <input data-bind="value: catalog.ru, attr:{'placeholder':'Ru', 'class':'form-control col-sm-3' }">
+                            <input data-bind="value: catalog.uk, attr:{'placeholder':'Uk','class':'form-control col-sm-3' }">
+                            <input data-bind="value: catalog.Code, attr:{'placeholder':'Название', 'class':'form-control col-sm-3' }">
+
+                            <div class="btn-group-xs" style="line-height: 33px;">
+                                <button title="Сохранить" data-bind="click : function (){executeOnServer(viewModel,'/admin/directory/save?modelId='+catalog.Id())},attr:{'class':'btn btn-green'}"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                <button title="Удалить" data-bind="visible: catalog.CanDelete, click : function (){executeOnServer(viewModel,'/admin/directory/delete?modelId='+catalog.Id())},attr:{'class':'btn btn-danger'}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                <button title="Добавить зависимость" data-bind="click : function (){executeOnServer(viewModel,'/admin/directory/adddependency?parentId='+catalog.Id())},attr:{'class':'btn btn-primary'}"><i class="fa fa-level-down" aria-hidden="true"></i></button>
+
+                            </div>
+                        </div>
+
+                        </div>
+                    
+
+                        <div data-bind="foreach: { data: Dependencies, as: 'catalog' } ">
+                            <div data-bind="bootstrapAccordion: { item: 'panel-group', openItem: 0 }, template: 'queryTemplate'">
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</script>
+
+
+<script>
+    ko.bindingHandlers.bootstrapAccordion = {
+        init: function (elem, value, allBindings) {
+            var options = ko.utils.unwrapObservable(value()),
+                handleClass = '[data-toggle]',
+                contentClass = '.collapse',
+                openedClass = ko.utils.unwrapObservable(options.openedClass) || 'fa-minus',
+                closedClass = ko.utils.unwrapObservable(options.closedClass) || 'fa-plus',
+                openCloseToggleClasses = openedClass + ' ' + closedClass,
+                openItem = ko.utils.unwrapObservable(options.openItem) || false,
+                itemClass = '.' + (ko.utils.unwrapObservable(options.item) || 'accordion-group'),
+                items = $(elem).find(contentClass);
+
+            var initializeItems = function (items) {
+                // toggle: false required to hide items on load
+                items.collapse({ parent: elem, toggle: false });
+                if (openItem > -1) {
+                    items.eq(openItem).collapse('show');
+                    items.eq(openItem).closest(itemClass).find('.panel-heading').find('i').toggleClass(openCloseToggleClasses);
+                    items.eq(openItem).closest(itemClass).find('.panel-heading').addClass('active');
+                }
+            }
+
+            initializeItems(items);
+
+            // if the array is dynamic, the collapse should be re-initiated to work properly
+            var list = allBindings.get('foreach');
+            if (ko.isObservable(list)) {
+                list.subscribe(function () {
+                    initializeItems($(elem).find(contentClass));
+                });
+            }
+
+            $(elem).on('click', handleClass, function () {
+                $(elem).find(contentClass).collapse('hide');
+                $(this).closest(itemClass).find(contentClass).collapse('show');
+                $(this).closest(itemClass).parent().find('.panel-heading i').removeClass(openCloseToggleClasses);
+                $(this).closest(itemClass).parent().find('.panel-heading i').addClass(closedClass);
+                $(this).closest(itemClass).parent().find('.panel-heading').removeClass('active');
+                if ($(this).closest(itemClass).find('.panel-collapse').attr('aria-expanded') === "true") {
+                    $(this).closest(itemClass).find('.panel-heading i').toggleClass(openCloseToggleClasses);
+                    $(this).closest(itemClass).find('.panel-heading').addClass('active');
+                }
+            });
+
+            $(elem).on('click', '[data-open-next]', function () {
+                $next = $(this).closest(itemClass).next(itemClass).find(handleClass);
+                if ($next.length) {
+                    $next.click();
+                } else {
+                    $same = $(this).closest(itemClass).find(contentClass);
+                    $same.collapse('hide');
+                    $same.parent().find('.panel-heading i').removeClass(openCloseToggleClasses);
+                    $same.parent().find('.panel-heading i').addClass(closedClass);
+                    $same.parent().find('.panel-heading').removeClass('active');
+                }
+            });
+        }
+    };
+
+    //ko.bindingHandlers.bootstrapAccordion = {
+    //    init: function (elem, value, allBindings) {
+    //        var options = ko.utils.unwrapObservable(value()),
+    //            handleClass = '[data-toggle]',
+    //            contentClass = '.collapse',
+    //            openItem = ko.utils.unwrapObservable(options.openItem) || false,
+    //            itemClass = '.' + ko.utils.unwrapObservable(options.item) || '.accordion-group',
+    //            items = $(elem).find(contentClass);
+
+    //        // toggle: false required to hide items on load
+    //        items.collapse({ parent: elem, toggle: false });
+    //        if (openItem > -1) items.eq(openItem).collapse('show');
+
+    //        // if the array is dynamic, the collapse should be re-initiated to work properly
+    //        var list = allBindings.get('foreach');
+    //        if (ko.isObservable(list)) {
+    //            list.subscribe(function () {
+    //                $(elem).find(contentClass).collapse({ parent: elem, toggle: false });
+    //            });
+    //        }
+
+    //        $(elem).on('click', handleClass, function () {
+    //            $(elem).find(contentClass).collapse('hide');
+    //            $(this).closest(itemClass).find(contentClass).collapse('show');
+    //        });
+    //    }
+    //};
+
+
+</script>
+@ko.Apply(Model)

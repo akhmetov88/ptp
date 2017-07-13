@@ -1,0 +1,17 @@
+﻿<div id="lang-select">
+    <ul>
+        @if(LocalText.GetCultureTwoLetter() == "uk")
+        { }
+        <li class="@(LocalText.GetCultureTwoLetter() == "uk" ? "active" : "")">
+            <a href="javascript:document.getElementById('language').submit()">UA</a>
+        </li>
+        <li class="@(LocalText.GetCultureTwoLetter() == "ru" ? "active" : "")">
+            @using (@Html.BeginForm("ChangeLanguage", "Home", FormMethod.Post, new {id = "language"}))
+            {
+                @Html.Hidden("lang", LocalText.GetCultureTwoLetter() == "ru" ? "uk-UA" : "ru-RU")
+              
+            }
+            <a href="javascript:document.getElementById('language').submit()">RU</a>
+        </li>
+    </ul>
+</div>

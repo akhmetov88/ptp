@@ -1,0 +1,30 @@
+﻿@using TradingPlatform.Models;
+@model TradingPlatform.Models.NotifyModels.NewOffer
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+    <p>
+        @LocalText.Inst.Get("email", "EmailTemplate.NewOffer", "На торговому майданчику Petroleum Trading Platform продавцем оголошено пропозицію", "На торговой площадке Petroleum Trading Platform продавец выложил предложение", Model.Lang) № <span class="mail-important-info">@Model.TradeNumber</span>.
+    </p>
+    <p>
+        <br />
+        Товар: @StaticData.Inst.GetCatalogValue(@Model.Model.ProductName)
+        <br />
+        Обсяг: @Model.Model.TotalVolume @StaticData.Inst.GetCatalogValue(@Model.Model.Unit).
+        <br />
+        Базис поставки: @StaticData.Inst.GetCatalogValue(@Model.Model.Incotherms) (@StaticData.Inst.GetCatalogValue(@Model.Model.ShipmentPoint) )
+        <br />
+        Ціна: @Model.Model.PriceStart @StaticData.Inst.GetCatalogValue(@Model.Model.PriceCurrency)/@StaticData.Inst.GetCatalogValue(@Model.Model.Unit).
+        <br />
+
+
+
+        @LocalText.Inst.Get("email", "EmailTemplate.GoToParticipate", "Для участі Ви можете пройти за", "Для участия Вы можете пройти по", Model.Lang)
+        <a href="@Model.Link">@LocalText.Inst.Get("email", "EmailTemplate.Link", "посиланням", "ссылке", Model.Lang)</a>
+    </p>
+</div>
+

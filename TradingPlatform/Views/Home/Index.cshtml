@@ -1,0 +1,15 @@
+﻿@model TradingPlatform.Models.ViewModel.ContentView
+@{
+    ViewBag.Title = Model.Title;
+    ViewBag.MetaKeywords = Model.KeyWords;
+    ViewBag.MetaDesc = Model.Descriptions;
+}
+@if (ViewBag.MenuAnchor != "main")
+{
+    <div class="clearfix"></div>
+    <div class="create-auction title">
+        <h3>@ViewBag.Title</h3>
+        <hr />
+    </div>
+}
+@Html.Raw(HttpUtility.HtmlDecode(Model.HtmlContent))

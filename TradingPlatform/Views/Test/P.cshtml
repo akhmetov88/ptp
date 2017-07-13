@@ -1,0 +1,36 @@
+﻿@using PerpetuumSoft.Knockout
+@model List<TradingPlatform.Controllers.TestController.CountryPlant>
+<script src="@Url.Content("~/Scripts/jquery-2.1.1.min.js")" type="text/javascript"></script> <!-- Use your version of jQuery -->
+<script src="@Url.Content("~/Scripts/knockout-3.4.0.js")" type="text/javascript"></script> <!-- Use your version of knockout -->
+<script src="@Url.Content("~/Scripts/knockout.mapping-latest.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/perpetuum.knockout.js")" type="text/javascript"></script>
+
+
+@{
+    var ko = Html.CreateKnockoutContext();
+}
+@ko.Initialize(Model)
+
+
+<div>
+    <label>Razor</label>
+    <select @ko.Bind.Options(c => @ko.Model).OptionsText("'name'")></select>
+    <select @ko.Bind.Options(c => @ko.Model).OptionsText("'name'")></select>
+</div>
+@*<div>
+    <label>HTML</label>
+    <select data-bind="options: $data, optionsText: 'name', value: 'price', optionsCaption: 'Select Type...'"></select>
+</div>*@
+
+<div>
+    <label>Organization sub type:</label>
+    
+        <select data-bind="options: $data.products, optionsText: 'name', value: 'price', optionsCaption: 'Select SubType...'"></select>
+    
+</div>
+
+
+
+
+@*@ko.Html.DropDownList(c=>c,null,"products.name").OptionsValue("price")*@
+@ko.Apply(Model)

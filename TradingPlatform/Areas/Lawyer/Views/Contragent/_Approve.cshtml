@@ -1,0 +1,89 @@
+﻿@model TradingPlatform.Models.ApproveModel
+    
+
+    <hr />
+    <h4>@LocalText.Inst.Get("text", "contragent_docs", "Документи", "Документы")</h4>
+    @using (Html.BeginForm("Edit", "Contragent", new { area="Lawyer"}, FormMethod.Post))
+    {
+        @Html.HiddenFor(x=>x.ContragentId)
+        <table class="table">
+            <tr class="table-header">
+                <th>@LocalText.Inst.Get("text", "contragent_doc_name", "Документ", "Документ")</th>
+                <th>Действие</th>
+                <th>Утверждено</th>
+            </tr>
+         
+
+            @for (int i = 0; i < Model.ContragentFiles.Count(c => c.Id != null || c.Id != 0); i++)
+            {
+                var doc = Model.ContragentFiles[i];
+                <tr>
+                    <td style="text-align: left">
+                        
+                        @Html.Hidden($"ContragentFiles[{i}].Id", doc.Id)
+                     
+                        @Html.Raw(doc.FileType.Name??doc.FileName)
+                        @if (doc.CreateDate != doc.UpdateDate)
+                        {
+                            <span>(</span><span>@LocalText.Inst.Get("text", "new", "Новий", "Новый")</span><span>)</span>
+                        }
+                    </td>
+                    <td>
+                        @if (doc.Id != 0)
+                        {
+                            @Html.ActionLink(LocalText.Inst.Get("link", "download", "завантажити", "Загрузить"), "ShowFile", "Contragent", new { file = doc.Id }, new { @target = "_blank" })
+                        }
+                    </td>
+                    <td>
+                        @*@Html.CheckBoxFor(c => item.IsApproved)*@
+                        @Html.CheckBox($"ContragentFiles[{i}].IsApproved", doc.IsApproved)
+                    </td>
+                </tr>
+            }
+        </table>
+        <br />
+        <table class="table">
+            <tr>
+
+                <td style="text-align: left"><b>@LocalText.Inst.Get("text", "approveDocOnSign", "Договір підготовлено та відправлено на підпис")</b></td>
+                <td style="text-align: left">@Html.CheckBoxFor(m => m.ContractIsOnSign)</td>
+            </tr>
+            <tr>
+                <td style="text-align: left"><b>@LocalText.Inst.Get("text", "approveDocCopy", "Скан-копію договору отримано")</b></td>
+                <td style="text-align: left">@Html.CheckBoxFor(m => m.HasContractCopy)</td>
+            </tr>
+            <tr>
+                <td style="text-align: left"><b>@LocalText.Inst.Get("text", "approveDocHasOriginal", "Засвідчені копії доукментів та оригінал договору отримано")</b></td>
+                <td style="text-align: left">@Html.CheckBoxFor(m => m.HasContractOriginal)</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: left" class="text-danger"><b>@LocalText.Inst.Get("text", "approveAsBuyer", "Підтвердити як покупця", "Подвердить как покупателя")</b></td>
+                <td style="text-align: left"class="text-danger">@Html.CheckBoxFor(m => m.IsBuyer)</td>
+            </tr>
+            <tr>
+                <td style="text-align: left"class="text-danger"><b>@LocalText.Inst.Get("text", "approveAsSeller", "Підтвердити як продавця", "Подвердить как продавца")</b></td>
+                <td style="text-align: left">@Html.CheckBoxFor(m => m.IsSeller)</td>
+            </tr>
+            <tr>
+                <td style="text-align: left"class="text-danger"><b>@LocalText.Inst.Get("text", "contragentIsApproved", "Підтверджую", "Подтверждаю")</b></td>
+                <td style="text-align: left">@Html.CheckBoxFor(m => m.IsApproved)</td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="text-align:left"><b>@LocalText.Inst.Get("title", "filecomment", "Коментар", "Комментарий")</b></td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.TextAreaFor(c => c.Comment, new {@class = "col-md-12",rows="15"})
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align:left" class="text-danger"><b>@LocalText.Inst.Get("text", "sendMail", "ЛИСТА СЛАТИ?", "ПИСЬМО СЛАТЬ?")</b></td>
+                <td style="text-align:left">@Html.CheckBoxFor(m => m.SendMail)</td>
+            </tr>
+        </table>
+        <br />
+        <button type="submit" >@LocalText.Inst.Get(" link", "save", "Зберегти", "Сохранить")</button>
+    }
+

@@ -1,0 +1,16 @@
+﻿@model TradingPlatform.Models.NotifyModels.ToLawyerAboutNewCompany
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+    <p>
+        Повідомляємо, що на Petroleum Trading Platform зареєстровано" <span class="mail-important-info">@Model.Company</span>.
+    </p>
+    <p>
+        Для проведення акредитаціі перейдіть за <a href="@Model.Link">посиланням</a>
+    </p>
+</div>
+

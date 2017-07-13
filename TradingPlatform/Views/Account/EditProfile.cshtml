@@ -1,0 +1,130 @@
+﻿@model TradingPlatform.Models.EditProfileModel
+@{
+    ViewBag.Title = LocalText.Inst.Get("title", "editProfile", "Редагування профіля", "Редактирование профиля");
+}
+<div class="create-auction title">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('editprofile')">?</a>
+    <h3>@ViewBag.Title</h3>
+    <hr />
+</div>
+
+@using (Html.BeginForm("EditProfile","Account",new {id="submitForm"}))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.Name, "", new {@class = "text-danger"})
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Patronimyc, htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Patronimyc, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.Patronimyc, "", new {@class = "text-danger"})
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Surname, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Surname, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Surname, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.HiddenFor(c=>c.Email)
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.AdditionalEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AdditionalEmail, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AdditionalEmail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Phone, htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Phone,  new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Phone, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AdditionalPhone, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AdditionalPhone, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AdditionalPhone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br />
+        <hr />
+        <h4>Пошта</h4>
+        <hr />
+        <div class="form-group">
+            @Html.LabelFor(model => model.AllowPromoMails, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6 text-center">
+                @Html.CheckBoxFor(model => model.AllowPromoMails, new { @class = "" } )
+                @Html.ValidationMessageFor(model => model.AllowPromoMails, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.AllowTradeMails, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6 text-center">
+                @Html.CheckBoxFor(model => model.AllowTradeMails, new { @class = "" })
+                @Html.ValidationMessageFor(model => model.AllowTradeMails, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+        <div data-toggle="tooltip" class="form-group" title="@LocalText.Inst.Get("tooltip","AboutImportantLetters","Нажаль, ми не можемо зовсім нічого Вам не слати. В цій категорії знаходяться, наприклад, листи для відновлення паролю","К сожалению, мы не можем совсем ничего Вам не слать. В этой категории находятся, например, письма для сброса пароля.")">
+            @Html.LabelFor(model => model.AllowImportantMails, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6 text-center">
+                @Html.CheckBoxFor(model => model.AllowImportantMails, new { @class = "", @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.AllowImportantMails, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br />
+        <hr />
+
+        <div class="form-group">
+            @Html.Label("Telegram: ", new { @class = "control-label col-md-3" })
+            <div class="col-md-3">
+                <a href="http://t.me/ptpua"><i class="fa fa-telegram fa-3x" aria-hidden="true" title="Приєднуйтесь до нас у Telegram"></i></a>                
+            </div>
+            @Html.Label("Push: ", new { @class = "control-label col-md-3" })
+            <div class="col-md-3">
+                @*<a href="https://t.me/ptpua"><img src="~/Content/images/Telelogo.png" alt="Telegram" /></a>*@
+                <a href="#"><i class="fa fa-bell fa-3x" aria-hidden="true" onclick="messaging.requestPermission()"></i></a>
+            </div>
+        </div>
+        <hr />
+        <br />
+      
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit">Ok</button>
+                @*<input type="submit" value="ОК" class="btn btn-default"/>*@
+            </div>
+        </div>
+    </div>
+}
+
+@*<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

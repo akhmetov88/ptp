@@ -1,0 +1,106 @@
+﻿@model List<TradingPlatform.Models.ApproveModel>
+@{
+    ViewBag.Title = LocalText.Inst.Get("link", "user-setings-entities", "Юридичні особи", "Юридические лица");
+}
+<div class="create-auction title">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('account')">?</a>
+    <h3>@ViewBag.Title</h3>
+    <hr/>
+</div>
+<div class="row">
+    <h4>@LocalText.Inst.Get("text", "registerJuridicHeader", "Зареєструвати нову юридичну особу", "Зарегистрировать новое юридическое лицо"):</h4>
+    <div class="add-btn col-xs-6">
+        @Html.ActionLink(LocalText.Inst.Get("btn", "registerJuridic", "Резидента", "Резидента"), "Create", "Account", null, new { @class = "btn btn-primary" })
+    </div>
+    <div class="add-btn col-xs-6">
+        @Html.ActionLink(LocalText.Inst.Get("btn", "registerJuridicNonResident", "Нерезидента", "Нерезидента"), "Create", "Account", new { isResident = false }, new { @class = "btn btn-primary" })
+    </div>
+</div>
+
+<br />
+<table class="table">
+    <tr class="table-header">
+        <th>@LocalText.Inst.Get("text", "approving_list_name", "Назва компанії", "Название компании")</th>
+        <th>@LocalText.Inst.Get("text", "approving_list_IsBuyer", "Покупець", "Покупатель")</th>
+        <th>@LocalText.Inst.Get("text", "approving_list_IsSeller", "Продавець", "Продавец")</th>
+        <th>@LocalText.Inst.Get("text", "action", "Дія", "Действие")</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        @*if (!String.IsNullOrEmpty(item.Comment))
+         {
+             <tr class="table-middle">
+                 <td colspan="4">@LocalText.Inst.Get("text", "approvingAttention", "Зверніть увагу", "Название компании")</td>
+             </tr>
+         }*@
+        <tr class="table-middle">
+            <td>@item.ContragentName</td>
+            <td>
+                @if (item.IsBuyer)
+                {
+                    if (item.IsApproved)
+                    {
+                        <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(item.Comment))
+                        {
+                            <a title="@item.Comment" data-toggle="tooltip" class="btn btn-danger" href="/user-setings-entities/edit/@item.ContragentId">@LocalText.Inst.Get("btn", "has-error", "Виправити", "Исправить")</a>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-time" aria-hidden="true" title="@LocalText.Inst.Get("tooltip","accountIsApproving","Треба зачекати, ми займаємося акредитацією...","Нужно подождать, мы занимаемся аккредитацией")" data-toggle="tooltip"></span>
+                        }
+                        @*else
+                        {
+                            <a class="btn btn-danger" href="/user-setings-entities/edit/@item.ContragentId">@LocalText.Inst.Get("btn", "has-error", "Виправити", "Исправить")</a>
+                        }*@
+                    }
+                }
+                else
+                {
+                    <a class="btn btn-primary" href="/user-setings-entities/edit/@item.ContragentId">@LocalText.Inst.Get("btn", "activate", "Ативувати", "Активировать")</a>
+                }
+            </td>
+            <td>
+                @if (item.IsSeller)
+                {
+                    if (item.IsApproved)
+                    {
+                        <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(item.Comment))
+                        {
+                            <a title="@item.Comment" data-toggle="tooltip" class="btn btn-danger" href="/user-setings-entities/edit/@item.ContragentId">@LocalText.Inst.Get("btn", "has-error", "Виправити", "Исправить")</a>
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-time" aria-hidden="true" title="@LocalText.Inst.Get("tooltip","accountIsApproving","Треба зачекати, ми займаємося акредитацією...","Нужно подождать, мы занимаемся аккредитацией")" data-toggle="tooltip"></span>
+                        }
+
+                        
+                        @*if (item.HasError)
+                        {
+                            <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                        }
+                        else
+                        {
+                            <a class="btn btn-danger" href="/user-setings-entities/edit/@item.Id">@LocalText.Inst.Get("btn", "has-error", "Виправити", "Исправить")</a>
+                        }*@
+                    }
+                }
+                else
+                {
+                    <a class="btn btn-primary" href="/user-setings-entities/edit/@item.ContragentId">@LocalText.Inst.Get("btn", "activate", "Ативувати", "Активировать")</a>
+                }
+            </td>
+            <td>
+                <a class="btn btn-primary" href="/user-setings-entities/edit/@item.ContragentId">@LocalText.Inst.Get("link", "more", "Детальніше", "Подробно")</a>
+            </td>
+        </tr>
+
+    }
+</table>

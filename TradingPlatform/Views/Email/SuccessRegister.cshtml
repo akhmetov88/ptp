@@ -1,0 +1,38 @@
+﻿@model TradingPlatform.Models.NotifyModels.SuccessRegister
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+<style>
+    .btn {
+        padding: 15px 34px;
+        color: #fff;
+        background-color: #012e40;
+        font-size: .8571428571428571em;
+        font-weight: bold;
+        font-family: Tahoma,Arial,sans-serif;
+        text-transform: uppercase;
+        border: #012e40;
+        border-radius: 10px;
+        width: 100%;
+    }
+</style>
+
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto;">
+    <caption>@LocalText.Inst.Get("email", "EmailTemplate.SuccessRegister", "Вітаємо з реєстрацією на PTP.UA", "Поздравляем с регистрацией на PTP.UA",  Model.Lang)</caption>
+   
+    <tr>
+        <td>
+            @LocalText.Inst.Get("email", "EmailTemplate.SuccessRegister.ClickButton", "Підтвердіть реєстрацію кліком по кнопці:", "Подтвердите регистрацию кликом по кнопке:", Model.Lang)
+            <br />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a class="btn" href="@Model.Link">Кнопка</a>
+        </td>
+    </tr>
+</table>
+
+

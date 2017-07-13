@@ -1,0 +1,14 @@
+﻿@model TradingPlatform.Models.NotifyModels.LoserLetter
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+    <p>
+        @LocalText.Inst.Get("text", "EmailTemplate.BaseNotification", "Повідомляємо, що", "Уведомляем, что", Model.Lang) на торгах <span class="mail-important-info">@Model.TradeId</span>
+        Ваша @LocalText.Inst.Get("text", "EmailTemplate.Company", "компанія", "компания", Model.Lang) <span class="mail-important-info">@Model.Company</span> @LocalText.Inst.Get("text", "EmailTemplate.DontWinAnyLot", "не виграла жодного лоту", "не выиграла ни одного лота", Model.Lang).
+    </p>
+</div>
+

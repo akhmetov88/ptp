@@ -1,0 +1,62 @@
+﻿@using System.Globalization
+@using TradingPlatform.Enums
+@model List<TradingPlatform.Models.OfferModels.OrderViewModel>
+
+<table class="details-table">
+    <tbody>
+        <tr>
+            <th>@LocalText.Inst.Get("text", "OrdersView.Time", "Час", "Время")</th>
+            
+            <th>@LocalText.Inst.Get("text", "OrdersView.Volume", "Об’єм", "Объём")</th>
+            <th>@LocalText.Inst.Get("text", "OrdersView.Price", "Ціна", "Цена")</th>
+            <th>@LocalText.Inst.Get("text", "OrdersView.Sum", "Сума", "Сумма")</th>
+            <th>@LocalText.Inst.Get("text", "OrdersView.How", "Ставка", "Ставка")</th>
+        </tr>
+        @if (Model.Count > 0)
+        {
+            foreach (var row in Model)
+            {
+                <tr class="@(row.IsCurrentUser ? "mybet" : "")">
+                    <td>@row.Created.ToClientTime()</td>
+                    <td>@row.Volume.ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " " })</td>
+                    <td>@row.Price.ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " " })</td>
+                    <td>@row.Sum.ToString("C", new NumberFormatInfo() {CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " "})</td>
+                    <td>
+                        @if (row.IsAcceptedBySeller)
+                        {
+                            @LocalText.Inst.Get("text", "OrdersView.OrderIsAccepted", "схвалено", "одобрена")
+                        }
+                        @if (!row.IsAcceptedBySeller&&!row.IsForSeller)
+                        {
+                            @LocalText.Inst.Get("text", "OrdersView.OnApproving", "на розгляді", "на рассмотрении")
+                        }
+                        @if (!row.IsAcceptedBySeller && row.IsForSeller)
+                        {
+                            <a class="btn btn-primary btn-green modal-link1" role="button" href="@Url.Action("AcceptOrder", "Offers", new {id = row.Id})">@LocalText.Inst.Get("text", "OrdersTableView.AcceptOrder", "прийняти пропозицію", "принять предложение")</a>
+                        }                      
+                    </td>
+                </tr>
+            }
+           
+            <tr class="result">
+                <td class="summary"><span class="bold-txt">@LocalText.Inst.Get("text", "betsTableSummary", "Всього", "Всего"):</span></td>
+                <td>@Model.Sum(c => c.Volume)</td>
+                <td>
+                    @if (Model.Count > 0)
+                    {
+                        @Model.Average(c => c.Price).ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 2 })
+                    }
+                    else
+                    {
+                        <text>0</text>
+                    }
+                </td>
+                <td>@Model.Sum(c => c.Sum).ToString("C", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " " })</td>
+                <td></td>
+                <td></td>
+            </tr>
+          
+        }
+    </tbody>
+</table>
+

@@ -1,0 +1,16 @@
+﻿@model TradingPlatform.Models.NotifyModels.NewReplyToOffer
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+<br />
+<div>
+    @*<h4>@LocalText.Inst.Get("email", "EmailTemplate.OrderAccept", "Повідомляємо, що Вами успішно укладено угоду на наступних умовах", "Сообщаем, что Вами успешно заключена сделка на следующих условиях", Model.Lang):</h4>*@
+    <h4>На Вашу пропозицію є відгук від покупця</h4>
+
+    @*<div>
+        <a href="@Model.Link">@LocalText.Inst.Get("email", "EmailTemplate.LookBill", "Подивитись рахунок", "Посмотреть счет", Model.Lang)</a>
+    </div>*@
+</div>
+

@@ -1,0 +1,42 @@
+﻿@using PerpetuumSoft.Knockout
+@model TradingPlatform.Controllers.ManageController.EditDirectoriesModel
+@{
+    ViewBag.Title = LocalText.Inst.Get("title", "dictionaryEdit", "Редагування довідників", "Редактирование справочников");
+}
+@{
+    var ko = Html.CreateKnockoutContext();
+
+}
+<div class="container-fluid">
+    <div class="row form-inline">
+        <div class="form-group col-lg-12">
+            <select class="auction-value form-control" @ko.Bind.Options(f => @ko.Model.Directories).OptionsText(LocalText.GetCultureTwoLetter(), true).Value(v => @ko.Model.SelectedDirectory)></select>
+            <button class="btn btn-primary">Add</button>
+        </div>
+        <div class="form-group col-lg-12" @ko.Bind.Visible(c => @ko.Model.SelectedDirectory.Values.Count > 0)>
+            @using (var vals = @ko.With(c => c.SelectedDirectory))
+            {
+                <select class="auction-value form-control" @vals.Bind.Options(f => f.Values).OptionsText(LocalText.GetCultureTwoLetter(), true).Value(c => @ko.Model.SelectedValueViewModel)></select>
+                <button class="btn btn-primary">Add</button>
+            }
+        </div>
+        <div class="form-group col-lg-12" @ko.Bind.Visible(c => @ko.Model.SelectedValueViewModel.DependentValues.Count > 0)>
+            @using (var depvals = @ko.With(c => c.SelectedValueViewModel))
+            {
+                <select class="auction-value form-control" @depvals.Bind.Options(f => f.DependentValues).OptionsText(LocalText.GetCultureTwoLetter(), true).Value(c => @ko.Model.SelectedDependent)></select>
+                <button class="btn btn-primary">Add</button>
+            }
+        </div>
+        <div class="form-group col-lg-12" @ko.Bind.Visible(c => @ko.Model.SelectedSecondDependent)>
+            @using (var secdepvals = @ko.With(c => c.SelectedDependent))
+            {
+                <select class="col-lg-4 auction-value form-control" @secdepvals.Bind.Options(f => f.AnotherDependencies).OptionsText(LocalText.GetCultureTwoLetter(), true).Value(c => @ko.Model.SelectedSecondDependent)></select>
+                <button class="btn btn-primary">Add</button>
+            }
+        </div>
+
+    </div>
+</div>
+
+
+@ko.Apply(Model)

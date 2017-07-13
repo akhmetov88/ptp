@@ -1,0 +1,34 @@
+﻿@using TradingPlatform.Enums
+
+@model TradingPlatform.Models.TradeModel.TradeViewModel
+
+@if (User.Identity.GetUserGroup() == Model.GroupId)
+{
+    if (Model.TradeType == TradeTypes.openFixed.ToString())
+    {
+        @Html.Partial("Trade/SellerFixedShortView", Model)
+    }
+    if (Model.TradeType == TradeTypes.closeFixed.ToString())
+    {
+        @Html.Partial("Trade/SellerFixedShortView", Model)
+    }
+    if (Model.TradeType == TradeTypes.quotation.ToString())
+    {
+        @Html.Partial("Trade/_DifferncialTradeViewSeller", Model)
+    }
+}
+else
+{
+    if (Model.TradeType == TradeTypes.openFixed.ToString())
+    {
+        @Html.Partial("Trade/BuyerFixedShortView", Model)
+    }
+    if (Model.TradeType == TradeTypes.closeFixed.ToString())
+    {
+        @Html.Partial("Trade/BuyerFixedShortView", Model)
+    } 
+    if (Model.TradeType == TradeTypes.quotation.ToString())
+    {
+        @Html.Partial("Trade/_DifferncialTradeViewBuyer", Model)
+    }
+}

@@ -1,0 +1,117 @@
+﻿@model TradingPlatform.Models.ViewModel.FeedbackViewModel
+@{
+    ViewBag.Title = @LocalText.Inst.Get("label", "feedbackHeader", "ЗВОРОТНІЙ ЗВ’ЯЗОК", "ОБРАТНАЯ СВЯЗЬ");
+    ViewBag.Hint = @LocalText.Inst.Get("help", "feedbackHint", "need translate", @"Через форму на странице «Обратная связь» можно обратиться по интересующим вопросам к Оператору PTP.
+Незарегистрированные пользователи могут обращаться только в службу технической поддержки. Для этого нужно обязательно указать свое имя, e-mail и телефон. Оператор PTP оставляет за собой право не отвечать на анонимные обращения.
+Зарегистрированные пользователи могут обращаться в службу технической поддержки по вопросам, связанным с работой площадки, к менеджеру по продажам по финансовым вопросам, по вопросам оказанных ЭТП услуг и по вопросам сотрудничества. Для этого нужно только указать тип обращения и текст обращения.
+");
+}
+<div class="create-auction title">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('feedback')">?</a>
+    <h3>@ViewBag.Title</h3>
+    <hr />
+</div>
+
+
+@using (Html.BeginForm("Feedback", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "submitForm" }))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name, LocalText.Inst.Get("label", "userNameFeedback", "Представтесь", "Представтесь"), new { @class = "col-md-3 control-label" })
+        <div class="col-md-9">
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control auction-value", @placeholder = "Jhon Doe" })
+            @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email, LocalText.Inst.Get("label", "userEmailFeedback", "Вкажіть свій еmail", "Укажите свой еmail"), new { @class = "col-md-3 control-label" })
+            <div class="col-md-9">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control auction-value", @placeholder = "jhon@doe.com" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.PhoneNumber, LocalText.Inst.Get("label", "userPhone", "Телефон", "Телефон"), new { @class = "col-md-3 control-label" })
+            <div class="col-md-9">
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control auction-value", @placeholder = "+380509379992" })
+                @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Subject, LocalText.Inst.Get("label", "feedbackSubject", "Зазначте тему звернення", "Укажите предмет обращения"), new { @class = "col-md-3 control-label" })
+            <div class="col-md-9">
+                @Html.TextBoxFor(m => m.Subject, new { @class = "form-control auction-value"})
+                @Html.ValidationMessageFor(m => m.Subject, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Text, LocalText.Inst.Get("label", "feedbackText", "Введіть текст звернення", "Введите текст обращения"), new {@class = "col-md-3 control-label" })
+        <div class="col-md-9">
+            @Html.TextAreaFor(m => m.Text, new {@class = "form-control auction-value"})
+            @Html.ValidationMessageFor(m => m.Text, "", new {@class = "text-danger"})
+        </div>
+    </div>
+
+    <input type="submit" class="col-lg-offset-3" value="@LocalText.Inst.Get("btn","feedbackSubmit","Відправити","Отправить")"/>
+
+}
+<br/>
+<hr/>
+
+<div id="our-contacts">
+    <div class="create-auction title">
+         
+            <hr />
+        </div>
+    <div>
+        <div><span>Наш адрес</span>: @LocalText.Inst.Get("text", "contacts_address", "Україна, м.Київ, вул.Лінійна 17", "Украина, г.Киев, ул.Линейная 17")</div>
+        <div><span>Тел</span>: +380(44)354-33-46</div>
+        <div><span>Email</span>: <a href="mailto: info@ptp.ua">info@ptp.ua</a></div>
+    </div>
+</div>
+
+
+
+@*<form id="feedback" method="POST">
+   
+    <div class="row form-group">
+        <div class="col-lg-5 for-select">
+            <label>
+                <select name="use" id="point" class="form-control action_filters auction-value">
+                    <option value="support">Обращение в службу поддержки сайта</option>
+                </select>
+            </label>
+        </div>
+        <label for="" class="col-lg-5">Суть обращения</label>
+    </div>
+    <div class="row form-group">
+        <div class="col-lgxz\v mnb,-5">
+            <input name="snp" type="text" class="form-control action_filters auction-value">
+        </div>
+        <label class="col-lg-5">ФИО</label>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-5">
+            <input name="email" type="text" class="form-control action_filters auction-value">
+        </div>
+        <label class="col-lg-5">e-mail</label>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-5">
+            <input name="tel1" type="text" class="form-control action_filters auction-value">
+        </div>
+        <label class="col-lg-5">Номер телефона</label>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-5">
+            <textarea name="message" class="form-control action_filters auction-value" rows="8" cols="78"></textarea>
+        </div>
+        <label class="col-lg-5">Текст обращения</label>
+    </div>
+    <div class="g-recaptcha" data-sitekey="6LexvQYTAAAAAMUnPWKb33Rk2whdukBeFteuKQlt"><div><div style="width: 304px; height: 78px;">|<iframe src="https://www.google.com/recaptcha/api2/anchor?k=6LexvQYTAAAAAMUnPWKb33Rk2whdukBeFteuKQlt&amp;co=aHR0cDovL3B0cC5raWV2LnVhOjgw&amp;hl=en&amp;v=r20160119135516&amp;size=normal&amp;cb=i6tx3yj2ybne" title="recaptcha widget" width="304" height="78" role="presentation" frameborder="0" scrolling="no"></iframe></div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid #c1c1c1; margin: 10px 25px; padding: 0px; resize: none;  display: none; "></textarea></div></div>
+    <input type="hidden" name="public_func" class="action_filters auction-value" value="auction_feedback">
+    <input type="hidden" name="action" class="action_filters auction-value" value="no-java-feedback-send">
+    <input type="hidden" name="lang" class="action_filters auction-value" value="ru">
+    <input type="submit" data-form="feedback" value="отправить">
+</form>*@
+

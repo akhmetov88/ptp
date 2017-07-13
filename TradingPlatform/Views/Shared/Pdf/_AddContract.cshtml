@@ -1,0 +1,262 @@
+﻿@using System.Globalization
+@using TradingPlatform.Enums
+@using TradingPlatform.Models
+@model TradingPlatform.Models.BillModel
+
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; CHARSET=utf-8">
+    <title></title>
+    <style>
+        h2, h4 {
+            text-align: center;
+        }
+
+        .floater {
+            margin: 0 0 8px;
+        }
+        .floater::after {
+            display: table;
+            content: "";
+            clear: both;
+        }
+        .floater p:first-child {
+            float: left;
+            width: 70%;
+            text-align: left;
+        }
+        .floater p:last-child {
+            float: right;
+            width: 30%;
+            text-align: right;
+        }
+
+        section {
+            margin: 16px 0;
+        }
+        section p:first-child {
+            margin: 0 0 6px;
+        }
+        section table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 5px 0;
+        }
+        section table, section table th, section table td {
+            border: 1px solid black;
+            padding: 4px;
+        }
+        section table th {
+            background-color: yellowgreen;
+            text-align: center;
+        }
+        section table td {
+            padding: 4px;
+        }
+        section table tr:nth-child(n+3) {
+            text-align: right;
+        }
+        section table #product-name {
+            width: 30%;
+            padding: 30px;
+        }
+        section table #product-name + td {
+            text-align: right;
+        } 
+
+        ol {
+            margin: 8px 0 18px;
+            list-style-type: none;
+        }
+        ol li {
+            margin: 10px 0;
+            padding: 4px 0 4px 16px;
+        }
+
+        #footer table {
+            width: 100%;
+            margin: 8px 0 0;
+        }
+        #footer table th, #footer table td  {
+            width: 50%;
+            text-align: center;
+        }
+        #footer table th {
+            padding-bottom: 40px;
+        }
+        #footer table #signatures span {
+            position: relative;
+            top: -5px;
+            right: -42px;
+        }
+    </style>
+</head>
+
+<body>
+    @{ 
+        var ceoSeller = Model.Seller.IsConfidant ? Model.Seller.ConfidantName : Model.Seller.CeoName;
+        var ceoBuyer = Model.Buyer.IsConfidant ? Model.Buyer.ConfidantName : Model.Buyer.CeoName;
+    }
+    <div id="header">
+        <h2>Додаткова угода № <b>@Model.ShowModel.AddContract</b></h2>
+        <div class="floater">
+            <p>до Договору купівлі-продажу нафтопродуктів № @Model.ShowModel.Contract</p>
+            <p>від @Model.ShowModel.DocCreaDate.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("uk-UA")).ToLower()p.</p>
+        </div>
+        
+        <div class="floater">
+            <p>м. Київ</p>
+            <p>@Model.ShowModel.DocCreaDate.ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("uk-UA"))</p>
+        </div>
+    </div>
+
+    <section>
+        <p>
+            ТОВ <b>«@Model.ShowModel.SellerName»</b>, в особі <b>@ceoSeller</b>,
+            який(яка) діє на підставі Статуту,
+            що іменується надалі «Продавець», з одного боку,
+            ТОВ <b>«@Model.ShowModel.BuyerName»</b>, в особі <b>@ceoBuyer</b>,
+            який(яка) діє на підставі Статуту,
+            що іменується надалі «Покупець», з іншого боку,
+            іменовані надалі разом – «Сторони», а кожна окремо – «Сторона», відповідно до чинного законодавства
+            України уклали цю Додаткову угоду про наступне:
+        </p>
+        <p>
+            1. Продавець зобов'язується передати у власність, а Покупець прийняти і оплатити Товар по цінах та
+            обсягах, що вказані нижче:
+        </p>
+        @*<table>
+            <tr>
+                <th>Найменування Товару</th>
+                <th>Одиниці виміру</th>
+                <th>Кількість</th>
+                <th>Ціна без ПДВ, грн.</th>
+                <th>Ціна з ПДВ, грн.</th>
+                <th>Сума без ПДВ, грн</th>
+            </tr>
+            <tr>
+                <td id="product-name"></td>
+                <td>тон (т)</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="5">Всього без ПДВ, грн.</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="5">ПДВ 20%, грн.</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="5">Всього з ПДВ, грн.</td>
+                <td></td>
+            </tr>
+        </table>*@
+        <div class="table">
+            <table class="table table-bordered">
+                <thead>
+                    <tr style="background-color: darkolivegreen">
+                        <th>№</th>
+                        <th>Товар</th>
+                        <th colspan="2">Кількість</th>
+                        <th>Ціна, грн.</th>
+                        <th>Сума, грн.</th>
+                    </tr>
+                </thead>
+
+                <tr>
+                    <td>1</td>
+                    <td>
+                        @StaticData.Inst.GetCatalogValue(@Model.Trade.ProductName)
+                    </td>
+                    <td>@Model.Bets.Where(c => c.IsActual).Sum(x => x.Volume ?? 0).ToStandartString()</td>
+                    <td>т</td>
+                    <td>@((Model.Bets.Where(c => c.IsActual).Sum(x => x.Price * x.LotsCount ?? 0) / Model.Bets.Sum(x => x.LotsCount)).ToString("C2", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 0 }))</td>
+                    <td>@Model.Bets.Where(c => c.IsActual).Sum(x => x.Volume * x.Price ?? 0).ToStandartString()</td>
+
+                </tr>
+                <tr>
+                    <td colspan="5" style="text-align: right">Разом:</td>
+                    <td>@(Model.Bets.Where(c => c.IsActual).Sum(x => x.Price * x.Volume ?? 0).ToString("C2", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 0 })) </td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="text-align: right">У тому числі ПДВ:</td>
+                    <td>@((Model.Bets.Where(c => c.IsActual).Sum(x => x.Price * x.Volume ?? 0) / 6).ToString("C2", new NumberFormatInfo() { CurrencySymbol = "", CurrencyDecimalSeparator = ".", CurrencyGroupSeparator = " ", CurrencyDecimalDigits = 0 }))</td>
+                </tr>
+            </table>
+        </div>
+        <ol>
+            2. Сторони визначили, що передача Товару буде здійснюватися на наступних умовах:
+            <li>
+                2.1. Якість Товару: <b>@StaticData.Inst.GetCatalogValue(Model.Trade.ProductQuality)</b>
+            </li>
+            <li>
+                2.2. Країна виробництва: <b>@StaticData.Inst.GetCatalogValue(Model.Trade.ProductCountry)</b>.
+                Завод-виробник: <b>@StaticData.Inst.GetCatalogValue(Model.Trade.ProductManufacturer)</b>.
+            </li>
+            <li>
+                2.3. Кількість Товару, що передано у власність за цією Додатковою угодою, визначається на підставі
+                Актів приймання-передачі Товару, та є остаточною.
+            </li>
+            <li>
+                2.4. Товар за цією Додатковою угодою передається @StaticData.Inst.GetCatalogValue(Model.Trade.TransportType) на
+                умовах @StaticData.Inst.GetCatalogValue(Model.Trade.Incotherms) @StaticData.Inst.GetCatalogValue(Model.Trade.ShipmentPoint) .
+            </li>
+            <li>
+                2.5. Строк поставки Товару: з <b>@Model.Trade.DeliveryDateFrom.ToClientDate() по @Model.Trade.DeliveryDateTo.ToClientDate() включно</b>, але в будь-якому
+                випадку не раніше дати зарахування на банківський рахунок Продавця суми 100% попередньої оплати
+                за Товар.
+            </li>
+            <li>
+                2.6. Умови оплати: 100% попередня оплата за Товар до <b>@Model.Trade.DayToPay.ToClientDate()</b> включно.
+            </li>
+            <li>
+                2.7. @*Період з дати прибуття завантажених цистерн на станцію призначення (підтверджується
+                позначками (штампами) станції призначення на залізничних накладних) і до дати відправки порожніх
+                цистерн на станцію, вказану в інструкції Продавця про повернення порожніх цистерн (підтверджується
+                позначками (штампами) станції відправлення на зворотній залізничній накладній) не повинен
+                перевищувати ___ (_________) календарних дні. Період, що перевищує ____ (__________) календарних
+                дні, підтверджений документами (позначками (штампами) на відповідних залізничних накладних та/або
+                даними наданими ГІОЦ ПАТ «Укрзалізниці», оплачується у розмірі ____ (______________) у
+                валюті _____ на добу за кожну цистерну.*@ @Model.Trade.TankTherms Оплата здійснюється Покупцем протягом 5 (п’яти) банківських
+                днів від дати виставлення Продавцем рахунку на оплату наднормового простою (використовуються
+                курси НБУ на дату виставлення такого рахунку).
+            </li>
+        </ol>
+        <p>
+            3. Ця Додаткова угода вступає в дію з дати її підписання та діє до @Model.ShowModel.DocCreaDate.AddYears(1).ToString("dd MMMM yyyy", CultureInfo.GetCultureInfo("uk-UA")).ToLower()p. включно (в частині
+            ціни та строків вивозу товару), в частині взаєморозрахунків - до їх повного завершення.
+        </p>
+        <p>
+            4. Ця Додаткова угода є невід'ємною частиною Договору купівлі-продажу нафтопродуктів №
+            <b>@Model.ShowModel.Contract</b> від <b>@Model.ShowModel.DocCreaDate.ToClientDate()</b>, складена у двох примірниках, які мають однакову юридичну
+            силу, по одному примірнику для кожної із Сторін.
+        </p>
+    </section>
+
+    <div id="footer">
+        <h4>ПІДПИСИ СТОРІН</h4>
+        <table>
+            <tr>
+                <th>Від ПРОДАВЦЯ </th>
+                <th>Від ПОКУПЦЯ</th>
+            </tr>
+            <tr>
+                <td>Продавець ______________ </td>
+                <td>Покупець _____________</td>
+            </tr>
+            <tr id="signatures">
+                <td><span>(підпис, печатка)</span></td>
+                <td><span>(підпис, печатка)</span></td>
+            </tr>
+        </table>
+    </div>
+    
+</body>
+
+</html>

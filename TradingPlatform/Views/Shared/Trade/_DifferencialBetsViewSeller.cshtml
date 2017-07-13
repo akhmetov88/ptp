@@ -1,0 +1,111 @@
+﻿@using System.Globalization
+@using TradingPlatform.Enums
+@model List<TradingPlatform.Models.LotViewModel>
+
+
+<table class="details-table">
+    <tbody>
+        <tr>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyer.ResellingCount", "Тур", "Тур")</th>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyer.LotNumber", "Лот №", "Лот №")</th>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyer.BetTime", "Час ставки", "Время ставки")</th>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyer.BuyerName", "Хто поставив", "Кто поставил")</th>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyer.AcceptTime", "До прийняття рішення", "До принятия решения")</th>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyerVolume", "Об’єм", "Объём")</th>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyer.Price", "Премія", "Премия")</th>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyer.Bet", "Дія", "Действие")</th>
+        </tr>
+        @if (Model.Count > 0)
+        {
+            foreach (var lot in Model)
+            {
+                var style =
+                   !lot.OnThinking&&!lot.IsSelled&&lot.IsActual ? "notonthinking" :
+                   !lot.IsActual&&lot.IsSelled ? "selled" :
+                   !lot.IsSelled&&!lot.IsActual? "notactual" :"default";
+                <tr class="@style">
+                    <td>
+                        @lot.ReSellingCount
+                    </td>
+                    <td>@lot.LotNumber</td>
+                    @if (lot.Bets.Any(c => c.IsActual))
+                    {
+                        <td>@lot.Bets.FirstOrDefault(c => c.IsActual).DateBet.ToClientTime()</td>
+                    }
+                    else
+                    {
+                        <td>@lot.TimeFrom.ToClientTime()</td>
+                    }
+                    <td>
+                        @if (lot.Bets.Any(c => c.IsActual))
+                        {
+                            @lot.Bets.FirstOrDefault(c => c.IsActual).BuyerName
+                        } else
+                        {
+                            @LocalText.Inst.Get("text", "Trade.DifferncialBetsViewSeller.BuyerNameNotExist", "Нема актуальних ставок", "Нет актуальных ставок");
+                        }
+                    </td>
+                    <td>
+                        @if (lot.IsSelled || !lot.IsActual)
+                        {
+
+                        }
+                        else if (!lot.IsSelled && lot.IsActual)
+                        {
+                            <span data-countdown="@lot.ElapsingTime.ToParse()" class="time trade-update-span" data-tableId="@lot.TradeId"></span>
+                        }
+                    </td>
+                    <td>@Html.DisplayFor(c => lot.Volume)</td>
+                    <td>@Html.DisplayFor(c => lot.Price)</td>
+                    <td>
+                        @if (lot.OnThinking)
+                        {
+                            if (!lot.IsSelled && lot.IsActual) 
+                            {
+                                if (lot.Bets.Any(c => c.IsActual))
+                                {
+                                    <a class="btn btn-green modal-link1" title="Продати" data-toggle="tooltip" role="button" href="@Url.Action("AcceptBetAndSaleLot", "Trade", new {lot = lot.Id})">
+                                        <i class="fa fa-check fa-2x"></i>
+                                    </a>
+                                    <a class="btn btn-default modal-link1" role="button" title="Перевиставити" data-toggle="tooltip" href="@Url.Action("ResellBet", "Trade", new {lot = lot.Id})">
+                                        <i class="fa fa-anchor fa-2x"> </i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-default modal-link1" title="Перевиставити" data-toggle="tooltip" role="button" href="@Url.Action("ResellBet", "Trade", new {lot = lot.Id})">
+                                        <i class="fa fa-anchor fa-2x"></i>
+                                    </a> 
+                                    <a class="btn btn-danger modal-link1" role="button" href="@Url.Action("DeclineBet", "Trade", new {lot = lot.Id})">
+                                        <i class="fa fa-times fa-2x"></i>
+                                    </a>
+                                }
+                            }
+
+                            else
+                            {
+                                <a onclick="OpenHelpDialog('@style')"><i class="fa fa-battery-empty"></i></a>
+                            }
+                        }
+                        else
+                        {
+                            if (lot.Bets.Any(c => c.IsActual))
+                            {
+                                <a onclick="OpenHelpDialog('@style')"><i class="fa fa-battery-full fa-2x"></i></a>
+                            }
+                            else
+                            {
+                                <a onclick="OpenHelpDialog('@style')"><i class="fa fa-battery-empty fa-2x"></i></a>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+
+        }
+    </tbody>
+
+
+
+
+</table>

@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /Admin/
+Disallow: /Lawyer/
+Disallow: /admin/
+Disallow: /lawyer/
+
+Sitemap: http://ptp.ua/sitemap.xml

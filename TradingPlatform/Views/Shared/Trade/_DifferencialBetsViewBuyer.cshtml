@@ -1,0 +1,114 @@
+﻿@using System.Globalization
+@using TradingPlatform.Enums
+@model List<TradingPlatform.Models.LotViewModel>
+@{
+    ViewBag.Title = @LocalText.Inst.Get("title", "createTradeHistoryTitle", "Історія торгів", "История торгов");
+}
+<table class="details-table">
+    <tbody>
+        <tr>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyer.ResellingCount", "Тур", "Тур")</th>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyer.LotNumber", "Лот №", "Лот №")</th>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyer.BetTime", "Час ставки", "Время ставки")</th>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyer.AcceptTime", "До прийняття рішення", "До принятия решения")</th>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyerVolume", "Об’єм", "Объём")</th>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyer.Price", "Премія", "Премия")</th>
+            <th>@LocalText.Inst.Get("text", "Trade.DifferncialBetsViewBuyer.Bet", "Дія", "Действие")</th>
+        </tr>
+        @if (Model.Count > 0)
+        {
+            foreach (var lot in Model)
+            {
+                var style =
+                   lot.OnThinking && lot.IsCurrentUser ? "mybet-onthinking" :
+                   lot.IsCurrentUser && lot.IsSelled ? "mybet-selled" :
+                   lot.OnThinking ? "onthinking" :
+                   !lot.IsActual&&!lot.IsSelled ? "notactual" :
+                   lot.IsCurrentUser&& !lot.OnThinking &&!lot.IsSelled ? "mybet" :
+                   lot.IsSelled&&!lot.IsActual ? "selled" : "default";
+
+                <tr class="@style">
+                    <td>
+                        @lot.ReSellingCount
+                    </td>
+                    <td>@lot.LotNumber</td>
+
+                    @if (lot.Bets.Any(c => c.IsActual))
+                    {
+                        <td>@lot.Bets.FirstOrDefault(c => c.IsActual).DateBet.ToClientTime()</td>
+                    }
+                    else
+                    {
+                        <td>@lot.TimeFrom.ToClientTime()</td>
+                    }
+                    <td>
+                        @if (lot.IsSelled && !lot.IsActual)
+                        {
+                            <span class="hint" onclick="OpenHelpDialog('@style')">@LocalText.Inst.Get("text", "HelpDiff-" + style)</span>
+                        }
+                        else if (!lot.IsSelled && !lot.IsActual)
+                        {
+                            <span class="hint" onclick="OpenHelpDialog('@style')">@LocalText.Inst.Get("text", "HelpDiff-" + style)</span>
+                        }
+                        else if (!lot.IsSelled && lot.IsActual)
+                        {
+                            <span data-countdown="@lot.ElapsingTime.ToParse()" class="time trade-update-span" data-tableId="@lot.TradeId"></span>
+                        }
+
+                    </td>
+                    <td>@Html.DisplayFor(c => lot.Volume)</td>
+                    <td>@Html.DisplayFor(c => lot.Price)</td>
+                    <td>
+                        @if (lot.IsActual && !lot.IsSelled && !lot.OnThinking && !lot.IsCurrentUser)
+                        {
+                            if (lot.Bets.Any(c => c.IsActual))
+                            {
+                                <a class="modal-link1" href="@Url.Action("ReBet", "Trade", new {trade = lot.TradeId, betid = @lot.Bets.FirstOrDefault(c => c.IsActual)?.Id, _ = DateTime.Now.Ticks})">
+                                    <i class="fa fa-battery-full fa-3x" title="Перебить (@lot.Price+0.5)" data-toggle="tooltip"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="modal-link1" href="@Url.Action("BetTwo", "Trade", new {trade = lot.TradeId, lot = @lot.Id, _ = DateTime.Now.Ticks})">
+                                    <i class="fa fa-battery-empty fa-3x" title="Предложить премию, минимум @lot.MinPrice" data-toggle="tooltip"></i>
+                                </a>
+                            }
+                        }
+                        else if (!lot.IsSelled && lot.IsActual)
+                        {
+                            if (lot.IsCurrentUser && lot.OnThinking)
+                            {
+                                <span class="hint" onclick="OpenHelpDialog('@style')">@LocalText.Inst.Get("text", "HelpDiff-" + style)</span>
+                            }
+                            else if (lot.OnThinking)
+                            {
+                                <span class="hint" onclick="OpenHelpDialog('@style')">@LocalText.Inst.Get("text", "HelpDiff-" + style)</span>
+                            }
+
+                        }
+                        else if (!lot.IsSelled && !lot.IsActual && !lot.OnThinking)
+                        {
+                            <span class="hint" onclick="OpenHelpDialog('@style')">@LocalText.Inst.Get("text", "HelpDiff-" + style)</span>
+                        }
+                        else if (lot.IsCurrentUser)
+                        {
+                            <span class="hint" onclick="OpenHelpDialog('@style')">@LocalText.Inst.Get("text", "HelpDiff-" + style)</span>
+                        }
+                        else
+                        {
+
+                        }
+
+                    </td>
+
+                </tr>
+            }
+
+        }
+    </tbody>
+
+
+
+
+
+</table>

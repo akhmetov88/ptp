@@ -1,0 +1,150 @@
+﻿@using System.Globalization
+@using TradingPlatform.Enums
+@using TradingPlatform.Models
+@model TradingPlatform.Models.BillModel
+
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; CHARSET=utf-8">
+    <title></title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container">
+        <div id="trade-document-invoice">
+        
+            <h3>INVOICE/ СЧЕТ № @Model.ShowModel.BillNumber</h3>
+            <div class="row">
+               <div class="col-sm-6"><p>Kiev/Киев</p></div>
+                <div class="col-sm-6"><p>Date/Дата: @Model.Trade.DateEnd.ToShortDateString()</p></div>
+            </div>
+            <p>Contract №/Договор №: @Model.ShowModel.Contract</p>
+            <p>Date of the Contract/Дата Договора: @Model.ShowModel.DocCreaDate.ToClientDate()</p>
+            <p>Annex №/Дополнительное соглашение: @Model.ShowModel.AddContract</p>
+            <p>Date of the Annex/Дата Дополнительного соглашения: @Model.Trade.DateEnd.ToShortDateString()</p>
+            <div>
+                <div class="row">
+                    <div class="col-sm-6"><p>Seller/Продавец</p></div>
+                    <div class="col-sm-6">
+                    <ul>
+                        <li>@Model.ShowModel.SellerName</li>
+                        <li>Address: @Model.Seller.PostAddress</li>
+                        <li>Beneficiary Bank: @Model.Trade.BankBill.BankName</li>
+                        <li>Address: @Model.Trade.BankBill.Address</li>
+                        <li>Swift: @Model.Trade.BankBill.Swift</li>
+                        <li>Beneficiary account (USD) No: @Model.Trade.BankBill.BillNumber</li>
+                        <li>Correspondent Bank: _______</li>
+                        <li>Address: _____</li>
+                        <li>Swift: ______</li>
+                        <li>Account ______</li>
+                    </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6"><p>Buyer/Покупатель</p></div>
+                    <div class="col-sm-6">
+                        <ul>
+                            <li>@Model.ShowModel.BuyerName</li>
+                            <li>Address: @Model.Buyer.PostAddress</li>
+                            <li>Beneficiary Bank: @Model.Buyer.BankBillRequired.BankName</li>
+                            <li>Swift: @Model.Buyer.BankBillRequired.Swift</li>
+                            <li>Beneficiary Account:/li>
+                            <li>№ @Model.Buyer.BankBillRequired.BillNumber</li>
+                            <li>Correspondent Bank (USD):</li>
+                            <li>_______</li>
+                            <li>Swift Code:  _______</li>
+                            <li>Account No: ___________</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+          <div class="row">
+            <table>
+                <tr>
+                    <th>Delivery terms/Базис поставки</th>
+                    <td>DAF Suzemka-exp. (The Russian Federation) / Zernovo-exp. (Ukraine) / DAF Суземка-эксп. (Российская Федерация) / Зерново-эксп. (Украина)</td>
+                </tr>
+                <tr>
+                    <th>Currency of invoice/Валюта счета</th>
+                    <td>USD/Доллар США</td>
+                </tr>
+                <tr>
+                    <th>Country of origin/Страна происхождения товара:</th>
+                    <td>@StaticData.Inst.GetCatalogValue(Model.Trade.ProductCountry)</td>
+                </tr>
+            </table>
+            </div>
+
+            <div class="row">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Description/Наименование</th>
+                        <th>№ of the tank car/№ цистерны</th>
+                        <th>Quantity (mt)/кол-во</th>
+                        <th>Dispatch station/Ст.отгрузки</th>
+                        <th>Unit price/цена</th>
+                        <th>Total amount/Сумма</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@StaticData.Inst.GetCatalogValue(Model.Trade.ProductName)</td>
+                        <td>57806028</td>
+                        <td>34,438</td>
+                        <td>Toropets/Торопец</td>
+                        <td>295,00</td>
+                        <td>10 159,21</td>
+                    </tr>
+                    <tr>
+                        <th>Total/Итого</th>
+                        <td></td>
+                        <td>34,438</td>
+                        <td></td>
+                        <td></td>
+                        <td>10 159,21</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    
+        <div class="row">
+            <div class="col-sm-6"><p>Total under invoice/<br />Итого по счету</p></div>
+                <div class="col-sm-6"><p>54 899,80 (Fifty four thousand eight hundred ninety nine US dollars 80 cents/Пятьдесят четыре тысячи восемьсот девяносто девять долларов США 80 центов)</p></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <p>Представитель компании</p>
+            </div>
+            <div class="col-sm-6">
+                <p>@Model.Seller.ConfidantName</p>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+       #trade-document-invoice h3+div+p {
+           margin-top: 24px;
+       }
+        #trade-document-invoice h3 {
+            text-align: center;
+        }
+        #trade-document-invoice ul {
+            list-style-type: none;
+        }
+        #trade-document-invoice table {
+            margin: 20px 0 10px;
+        }
+        #trade-document-invoice th, #trade-document-invoice td {
+            border: 1px solid grey;
+            padding: 8px;
+        }
+    </style>
+
+</body>
+</html>
+

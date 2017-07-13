@@ -1,0 +1,687 @@
+﻿@using PerpetuumSoft.Knockout
+@model TradingPlatform.Models.TradeModel.NewAuctionViewModel
+@{
+    ViewBag.Title = @LocalText.Inst.Get("title", "createTradeTitle", "Створення торгів", "Создание торгов");
+}
+<link rel="stylesheet" href="~/Scripts/dt/bootstrap-datetimepicker.css" />
+<link rel="stylesheet" href="~/Content/datepick1.css" />
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+<script src="~/Scripts/datepick1uk.js"></script>
+<script type="text/javascript" src="~/scripts/moment.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="~/scripts/moment-with-locales.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="~/scripts/dt/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="~/scripts/dt/locales/bootstrap-datetimepicker.uk.js" charset="UTF-8"></script>
+<script type="text/javascript" src="~/scripts/dt/locales/bootstrap-datetimepicker.ua.js" charset="UTF-8"></script>
+<script type="text/javascript" src="~/scripts/dt/locales/bootstrap-datetimepicker.ru.js" charset="UTF-8"></script>
+<script src="@Url.Content("~/Scripts/knockout-3.4.0.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/knockout.mapping-latest.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/perpetuum.knockout.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/knockoutswitch.js")" type="text/javascript"></script>
+<script type="text/javascript" src="~/Scripts/bindFile2.js"></script>
+
+
+<style>
+    #torg-param-helper  div[class*="col-lg"]{
+        padding: 0;
+    }
+    @@media screen and (min-width: 768px) {
+        #quotation-valute-select-wrapper select {
+            width: 100%;
+        }
+    }
+    @@media screen and (min-width: 1200px) {
+        #quotation-valute-select-wrapper {
+            padding: 0 12px 6px;
+            background-color: initial;
+            border: none;
+            text-align: left;
+        }
+        #quotation-valute-select-wrapper select {
+            width: auto;
+        }
+    }
+</style>
+
+@{
+    var ko = Html.CreateKnockoutContext();
+}
+
+@ko.Initialize(Model)
+
+<div class="create-auction title">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('tradecreate')">?</a>
+    <h3>@LocalText.Inst.Get("label", "createTradeHeader", "Створити торг", "Создать торг")</h3>
+    <hr />
+</div>
+<div>
+    <ul class="nav nav-tabs">
+        <li class="@(Request.Url.PathAndQuery == "/auction-buyer-future" ? "active" : "")"><a href="/auction-buyer-future">@LocalText.Inst.Get("link", "auction-buyer-future", "Майбутні торги", "Будущие торги")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/auction-buyer-current" ? "active" : "")"><a href="/auction-buyer-current">@LocalText.Inst.Get("link", "auction-buyer-current", "Поточні торги", "Текущие торги")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/auction-buyer-past" ? "active" : "")"><a href="/auction-buyer-past">@LocalText.Inst.Get("link", "auction-buyer-past", "Минулі торги", "Прошедшие торги")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/my/trades" ? "active" : "")"><a href="/my/trades">@LocalText.Inst.Get("link", "Trades.Index.My", "Мої торги", "Мои торги")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/approving" ? "active" : "")"><a href="/approving">@LocalText.Inst.Get("link", "Trades.Index.MyOnApproving", "На модерації", "На модерации")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/trade/createtrade" ? "active" : "")"><a href="/trade/createtrade">@LocalText.Inst.Get("link", "Trade.Index.CreateTradeLink", "Створити торги", "Создать торги")</a></li>
+
+    </ul>
+</div>
+@using (@ko.Html.Form("CreateTrade", "Trade", null, new { id = "createtradeform"}))
+{
+ 
+    <div class="create-auction-input">
+        <p>@LocalText.Inst.Get("label", "sellerName", "Продавець", "Продавец")</p>
+        <select title="@LocalText.Inst.Get("tooltip", "createtradeContragent", "Виберіть юридичну особу, яка буде виступати продавцем товару", "Выберите юридичекое лицо, которое будет выступать продавцом товара")"
+                data-toggle="tooltip"
+                @ko.Bind.Options(c => c.ContragentList).OptionsText("LongName", true).Value(c => c.SelectedSeller).OptionsCaption(@LocalText.Inst.Get("label", "makeAChoosePlease", "Зробіть, будь ласка, вибір", "Сделайте, пожалуйста, выбор"))></select>
+    </div>
+        <div class="create-auction-input" data-bind="visible: SelectedSeller">
+            <p>@LocalText.Inst.Get("label", "contactFace", "Контактна особа", "Контактное лицо")</p>
+            <input data-bind="value : Contact,valueUpdate : 'afterkeydown'" name="Contact" type="text" data-toggle="tooltip"
+                   title="@LocalText.Inst.Get("tooltip", "createtradeContact", "Залиште інформацію для зв’язку з вами", "Оставьте информацию для связи с вами")">
+        </div>
+        <span class="text-danger" data-bind="visible: (Contact().length<10)&& SelectedSeller">
+            @LocalText.Inst.Get("label", "contactInputHint", "Введіть дані про контакну особу, наприклад, ім’я, номер телефону/емейл", "Введите данные о контакном лице, например, имя, номер телефона/эмейл")
+        </span>
+        <div class="create-auction-input" data-bind="visible: Contact().length>=10">
+            <p>@LocalText.Inst.Get("label", "bankBills", "Банківські реквізити", "Банковские реквизиты")</p>
+            @using (var banks = ko.With(c => c.SelectedSeller))
+                {
+                <select title="@LocalText.Inst.Get("tooltip", "createtradebank", "Виберіть банківський рахунок який буде використано для взаєморозрахунків з покупцями", "Выберите банковский счет, который будет использован для взаиморасчетов с покупателями")"
+                        data-toggle="tooltip" @banks.Bind.Options(c => c.BankBills).OptionsText("'BankName'").Value(c => @ko.Model.SelectedBank).OptionsCaption(@LocalText.Inst.Get("label", "makeAChoosePlease", "Зробіть, будь ласка, вибір", "Сделайте, пожалуйста, выбор"))></select>
+            }
+        </div>
+
+            <div class="create-auction-input" data-bind="visible: SelectedBank">
+                <p>@LocalText.Inst.Get("label", "tradeType", "Тип торгів", "Тип торгов")</p>
+                @using (var trades = @ko.Foreach(c => c.TradeTypes))
+                {
+                    <select title="@LocalText.Inst.Get("tooltip", "createtradeType", "Виберіть тип створюваних торгів, детальніше дивіться в FAQ", "Выберите тип создаваемых торгов, подробней смотрите в FAQ")"
+                            data-toggle="tooltip" @trades.Bind.Options(f => f.Dependencies).OptionsText(LocalText.GetCultureTwoLetter(), true).Value(v => @ko.Model.SelectedTradeType).OptionsCaption(@LocalText.Inst.Get("label", "makeAChoosePlease", "Зробіть, будь ласка, вибір", "Сделайте, пожалуйста, выбор"))></select>
+                }
+            </div>
+            <div data-bind="visible: SelectedTradeType">
+                <div class="create-auction-input">
+                    <p>@LocalText.Inst.Get("label", "tradeBegin", "Дата і час початку торгів", "Дата и время начала торгов")</p>
+                    <input title="@LocalText.Inst.Get("tooltip", "createtradeBegin", "Виберіть бажаний час початку створюваних торгів.", "Выберите желаемое время начала создаваемых торгов. Сделайте зазор на модерацию")"
+                           data-toggle="tooltip" id="TradeBegin" class="form-control  auction-value" data-bind="datetimepicker: TradeBegin" autocomplete="off" />
+                </div>
+                <span class="text-danger" data-bind="visible: (new Date(viewModel.TradeBegin())<new Date())&& viewModel.SelectedTradeType()!==undefined && SelectedTradeType().Code()!=='quotation'">@LocalText.Inst.Get("error", "wrongTimeOfTradeBegin", "Час не початку торгів не може бути в минулому. Також пам’ятайте про процедуру модерації", "Время начала торгов не может быть в прошлом. Также помните о процедуре модерации.")</span>
+                <div class="create-auction-input" data-bind="visible: (TradeBegin()-new Date()>0)&& viewModel.SelectedTradeType()!==undefined && SelectedTradeType().Code()!=='quotation'">
+                    <p>@LocalText.Inst.Get("label", "TradeEnd", "Дата і час закінчення торгів", "Дата и время окончания торгов")</p>
+                    <input title="@LocalText.Inst.Get("tooltip", "createtradeEnd", "Виберіть бажаний час закінчення створюваних торгів.", "Выберите желаемое время завершения создаваемых торгов.")"
+                           data-toggle="tooltip" id="TradeEnd" class="form-control auction-value" data-bind="datetimepicker: TradeEnd" autocomplete="off" />
+                </div>
+                <span class="text-danger" data-bind="visible: new Date(viewModel.TradeEnd())<new Date()&& viewModel.SelectedTradeType()!==undefined && SelectedTradeType().Code()!=='quotation'">
+                    @LocalText.Inst.Get("label", "TradeEndHint", "Виберіть час закінчення торгів", "Выберите время окончания торгов")
+                </span>
+                <span class="text-danger" data-bind="visible: (TradeEnd()-TradeBegin()<1700000)&& viewModel.SelectedTradeType()!==undefined && SelectedTradeType().Code()!=='quotation'">
+                    @LocalText.Inst.Get("label", "TradeLengt30hHint", "Різниця між початком та кінцем торгів повинна бути більшою ніж півгодини", "Разница между началом и концом торгов должна превышать полчаса")
+                </span>
+            </div>
+            <div class="sub-title-faq" data-bind="visible: TradeEnd()-TradeBegin()>1700000||viewModel.SelectedTradeType()!==undefined && SelectedTradeType().Code()==='quotation'">
+                @LocalText.Inst.Get("label", "infoAboutProduct", "Информация о товаре", "Інформація про товар")
+            </div>
+            <div class="create-auction-input" data-bind="visible: (TradeEnd()-TradeBegin()>1700000)||(TradeBegin()-new Date()>0) && viewModel.SelectedTradeType()!==undefined && SelectedTradeType().Code()==='quotation'">
+                <p>@LocalText.Inst.Get("label", "productName", "Товар", "Товар")</p>
+                @using (var products = @ko.Foreach(c => c.ProductsList))
+                {
+                    <select title="@LocalText.Inst.Get("tooltip", "createtradeProduct", "Виберіть тип товару, який який ви хочете висунути на торги.", "Выберите тип товра, который вы хотите выставить на торги")"
+                            data-toggle="tooltip" @products.Bind.Options(c => c.Dependencies).OptionsText(LocalText.GetCultureTwoLetter(), true).Value(c => @ko.Model.SelectedProduct).OptionsCaption(@LocalText.Inst.Get("label", "makeAChoosePlease", "Зробіть, будь ласка, вибір", "Сделайте, пожалуйста, выбор"))></select>
+                }
+            </div>
+            <div class="create-auction-input" data-bind="visible: SelectedProduct">
+                <p>@LocalText.Inst.Get("label", "nomenclatureProduct", "Номенклатура", "Номенклатура")</p>
+                @using (var nomenclature = ko.With(c => c.SelectedProduct))
+                {
+                    <select title="@LocalText.Inst.Get("tooltip", "createtradeТщьутсдфегку", "Виберіть номенклатуру, відповдну вашому товару.", "Выберите номенклатуру, соответствующую вашему товару")"
+                            data-toggle="tooltip" data-bind="options: viewModel.Nomenclatures, optionsText: '@LocalText.GetCultureTwoLetter()', value: viewModel.SelectedNomenclature, optionsCaption: '@LocalText.Inst.Get("label","makeAChoosePlease","Зробіть, будь ласка, вибір","Сделайте, пожалуйста, выбор")'"></select>
+                }
+            </div>
+               <!-- ko if: SelectedProduct()!=null&&SelectedProduct().Code()=='Газ' -->
+            <div class="create-auction-input" data-bind="visible: viewModel.SelectedNomenclature()!=null&& viewModel.SelectedNomenclature().Type() == 'Nomenclature'">
+                <p>@LocalText.Inst.Get("label", "productQuality", "Якість товару", "Качество товара")</p>
+                @using (var quality = ko.With(c => c.SelectedProduct))
+                {
+                    <select title="@LocalText.Inst.Get("tooltip", "createtradeGost", "Виберіть якість, якій відповідає ваш товар", "Выберите качество, которому соответствует ваш товар")"
+                            data-toggle="tooltip" data-bind="options: viewModel.Gosts, optionsText: '@LocalText.GetCultureTwoLetter()', value: viewModel.SelectedQuality, optionsCaption: '@LocalText.Inst.Get("label","makeAChoosePlease","Зробіть, будь ласка, вибір","Сделайте, пожалуйста, выбор")'"></select>
+                }
+            </div>
+                <!-- /ko -->
+            <div class="create-auction-input" data-bind="visible: (viewModel.SelectedQuality()!=null && viewModel.SelectedQuality().Type() == 'GOST')||(viewModel.SelectedProduct()!=null&&viewModel.SelectedProduct().Code()=='polietylen'&&viewModel.SelectedNomenclature()!=null)">
+                <p>@LocalText.Inst.Get("label", "productCountry", "Країна виробництва", "Страна производтсва")</p>
+                @using (var country = @ko.Foreach(c => c.CountryList))
+                {
+                    <select title="@LocalText.Inst.Get("tooltip", "createtradeCountry", "Вкажіть страну-виробника товару", "Укажите страну-производитель товара")"
+                            data-toggle="tooltip" @country.Bind.Options(c => c.Dependencies).OptionsText(LocalText.GetCultureTwoLetter(), true).Value(c => @ko.Model.SelectedCountry).OptionsCaption(@LocalText.Inst.Get("label", "makeAChoosePlease", "Зробіть, будь ласка, вибір", "Сделайте, пожалуйста, выбор"))></select>
+                }
+            </div>
+            <div class="create-auction-input" data-bind="visible: SelectedCountry ">
+                <p>@LocalText.Inst.Get("label", "productPlant", "Завод-виробник", "Завод-производитель")</p>
+                @using (var quality = ko.With(c => c.SelectedCountry))
+                {
+                    <select title="@LocalText.Inst.Get("tooltip", "createtradePlant", "Виберіть завод, на якому було виготовлено товар. Зверніться до оператора ЕТП, якщо такий недоступний", "Укажите завод, на котором был изготовлен товар. Обратитесь к опертору ЭТП, если такового нет")"
+                            data-toggle="tooltip" @quality.Bind.Options(c => c.Dependencies).OptionsText(LocalText.GetCultureTwoLetter(), true).Value(c => @ko.Model.SelectedPlant).OptionsCaption(@LocalText.Inst.Get("label", "makeAChoosePlease", "Зробіть, будь ласка, вибір", "Сделайте, пожалуйста, выбор"))></select>
+                }
+            </div>
+            <div class="create-auction-input" data-bind="visible: SelectedPlant ">
+                <p>@LocalText.Inst.Get("label", "productPassport", "Завантажте паспорт якості", "Загрузите паспорт качества")</p>
+            </div>
+            <input title="@LocalText.Inst.Get("tooltip", "createtradePassport", "Завантажте паспорт продукту", "Загрузите паспорт продукта")"
+                   data-toggle="tooltip" type="file" data-bind="fileInput: fileData,visible: SelectedPlant" accept="image/*, application/pdf" class="form-control auction-value" autocomplete="off" required="required">
+
+            <div class="sub-title-faq" data-bind="visible: viewModel.fileData().file()!=null">
+                @LocalText.Inst.Get("label", "transportTherms", "Умови поставки", "Условия поставки")
+            </div>
+            <div class="create-auction-input" data-bind="visible: viewModel.fileData().file()!=null">
+                <p>@LocalText.Inst.Get("label", "transportType", "Вид транспортування", "Вид транспортировки")</p>
+                @using (var country = @ko.Foreach(c => c.TransportTypes))
+                {
+                    <select title="@LocalText.Inst.Get("tooltip", "createtradeTransportType", "Вкажіть тип транспортування товару", "Укажите тип транспортировки товара")"
+                            data-toggle="tooltip" @country.Bind.Options(c => c.Dependencies).OptionsText(LocalText.GetCultureTwoLetter(), true).Value(c => @ko.Model.TransportTypeSelected).OptionsCaption(@LocalText.Inst.Get("label", "makeAChoosePlease", "Зробіть, будь ласка, вибір", "Сделайте, пожалуйста, выбор"))></select>
+                }
+            </div>
+            <div class="create-auction-input" data-bind="visible: TransportTypeSelected()!=null">
+                <p>@LocalText.Inst.Get("label", "incoTherms", "Умови поставки згідно Інкотермс 2010:", "Условия поставки согласно Инкотермс 2010:")</p>
+                @using (var inco = @ko.With(c => c.TransportTypeSelected))
+                {
+                    <select title="@LocalText.Inst.Get("tooltip", "createtradeINcotherms", "Виберіть умови поставки згідно Інкотермс", "Выберите условия поставки по Инкотермс")"
+                            data-toggle="tooltip" data-bind="options: viewModel.Incotherms, optionsText: '@LocalText.GetCultureTwoLetter()',  value: viewModel.IncothermSelected, optionsCaption: '@LocalText.Inst.Get("label","makeAChoosePlease","Зробіть, будь ласка, вибір","Сделайте, пожалуйста, выбор")'"></select>
+                }
+            </div>
+            <div class="create-auction-input" data-bind="visible: IncothermSelected()!=null && IncothermSelected().Type()!='caption'">
+                <p>@LocalText.Inst.Get("label", "shipmentPoint", "Місце передачі", "Место передачи")</p>
+                @using (var point = @ko.With(c => c.TransportTypeSelected))
+                {
+                    <select title="@LocalText.Inst.Get("tooltip", "createtradeShipmentPoint", "Виберіть місце передачі товару покупцю", "Выберите место передачи тавара покупателю")"
+                            data-toggle="tooltip" data-bind="options: viewModel.Places, optionsText: '@LocalText.GetCultureTwoLetter()',  value: viewModel.TransportPointSelected, optionsCaption: '@LocalText.Inst.Get("label","makeAChoosePlease","Зробіть, будь ласка, вибір","Сделайте, пожалуйста, выбор")'"></select>
+                }
+            </div>
+
+            <div class="create-auction-input" data-bind="visible: TransportPointSelected()!=null && TransportPointSelected().Type()!='caption'">
+                <p>@LocalText.Inst.Get("label", "deliveryPeriod", "Період поставки", "Период поставки")</p>
+                <input title="@LocalText.Inst.Get("tooltip", "createtradeDeliveryBegin", "Вкажіть дату, з якої можна буде отримати оплачений товар", "Укажите дату, с которой можно будет получить оплаченный товар")"
+                       data-toggle="tooltip" type="text" class="form-control auction-value" data-bind="datePicker: DeliveryDateFrom" autocomplete="off" />
+                <input title="@LocalText.Inst.Get("tooltip", "createtradeDeliveryEnd", "Вкажіть максимальну дату, по яку можна буде отримати оплачений товар", "Укажите максимальную дату, по которой можно будет получить оплаченный товар")"
+                       data-toggle="tooltip" type="text" class="form-control auction-value" data-bind="datePicker: DeliveryDateTo" autocomplete="off" />
+            </div>
+            <!-- ko if: TransportTypeSelected() != null -->
+    using (var tank = @ko.If(c => c.TransportTypeSelected.Code == "ЖД" || c.TransportTypeSelected.Code == "Танк"))
+    {
+        <div data-bind="visible: new Date(DeliveryDateTo())>new Date(DeliveryDateFrom())">
+            <h5>@LocalText.Inst.Get("label", "tankThermsHeader", "Умови обороту цистерн", "Условия оборота цистерн"):</h5>
+            <div class="create-auction-input">
+                <p>@LocalText.Inst.Get("label", "tankThermsBegin", "Дата початку", "Дата начала"):</p>
+                <select title="@LocalText.Inst.Get("tooltip", "createtradeRailwayBegin", "Виберіть подію, в день якої починається оборот цистерн", "Выберите событие, по которому начинается оборот цистерн")"
+                        data-toggle="tooltip" data-bind="options: viewModel.RailwayBegins, optionsText: '@LocalText.GetCultureTwoLetter()',  value: viewModel.RailwayBeginSelected, optionsCaption: '@LocalText.Inst.Get("label","makeAChoosePlease","Зробіть, будь ласка, вибір","Сделайте, пожалуйста, выбор")'"></select>
+            </div>
+            <div class="create-auction-input" data-bind="visible: RailwayBeginSelected">
+                <p>@LocalText.Inst.Get("label", "tankThermsEnd", "Дата кінця", "Дата окончания"):</p>
+                <select title="@LocalText.Inst.Get("tooltip", "createtradeRailwayEnd", "Виберіть подію, в день якої закінчується оборот цистерн", "Выберите событие, по которому заканчивается оборот цистерн")"
+                        data-toggle="tooltip" data-bind="options: viewModel.RailwayEnds, optionsText: '@LocalText.GetCultureTwoLetter()',  value: viewModel.RailwayEndSelected, optionsCaption: '@LocalText.Inst.Get("label","makeAChoosePlease","Зробіть, будь ласка, вибір","Сделайте, пожалуйста, выбор")'"></select>
+            </div>
+
+            <div class="create-auction-input" data-bind="visible: RailwayEndSelected">
+                <p>@LocalText.Inst.Get("label", "tankThermsDaysBetween", "Кількість днів між подіями", "Количество дней между событиями")</p>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <input title="@LocalText.Inst.Get("tooltip", "createtradeRailwayDaysBetween", "Вкажіть максимальну кількість днів між вказаними вище подіями, після яких починає рахуватись простой", "Укажите максимальное количество дней между указанными выше событиями, после которых начинает считаться простой")"
+                               data-toggle="tooltip" type="number" autocomplete="off" step="1" class="form-control auction-value" required="required" @ko.Bind.Value(c => c.DaysForUptime).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown)>
+                    </div>
+                </div>
+            </div>
+            <span class="text-danger" data-bind="visible: !DaysForUptime">
+                @LocalText.Inst.Get("label", "inputDaysHint", "Введіть максимальну кількість днів простою", "Введите максимальное количествое дней простоя")
+            </span>
+            <div class="create-auction-input" data-bind="visible: DaysForUptime">
+                <p>@LocalText.Inst.Get("label", "tankThermsCurrency", "Валюта розрахунку простоїв", "Валюта расчета простоев"):</p>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <select title="@LocalText.Inst.Get("tooltip", "createtradeRailwayCurrency", "Оберіть валюту, в якій будуть разраховані штрафи за простой цистерн", "Выберите валюту, по которой будет рассчитіваться простой цистерн")"
+                                data-toggle="tooltip" @ko.Bind.Options(c => c.Currencies).Value(c => c.CurrencySelected).OptionsCaption(@LocalText.Inst.Get("label", "makeAChoosePlease", "Зробіть, будь ласка, вибір", "Сделайте, пожалуйста, выбор")).OptionsText(LocalText.GetCultureTwoLetter(), true)></select>
+                    </div>
+                </div>
+            </div>
+            <div class="create-auction-input" data-bind="visible: CurrencySelected">
+                <p>@LocalText.Inst.Get("label", "tankThermsPenalty", "Розмір штрафу за одинь день простою цистерни", "Размер штрафа за день простоя 1 цистерны"):</p>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <input title="@LocalText.Inst.Get("tooltip", "createtradeRailwayCalc", "Вкажіть сумму, яка буде нараховуватися за кожен день простою цистерн", "Укажите сумму, которая будет насчитываться за каждый день простоя цистерн")"
+                               data-toggle="tooltip" type="number" step="1" autocomplete="off" class="form-control auction-value" data-bind="value: TaxForUpTime, valueUpdate : 'afterkeydown' " required="required">
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+            <!-- /ko -->
+            <!-- ko if: SelectedTradeType() != null -->
+    <div class="sub-title-faq" data-bind="visible: (viewModel.DeliveryDateTo() > new Date()) &&  (TransportTypeSelected()!=null && TransportTypeSelected().Code() =='авто' || TaxForUpTime()!=0)">
+        @LocalText.Inst.Get("label", "tradePricenVolume", "Об’єм та ціна торгів", "Объем и цена торгов")
+    </div>
+    //using (ko.If(b => b.SelectedTradeType.Code == "openFixed" || b.SelectedTradeType.Code == "closeFixed" || b.SelectedTradeType != null))
+    <div data-bind="switch: SelectedTradeType().Code" id="capacity-price-trading">
+        <div data-bind="case: ['openFixed','closeFixed']">
+            <div class="row">
+                <div data-bind="visible: (viewModel.DeliveryDateTo() > new Date())" class="col-md-6">
+                    @*<div class="row">*@
+                    <p>
+                        @LocalText.Inst.Get("label", "lotVolume", "Кількість товару в одному лоті,", "Количество товара в одном лоте,")
+                        <!-- ko if: SelectedUnit() != null -->
+                        <span class="units" data-bind="text: viewModel.SelectedUnit().@LocalText.GetCultureTwoLetter()"></span>
+                        <!-- /ko -->
+                    </p>
+                    @*<div class="col-lg-4">*@
+                    <div class="input-group">
+                        <input title="@LocalText.Inst.Get("tooltip", "createtradeVolume", "Вкажіть об’єм, який буде складати один лот", "Укажите который будет составлять один лот")"
+                               data-toggle="tooltip" type="number" step="0.1" autocomplete="off" @*min="1"*@
+                               class="form-control auction-value" @ko.Bind.Value(c => c.LotVolume).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown) />
+
+                        <div class="input-group-addon">
+                            <select title="@LocalText.Inst.Get("tooltip", "Trade.CreateTrade.SelectedUnit", "Виберіть одиницю виміру", "Выберите единицу измерения торгов")"
+                                    data-toggle="tooltip"
+                                    @ko.Bind.Options(c => c.Units).OptionsText(@LocalText.GetCultureTwoLetter(), true).Value(c => c.SelectedUnit)></select>
+                        </div><!-- /btn-group -->
+                    </div>
+            
+                </div>
+                <div class="col-md-6" data-bind="visible: LotVolume ">
+                    <p>@LocalText.Inst.Get("label", "lotsCount", "Кількість лотів, шт", "Количество лотов, шт")</p>
+             
+                    <div class="input-group">
+                        <input title="@LocalText.Inst.Get("tooltip", "createtradeLotsCount", "Вкажіть загальну кількість лотів. Загальний обсяг торгів обчислюється нижче", "Укажите общее количество лотов. Общий объём считается ниже")"
+                               data-toggle="tooltip" type="number" step="1" @*min="1"*@ autocomplete="off" class="form-control auction-value" @ko.Bind.Value(c => c.LotsCount).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown) />
+                        <div class="input-group-addon">
+                            <b title="@LocalText.Inst.Get("tooltip", "createtradeTotalVolume", "Загальний обсяг торгів", "Общий объём торгов")"
+                               data-toggle="tooltip" @ko.Bind.Text(c => c.LotVolume * c.LotsCount).Value(c => c.TotalVolume)></b><span class="units" data-bind="text: SelectedUnit().@LocalText.GetCultureTwoLetter()"></span>
+                            <input type="hidden" autocomplete="off" @ko.Bind.Value(c => c.TotalVolume) />
+                        </div>
+                    </div>
+              
+                </div>
+            </div>
+    
+
+            <div class="row">
+                <div class="col-md-6" data-bind="visible: LotsCount ">
+                    <p>
+                        @LocalText.Inst.Get("label", "tradeStartPrice", "Стартова ціна, грн./т. ", "Стартовая цена, грн./т.")
+                        <!-- ko if: SelectedPriceCurrency() != null -->
+                        <span class="units" data-bind="text: viewModel.SelectedPriceCurrency().@LocalText.GetCultureTwoLetter()"></span>
+                        <!-- /ko -->
+
+                        <span class="units" data-bind="text: viewModel.SelectedUnit().@LocalText.GetCultureTwoLetter()"></span>
+                    </p>
+                    @*<div class="row">*@
+                    @*<div class="col-lg-4">*@
+                    <div class="input-group">
+                        <input title="@LocalText.Inst.Get("tooltip", "createtradeStartPrice", "Вкажіть стартову ціну товару (за одну тонну)", "Укажите стартовую цену товара (за одну тонну)")"
+                               data-toggle="tooltip" type="number" step="1" autocomplete="off" @*min="1"*@ class="form-control auction-value" @ko.Bind.Value(c => c.StartPrice).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown) />
+
+
+                        <div class="input-group-addon">
+
+                            <select title="@LocalText.Inst.Get("tooltip", "Trade.CreateTrade.PriceCurrency", "Виберіть валюту торгів", "Выберите валюту торгов")"
+                                    data-toggle="tooltip"
+                                    @ko.Bind.Options(c => c.Currencies).OptionsText(@LocalText.GetCultureTwoLetter(), true).Value(c => c.SelectedPriceCurrency)></select>
+                        </div><!-- /btn-group -->
+                    </div><!-- /input-group -->
+                    @*</div>*@<!-- /.col-lg-6 -->
+                    @*</div>*@
+                </div>
+                <div class="col-md-6" data-bind="visible: StartPrice ">
+                    <!-- ko if: viewModel.SelectedPriceCurrency() != null -->
+                    <p>
+                        @LocalText.Inst.Get("label", "tradeSumStep", "Крок по ціні, грн. ", "Шаг по цене, грн ")
+                        <span class="units" data-bind="text: viewModel.SelectedPriceCurrency().@LocalText.GetCultureTwoLetter()"></span>
+                        <span class="units" data-bind="text: viewModel.SelectedUnit().@LocalText.GetCultureTwoLetter()"></span>
+                    </p>
+                    @*<div class="row">*@
+                    @*<div class="col-lg-4">*@
+                    <input title="@LocalText.Inst.Get("tooltip", "createtradePriceStep", "Вкажіть суму, на яку треба буде підвищити ціну ставки для того, щоб її перебити", "Укажите сумму, на которую надо будет поднять цену ставки для того, чтобы ее перебить")"
+                           data-toggle="tooltip" type="number" step="1" autocomplete="off" @*min="1"*@ class="form-control auction-value" @ko.Bind.Value(c => c.PriceStep).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown) />
+                    @*</div>*@
+                    @*</div>*@
+                    <!-- /ko -->
+                </div>
+            </div>
+            <div class="create-auction-input" data-bind="visible: PriceStep">
+                <p>@LocalText.Inst.Get("label", "redemptionPrice", "Викупна ціна", "Цена выкупа")</p>
+                <!-- ko if: viewModel.SelectedPriceCurrency() != null -->
+                <span class="units" data-bind="text: viewModel.SelectedPriceCurrency().@LocalText.GetCultureTwoLetter()"></span>/
+                <span class="units" data-bind="text: viewModel.SelectedUnit().@LocalText.GetCultureTwoLetter()"></span>
+                <!-- /ko -->
+                @*<div class="row">*@
+                <div id="vikup-yopt">
+                    <input type="number" step="1" autocomplete="off" class="form-control auction-value" @ko.Bind.Value(c => c.RedemptionPrice).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown) required="required" />
+                </div>
+                @*</div>*@
+            </div>
+        </div>
+
+        <div data-bind="case: 'quotation'" id="torg-helper">
+            <div data-bind="visible: (viewModel.DeliveryDateTo() > new Date())">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>
+                            @LocalText.Inst.Get("label", "lotVolume", "Кількість товару в одному лоті,", "Количество товара в одном лоте,")
+                            <!-- ko if: SelectedUnit() != null -->
+                            <span class="units" data-bind="text: viewModel.SelectedUnit().@LocalText.GetCultureTwoLetter()"></span>
+                            <!-- /ko -->
+                        </p>
+
+                        <div class="input-group">
+                            <input title="@LocalText.Inst.Get("tooltip", "createtradeVolume", "Вкажіть об’єм, який буде складати один лот", "Укажите объем, который будет составлять один лот")"
+                                   data-toggle="tooltip" type="number" step="0.1" autocomplete="off" @*min="1"*@
+                                   class="form-control auction-value" @ko.Bind.Value(c => c.LotVolume).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown) />
+
+                            <div class="input-group-addon">
+                                <select title="@LocalText.Inst.Get("tooltip", "Trade.CreateTrade.SelectedUnit", "Виберіть одиницю виміру", "Выберите единицу измерения торгов")"
+                                        data-toggle="tooltip"
+                                        @ko.Bind.Options(c => c.Units).OptionsText(@LocalText.GetCultureTwoLetter(), true).Value(c => c.SelectedUnit)></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" data-bind="visible: LotVolume ">
+                        <p>@LocalText.Inst.Get("label", "lotsCount", "Кількість лотів, шт", "Количество лотов, шт")</p>
+                        <div class="input-group">
+                            <input title="@LocalText.Inst.Get("tooltip", "createtradeLotsCount", "Вкажіть загальну кількість лотів. Загальний обсяг торгів обчислюється нижче", "Укажите общее количество лотов. Общий объём считается ниже")"
+                                   data-toggle="tooltip" type="number" step="1" @*min="1"*@ autocomplete="off" class="form-control auction-value" @ko.Bind.Value(c => c.LotsCount).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown) />
+                            <div class="input-group-addon">
+                                <b title="@LocalText.Inst.Get("tooltip", "createtradeTotalVolume", "Загальний обсяг торгів", "Общий объём торгов")"
+                                   data-toggle="tooltip" @ko.Bind.Text(c => c.LotVolume * c.LotsCount).Value(c => c.TotalVolume)></b><span class="units" data-bind="text: SelectedUnit().@LocalText.GetCultureTwoLetter()"></span>
+                                <input type="hidden" autocomplete="off" @ko.Bind.Value(c => c.TotalVolume).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown) />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" data-bind="visible: LotsCount" id="torg-param-helper">
+                <p>
+                    @LocalText.Inst.Get("label", "Trade.CreateTrade.DifferencialPriceText", "Параметри розрахунку ціни товару", "Параметры расчета цены товара")
+                </p>
+                @*<div class="col-lg-12">*@
+                    @*<div class="input-group">*@
+
+                <div class="col-xs-12 col-sm-6 col-lg-3">
+                    @LocalText.Inst.Get("tooltip", "Trade.CreateTrade.PriceCurrency", "Виберіть валюту торгів", "Выберите валюту торгов"):
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-lg-9">
+                    <div class="input-group">
+                        <div class="input-group-addon" id="quotation-valute-select-wrapper">
+                            <select title="@LocalText.Inst.Get("tooltip", "Trade.CreateTrade.PriceCurrency", "Виберіть валюту торгів", "Выберите валюту торгов")"
+                                    data-toggle="tooltip"
+                                    @ko.Bind.Options(c => c.Currencies).OptionsText(@LocalText.GetCultureTwoLetter(), true).Value(c => c.SelectedPriceCurrency)></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-lg-2">
+                       <div class="input-group">
+                        <div class="input-group-addon">
+                            <select title="@LocalText.Inst.Get("tooltip", "Trade.CreateTrade.DifferencialPriceTextTooltip", "Виберіть котирування", "Выберите котировку")"
+                                    data-toggle="tooltip" class="form-control" @ko.Bind.Options(c => c.DifferencialPriceText).OptionsText(@LocalText.GetCultureTwoLetter(), true).Value(c => c.DifferencialPriceTextSelected)></select>
+                        </div>
+                      </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-lg-2">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <select class="form-control" title="@LocalText.Inst.Get("tooltip", "Trade.CreateTrade.DifferencialPriceDateTypeTooltip", "Виберіть період котирування", "Выберите период котировки")"
+                                    data-toggle="tooltip" @ko.Bind.Options(c => c.DifferencialPriceDateType).OptionsText(@LocalText.GetCultureTwoLetter(), true).Value(c => c.DifferencialPriceDateTypeSelected)></select>
+                        </div>
+                    </div>
+                </div> 
+                <div class="col-xs-12 col-sm-6 col-lg-2">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <select class="form-control" title="@LocalText.Inst.Get("tooltip", "Trade.CreateTrade.DifferencialPriceDateTypeDesc", "Уточніть період", "Уточните период")" data-toggle="tooltip"
+                                    @ko.Bind.Options(c => c.DifferencialPriceDateTypeDesc).OptionsText(@LocalText.GetCultureTwoLetter(), true).Value(c => c.DifferencialPriceDateTypeDescSelected)></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-lg-2">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <select class="form-control" title="@LocalText.Inst.Get("tooltip", "Trade.CreateTrade.DifferencialPriceValueType", "Виберіть значення котирування", "Выберите значение котировки")" data-toggle="tooltip"
+                                    @ko.Bind.Options(c => c.DifferencialPriceValueType).OptionsText(@LocalText.GetCultureTwoLetter(), true).Value(c => c.DifferencialPriceValueTypeSelected)></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-lg-2">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <input title="@LocalText.Inst.Get("tooltip", "Trade.CreateTrade.DifferencialTradeStepTooltip", "Вкажіть крок зміни ціни лоту", "Укажите шаг смены ")"
+                                   data-toggle="tooltip" type="number" min="0.1" step="0.1" autocomplete="off"
+                                   class="form-control auction-value" @ko.Bind.Value(c => c.PriceStep).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown) />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-lg-2">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <input title="@LocalText.Inst.Get("tooltip", "Trade.CreateTrade.DifferencialMinTooltip", "Вкажіть мінімальний об’єм премії", "Укажите минимальный объем премии")"
+                                   data-toggle="tooltip" type="number" step="0.1" autocomplete="off"
+                                   class="form-control auction-value" @ko.Bind.Value(c => c.DifferencialMin).ValueUpdate(KnockoutValueUpdateKind.AfterKeyDown) />
+                        </div>
+                    </div>
+                </div>
+                        @*</div>*@
+                    @*</div>*@
+
+            </div>
+        </div>
+    </div>
+    <!-- /ko -->
+    
+    <div class="create-auction-input" data-bind="visible: RedemptionPrice()!==null || DifferencialMin()!==null ">
+        <div class="sub-title-faq">@LocalText.Inst.Get("label", "paymentTherms", "Умови оплати", "Условия оплаты")</div>
+        <div class="row">
+            <div class="col-lg-4">
+                @LocalText.Inst.Get("label", "paymentDeadline", "100% оплати до", "100% оплаты до")
+                <input title="@LocalText.Inst.Get("tooltip", "createtradePaymentDay", "Вкажіть дату очікуваної оплати за товар", "Укажите дату ожидаемой оплаты товара")"
+                       data-toggle="tooltip" class="form-control  auction-value" autocomplete="off" data-bind="datePicker: DayToPay"/>
+            </div>
+        </div>
+
+        
+        
+    </div>
+        <div data-bind="visible:new Date(viewModel.DayToPay())-new Date()>0, enable: new Date(viewModel.DayToPay())-new Date()>0">
+            <span class="text-danger">
+                @LocalText.Inst.Get("hint", "createTradeModeration", "Перевірте, будь ласка, вказану інформацію про торги. Вона мусить бути максимально правильною для прискорення процесу модерації",
+                    "Проверьте, пожалуйста, информацию, указанную о торгах. Она должна быть максимально правильной для ускорения процесса модерации.")
+            </span>
+            <br />
+            <!-- ko if:new Date(viewModel.DayToPay())-new Date() > 0 -->
+            <button title="@LocalText.Inst.Get("tooltip", "createtradeButton", "Якщо вся інформація вірна, ви можете відправити торги на модерацію", "Если вся информация верна, вы можете отправить торги на модерацию")"
+                    data-toggle="tooltip" type="submit" class="btn btn-submit" id="submitBtn">
+                <i id="load" class="fa fa-spinner fa-3x fa-spin-hover"></i>@LocalText.Inst.Get("button", "create", "Створити", "Создать")
+            </button>
+            <!-- /ko -->
+        </div>
+
+
+}
+
+<script type="text/javascript">
+
+    ko.bindingHandlers.datetimepicker = {
+        init: function (element, valueAccessor, allBindingsAccessor) {
+            var options = allBindingsAccessor().dateTimePickerOptions || {
+                autoclose: true,
+                todayBtn: true,
+                'format': 'dd.mm.yyyy hh:ii',
+                language: 'uk',
+                startDate: new Date(),
+                minuteStep: 30,
+                initialDate: new Date(),
+                weekStart: 1
+            };
+            $(element).datetimepicker(options).on("changeDate", function (ev) {
+                var observable = valueAccessor();
+                observable(ev.date);
+            });
+        },
+        update: function (element, valueAccessor) {
+            ko.utils.unwrapObservable(valueAccessor());
+        }
+    };
+
+    ko.bindingHandlers.datePicker = {
+        init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+            var unwrap = ko.utils.unwrapObservable;
+            var dataSource = valueAccessor();
+            var binding = allBindingsAccessor();
+            var options = {
+                keyboardNavigation: true,
+                todayHighlight: true,
+                autoclose: true,
+                //daysOfWeekDisabled: [0, 6],
+                format: 'dd.mm.yyyy',
+                language: 'ua',
+                weekStart: 1
+            };
+            if (binding.datePickerOptions) {
+                options = $.extend(options, binding.datePickerOptions);
+            }
+            $(element).datepicker(options);
+            $(element).datepicker('update', dataSource());
+            $(element).on("changeDate", function (ev) {
+                var observable = valueAccessor();
+                if ($(element).is(':focus')) {
+                    // Don't update while the user is in the field...
+                    // Instead, handle focus loss
+                    $(element).one('blur', function (ev) {
+                        var dateVal = $(element).datepicker("getDate");
+                        observable(dateVal);
+                    });
+                }
+                else {
+                    observable(ev.date);
+                }
+            });
+            //handle removing an element from the dom
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                $(element).datepicker('remove');
+            });
+        },
+        update: function (element, valueAccessor) {
+            var value = ko.utils.unwrapObservable(valueAccessor());
+            //   $(element).datepicker('update', value);
+        }
+    };
+
+
+    ko.bindingHandlers.option = {
+        update: function (element, valueAccessor) {
+            var value = ko.utils.unwrapObservable(valueAccessor());
+            ko.selectExtensions.writeValue(element, value);
+        }
+    };
+
+
+    viewModel.Nomenclatures = ko.computed(function () {
+        var product = viewModel.SelectedProduct();
+        if (product === null || product === undefined) return null;
+        return ko.utils.arrayFilter(product.Dependencies(), function (dep) {
+            return dep.Type() === 'Nomenclature';
+        });
+    }, viewModel);
+
+    viewModel.Gosts = ko.computed(function () {
+        var product = viewModel.SelectedProduct();
+        if (product === null || product === undefined) return null;
+        return ko.utils.arrayFilter(product.Dependencies(), function (dep) {
+            return dep.Type() === 'GOST';
+        });
+    }, viewModel);
+    viewModel.Incotherms = ko.computed(function () {
+        var product = viewModel.TransportTypeSelected();
+        if (product === null || product === undefined) return null;
+        return ko.utils.arrayFilter(product.Dependencies(), function (dep) {
+            return dep.Type() === 'Incotherms';
+        });
+    }, viewModel);
+    viewModel.Places = ko.computed(function () {
+        var product = viewModel.TransportTypeSelected();
+        if (product === null || product === undefined) return null;
+        return ko.utils.arrayFilter(product.Dependencies(), function (dep) {
+            return dep.Type() === 'ShipmentPoint';
+        });
+    }, viewModel);
+
+    viewModel.RailwayBegins = ko.computed(function () {
+        var product = viewModel.RailwayTransportTherms()[0].Dependencies()[0];
+        if (product === null || product === undefined) return null;
+        return ko.utils.arrayFilter(product.Dependencies(), function (dep) {
+            return dep.Type() === 'TransporTherm';
+        });
+    }, viewModel);
+
+   
+    viewModel.fileData = ko.observable({
+        dataURL: ko.observable(),
+        base64String: ko.observable(),
+    });
+
+
+    viewModel.RailwayEnds = ko.computed(function () {
+        var product = viewModel.RailwayTransportTherms()[0].Dependencies()[1];
+        if (product === null || product === undefined) return null;
+        return ko.utils.arrayFilter(product.Dependencies(), function (dep) {
+            return dep.Type() === 'TransporTherm';
+        });
+    }, viewModel);
+
+    
+    viewModel.executeOnServer = function (model, url) {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: ko.mapping.toJSON(model),
+
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            //beforeSend: function () {
+            //    $(".fa-spin-hover").removeClass("nodisplay");
+            //    $('#submitBtn').innerHtml = "";
+            //    $('#submitBtn').attr('disabled', 'disabled');
+
+            //    //$("#submitBtn").disabled = true;
+            //    //$("#submitBtn").innerHTML = '<i class="fa fa-spinner fa-3x fa-spin-hover"></i> …';
+            //},
+            success: function (data) {
+                if (data.Success === true) {
+                    window.location.href = data.redirectUrl;
+                } else {
+                    alert("Error: " + data.responseText);
+                }
+            },
+            error: function (error) {
+                console.log(error);
+                alert("@LocalText.Inst.Get("error","createTradeError", "Виникла помилка, спробуйте пізніше", "Возникла ошибка, поробуйте позже")");
+            }
+        });
+    };
+
+    var $loading = $('#load').hide();
+    $(document)
+      .ajaxStart(function () {
+          $loading.show();
+      })
+      .ajaxStop(function () {
+          $loading.hide();
+      });
+    $('form').on('submit', function () {
+        OpenHelpDialog("noclose");
+    });
+
+    //$('#createtradeform').bind("DOMSubtreeModified", function () {
+    //    $('[data-toggle="tooltip"]').tooltip({
+    //        'placement': 'auto bottom',
+    //        'container': 'body'
+    //    });
+    //});
+</script>
+@ko.Apply(Model)

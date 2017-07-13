@@ -1,0 +1,30 @@
+﻿@using TradingPlatform.Models
+@model TradingPlatform.Models.TradeModel.TradeViewModel
+<div class="details-content">
+    @using (var db = ApplicationDbContext.Create())
+    {
+
+        <table class="table">
+            @foreach (var buyer in Model.AllContragentIds)
+            {
+                var contr = db.Contragents.SingleOrDefault(c => c.Id == buyer);
+                if (contr != null)
+                {
+                    <tr>
+                        <td>
+                            @contr.LongName
+                        </td>
+                        <td>
+                            <b>@contr.Bets.Count(c => c.TradeId == Model.Id) ставок</b>
+                        </td>
+                    </tr>
+                }
+            }
+
+
+        </table>
+
+
+    }
+
+</div>

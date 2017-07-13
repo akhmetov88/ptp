@@ -1,0 +1,119 @@
+﻿@model TradingPlatform.Models.NotifyModels.Broadcast
+@{
+    ViewBag.Title = "SendMails";
+}
+<script src="~/Scripts/jquery-2.2.4.min.js"></script>
+
+
+@using (Html.BeginForm("SendMails", "Home", new { area = "" }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "submitForm" }))
+{
+    <div class="row">
+        
+        @if (!Model.IsReply)
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.ToAll, LocalText.Inst.Get("label", "Home.SendMails.Toall", "Если тута княпнешь, то всем уйдет", "Если тута княпнеш, то всем уйдёт"), new {@class = "col-md-9 control-label"})
+                <div class="col-md-3">
+                    @Html.CheckBoxFor(m => m.ToAll, new {@class = "form-control auction-value"})
+                    @Html.ValidationMessageFor(m => m.ToAll, "", new {@class = "text-danger"})
+                </div>
+
+            </div>
+        }
+        else
+        {
+            @Html.HiddenFor(c => c.ToAll)
+
+            @Html.HiddenFor(c=>c.ReplyId)
+            @Html.HiddenFor(c => c.IsReply)
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email, LocalText.Inst.Get("label", "Home.SendMails.Address", "Кому", "Кому"), new {@class = "col-md-3 control-label"})
+            <div class="col-md-9">
+                @Html.TextBoxFor(m => m.Email, new {@class = "form-control auction-value", @placeholder = "user@server.com"})
+                @Html.ValidationMessageFor(m => m.Email, "", new {@class = "text-danger"})
+            </div>
+
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.UserName, LocalText.Inst.Get("label", "Home.SendMails.UserName", "Как зовут", "Как зовут"), new {@class = "col-md-3 control-label"})
+            <div class="col-md-9">
+                @Html.TextBoxFor(m => m.UserName, new {@class = "form-control auction-value", @placeholder = "Проксиманова Авдотья Михална"})
+                @Html.ValidationMessageFor(m => m.UserName, "", new {@class = "text-danger"})
+            </div>
+
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Subject, LocalText.Inst.Get("label", "mailerSubject", "Тема повідомлення", "Тема сообщения"), new {@class = "col-md-3 control-label"})
+            <div class="col-md-9">
+                @Html.TextBoxFor(m => m.Subject, new {@class = "form-control auction-value", @placeholder = "BlaBla"})
+                @Html.ValidationMessageFor(m => m.Subject, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Body, LocalText.Inst.Get("label", "mailerBody", "Текст повідомлення", "Текст сообщения"), new {@class = "col-md-3 control-label"})
+            <div class="col-md-9">
+             @*  @Html.TextAreaFor(m => m.txtContentHtmlArea, new { @class = "form-control auction-value", @onchange = "GetHTML();",@style= "min-height: 500px"})*@
+               
+
+                <textarea id="txtContentHtmlArea" style="min-height: 500px">
+                    @if (Model.IsReply)
+                    {
+                        <br />
+<br />
+
+                        <p><b>Вы писали:</b></p>
+                        <b>________________________________________________</b>
+                        <p>
+                            @Html.Raw(Model.Body)
+                        </p>
+                    }
+                </textarea>
+            </div>
+            @Html.HiddenFor(model => model.Body)
+
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @*<button type="button"  onclick="GetHTML();">Сохранить</button>*@
+
+                <input type="submit" value="отправить"/>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section scripts {
+    <script src="~/Scripts/tinymce/tinymce.min.js"></script>
+    <script>
+        tinymce.init({
+            selector: '#txtContentHtmlArea',
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code'
+            ],
+            toolbar:
+                'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            mode: "textareas",
+            setup: function(editor) {
+                editor.on('init',
+                    function(e) {
+                        GetHTML();
+                    });
+            },
+            init_instance_callback: function (editor) {
+                editor.on('Change', function (e) {
+                    GetHTML();
+                });
+            }
+        });
+
+        function GetHTML() {
+            $('#Body').val(tinyMCE.activeEditor.getContent());
+        }
+    </script>
+}

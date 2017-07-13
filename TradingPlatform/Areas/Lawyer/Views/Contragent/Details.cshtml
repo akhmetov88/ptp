@@ -1,0 +1,231 @@
+﻿@model TradingPlatform.Models.EntityModel.ContragentViewModel
+@using TradingPlatform.Models
+
+@{
+    ViewBag.Title = LocalText.Inst.Get("title", "contragent_title", "Акредитація контрагента", "Аккредитация контрагента");
+}
+
+<div class="row">
+    <div class="col-xs-9"><h4>@LocalText.Inst.Get("title", "contragent_title", "Контрагент", "Контрагентов"): <b>@Model.LongName</b></h4></div>
+    <div class="col-xs-3"><h4>@Html.ActionLink(LocalText.Inst.Get("link", "back", "До списку", "Назад"), "Index")</h4></div>
+</div>
+<div class="request-details">
+    <hr />
+<dl class="dl-horizontal">
+<dt>
+    @LocalText.Inst.Get("label", "contragentName", "Назва юридичної особи", "Название юридического лица")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.LongName)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "contragentEDRPOU", "Код по ЄДРПОУ", "Код по ЕГРПОУ")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.Code)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "ContragentGroupName", "Назва групи", "Название группы")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.GroupName)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("text", "contragent_date_create", "Дата подачі", "Дата подачи")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.CreateDate)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("text", "contragent_date_update", "Дата оновлення", "Дата обновления")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.UpdateDate)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "ContragentSeller", "Продавець", "Продавец")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.IsSeller)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "СontragentBuyer", "Покупець", "Покупатель")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.IsBuyer)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "contragentIsTaxPayer", "Платник ПДВ", "Плательщик НДС")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.IsTaxPayer)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "dividerContragentTax", "Система оподаткування", "Система налогообложения")
+</dt>
+<dd>
+    @StaticData.Inst.GetCatalogValue(Model.TaxType)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "contragentTaxCodeNumber", "Індивідуальний податковий номер", "Индивидуальный налоговый номер")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.TaxCode)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "contragentDuty", "Статус платника акцизного податку", "Статус плательщика акцизного налога")
+</dt>
+<dd>
+    @(Model.IsDutyPayer ? LocalText.Inst.Get("label", "dutyPayer", "Платник", "Плательщик") : LocalText.Inst.Get("label", "dutyNoPayer", "Неплатник", "Неплательщик"))
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "ContragentCeoTitleShort", "Керівника", "Руководителя")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.CeoTitle)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "contragentCeoName", "ПІБ керівника", "ФИО руководителя")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.CeoName)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "confidantName", "ПІБ підписанта", "ФИО подписанта")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.ConfidantName)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "confidantDocTypeName", "Назва документу", "Название документа")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.ConfidantDocumentType)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "addressHeader", "Юридична адреса", "Юридический адрес")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.Address)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "postaddressHeader", "Поштова адреса", "Почтовый адрес")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.PostAddress)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "bankName", "Назва банку", "Название банка")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.BankBillRequired.BankName)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "bankMFo", "МФО банку", "МФО банка")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.BankBillRequired.Mfo)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "bankBillNumber", "Розрахунковий рахунок №", "Расчетный счет №")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.BankBillRequired.BillNumber)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "bankBillOptionalHeader", "Додатковий рахунок", "Додатковий рахунок")
+</dt>
+<dd></dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "bankName", "Назва банку", "Название банка")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.BankBillOptional.BankName)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "bankMFo", "МФО банку", "МФО банка")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.BankBillOptional.Mfo)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "bankBillNumber", "Розрахунковий рахунок №", "Расчетный счет №")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.BankBillOptional.BillNumber)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("text", "contragent_user", "Користувач", "Пользователь")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.CreatedByUser.UserName)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "contragentEmail", "Email", "Email")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.ContragentEmail)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "contragentWebSite", "Веб-сайт", "Веб-сайт")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.ContragentSite)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "contragentPhone", "Телефон", "Телефон")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.ContragentPhone)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("label", "contragentFax", "Факс", "Факс")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.ContragentFax)
+</dd>
+
+<dt>
+    @LocalText.Inst.Get("text", "contragent_approved_user", "Затверджено", "Утвержден")
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.ApprovedByUser.UserName)
+</dd>
+
+    <dt>
+        @LocalText.Inst.Get("text", "email_user", "Почта користувачів юрособи", "Почта пользователей юрлица")
+    </dt>
+<dd>
+    @String.Join(",", @Model.ContragentUsers.Select(c => c.Email).ToList()))
+</dd>
+</dl>
+    @Html.Partial("_Approve",new ApproveModel(Model))
+</div>

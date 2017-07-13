@@ -1,0 +1,44 @@
+﻿@model IEnumerable<TradingPlatform.Models.TradeModel.TradeViewModel>
+@{
+    ViewBag.Title = @LocalText.Inst.Get("title", "Orders.IndexPage.Title", "Заявки покупців", "Заявки покупателей");
+}
+<div class="clearfix"></div>
+<div class="create-auction title">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('orders')">?</a>
+    <h3>@ViewBag.Title</h3>
+    <hr />
+</div>
+<div>
+    <ul class="nav nav-tabs">
+        <li class="@(Request.Url.PathAndQuery == "/orders" ? "active" : "")"><a href="/orders">@LocalText.Inst.Get("link", "Orders.Index.ActualLink", "Актуальні заявок", "Актуальные заявки")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/orders/index?actual=false" ? "active" : "")"><a href="/orders/index?actual=false">@LocalText.Inst.Get("link", "Orders.Index.NotActualLink", "Архів заявок", "Архив Заявок")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/my/orders" ? "active" : "")"><a href="/my/orders">@LocalText.Inst.Get("link", "Orders.Index.My", "Мої заявки", "Мои заявки")</a></li>
+        <li class="@(Request.Url.PathAndQuery == "/orders/create" ? "active" : "")"><a href="/orders/create">@LocalText.Inst.Get("title", "Orders.IndexPage.CreateOrder", "Подати заявку", "Подать заявку")</a></li>
+    </ul>
+</div>
+
+@*<h4>@Html.ActionLink(@LocalText.Inst.Get("title", "Orders.IndexPage.CreateOrder", "Подати заявку", "Подать заявку"), "Create", new { @class = "" })</h4>*@
+
+@if (Model != null && Model.Any())
+{
+    foreach (var order in Model)
+    {
+        <table class="table-trading" id="tradeTable-@order.Id">
+            @Html.Partial("~/Views/Orders/_OrderTable.cshtml", order)
+        </table>
+    }
+}
+else
+{
+    <br/>
+    <div class="tab-content">
+        <p class="empty-trades">
+            @LocalText.Inst.Get("title", "Orders.IndexPage.EmptyList", "Нажаль, актуальних заявок немає", "К сожалению, актуальных заявок нет");
+        </p>
+    </div>
+   
+    <hr />
+    @*@Html.ActionLink(@LocalText.Inst.Get("title", "Orders.IndexPage.CreateOrder", "Подати заявку", "Подать заявку"), "Create")
+    <br />
+    @Html.ActionLink(@LocalText.Inst.Get("title", "Orders.IndexPage.History", "Історія", "История"), "Index", new { @actual=false})*@
+}

@@ -1,0 +1,15 @@
+﻿@model TradingPlatform.Models.NotifyModels.UpdateInfoMail
+
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+    <p>
+        @LocalText.Inst.Get("text", "EmailTemplate.Contagentom", "Контрагентом", "Контрагент", Model.Lang) @Model.ContragentName 
+        @LocalText.Inst.Get("text", "EmailTemplate.UpdateInfo", "оновлено інформацію", "обновил свою информацию", Model.Lang).
+    </p>
+    <a href="@Model.Link">@LocalText.Inst.Get("text", "EmailTemplate.Look", "Подивитись", "Посмотреть", Model.Lang)</a>
+</div>

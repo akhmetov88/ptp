@@ -1,0 +1,20 @@
+﻿@model TradingPlatform.Models.NotifyModels.LegalNotActive
+@{
+    ViewBag.UserName = Model.UserName;
+    ViewBag.Lang = Model.Lang;
+    Layout = "~/Views/Email/_LayoutMail.cshtml";
+}
+
+<div>
+    <p>
+        @LocalText.Inst.Get("email", "EmailTemplate.CompanyNotific", "Повідомляємо, що компанію", "Сообщаем, что компания ", Model.Lang) <span class="mail-important-info">@Model.Company</span> 
+        @LocalText.Inst.Get("email", "EmailTemplate.CompanyNotAccredit", "не акредитовано на Petroleum Trading Platform", "не была аккредитована на Petroleum Trading Platform", Model.Lang).
+    </p>
+    <p>
+        <span class="mail-important-info">@Model.Comment</span><br />
+        @LocalText.Inst.Get("email", "EmailTemplate.ChangeinSection", "При необхідності Ви можете внести зміни у розділі", "При необходимости Вы можете внести изменения в разделе", Model.Lang) 
+        <span class="mail-important-info"><a href="ptp.ua/user-setings-entities">@LocalText.Inst.Get("email", "EmailTemplate.UserGreentings", "Юридичні особи", "Юридические лица", Model.Lang)</a></span>
+    </p>
+</div>
+
+

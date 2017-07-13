@@ -1,0 +1,109 @@
+﻿@using System.Globalization
+@using TradingPlatform.Enums
+@model TradingPlatform.Models.EntityModel.BetViewModel
+
+@*<script src="~/Scripts/jquery-2.2.4.min.js"></script>
+    <script src="~/Scripts/jquery.countdown.min.js"></script>*@
+
+<div class="modal-header">
+    <span data-countdown="@Model.DateEnd.ToParse()" class="time"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true"><img src="~/Content/images/modal-close-btn.png"></span>
+    </button>
+    <h4 class="modal-title" id="">@LocalText.Inst.Get("title", "Trade.DifferncialBetModal.Title", "Зробити пророзицію ", "Сделать предложение")</h4>
+</div>
+@using (Ajax.BeginForm("Bet", "Trade", FormMethod.Post, new AjaxOptions() { OnSuccess = "onTwoModelSuccess", OnFailure = "onAjaxFailure" }, new { id = "betForm" }))
+{
+    <div class="modal-body">
+        <div class="row">
+            <div class="form-group">
+                @Html.LabelFor(c => c.Price, LocalText.Inst.Get("label", "Trade.DiffernecialBetLabel", "Запропонувати:", "Предложить:"), new { @class = "col-xs-6 col-lg-6" })
+                @*@Html.TextBoxFor(c => c.Price, new { @class = "col-xs-4 col-lg-4", type = "number", min = @Model.Price, step = @Model.Step, max = @Model.MaxPrice })*@
+                <div class="col-lg-6 col-xs-6">
+                    <span class="inc-step" onclick="return IncDec(false);">-</span>
+                    <span id="display-price">@Html.DisplayFor(c=>c.Price)</span>
+                    <span class="dec-step" onclick="return IncDec(true);">+</span>
+                    <br /><span style="font-size:smaller;">(@LocalText.Inst.Get("text", "LabelStep", "крок", "шаг")  @Html.DisplayFor(c => c.Step))</span>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Buyers.Count > 1)
+        { <div class="form-group">
+                @Html.LabelFor(c => c.BuyerId, LocalText.Inst.Get("label", "labelBetFromContragent", "Представляючи:", "От лица:"), new { @class = "col-xs-6 col-lg-6" })
+                @Html.DropDownListFor(c => c.BuyerId, Model.Buyers, new { @class = "auction-value col-xs-6 col-lg-6" })
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                @Html.LabelFor(c => c.BuyerId, LocalText.Inst.Get("label", "labelBetFromContragent", "Представляючи:", "От лица:"), new { @class = "col-xs-6 col-lg-6" })
+                @Html.DisplayFor(c => c.BuyerName, new { @class = "col-xs-6 col-lg-6" })
+            </div>
+                @Html.HiddenFor(c => c.BuyerId)
+                @Html.HiddenFor(c => c.RebetterId)
+        }
+        @Html.HiddenFor(c => c.Price)
+        @Html.HiddenFor(c => c.BetIdToRebet)
+        @Html.HiddenFor(c => c.IsRebetting)
+        @Html.HiddenFor(c => c.TradeId)
+        @Html.HiddenFor(c => c.LotId)
+        @Html.Hidden("IsRedemption", false)
+        <div id="error" class="text-danger"></div>
+    </div>
+            <div class="modal-footer">
+                <button type="submit" id="submitBet">OK</button>
+            </div>
+}
+
+
+
+<script>
+    $("#submitBet").one("click", function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        $('#betForm').submit();
+    });
+
+    function onAjaxFailure() {
+        $("#error").text('@LocalText.Inst.Get("error","ModalError","Відбудась помилка","Произошла ошибка")');
+    }
+
+    $('[data-countdown]').each(function () {
+        var $this = $(this), finalDate = $(this).data('countdown');
+        $this.countdown(finalDate, function (event) {
+            $this.html(event.strftime('<i class="fa fa-clock-o" aria-hidden="true"></i> %H:%M:%S'));
+        });
+    });
+    var lotVolume = parseFloat(@Model.LotVolume);
+    var minPrice = parseFloat(@Model.Price);
+    var maxPrice = parseFloat(@Model.MaxPrice);
+    var step = parseFloat(@Model.Step.Value.ToString("F1"));
+    var lotsCount = parseInt(@Model.LotsCount);
+    var lotsCountAv = parseInt(@Model.LotsCountMax);
+    function IncDec(inc) {
+        debugger;
+        var buff = $('#Price').val();
+        if (inc) {
+            buff = parseFloat($('#display-price').html().replace(' ', '').replace('&nbsp;', '').replace(' ', '').replace('&nbsp;', '')) + step;
+            if (buff < maxPrice) {
+                UpdatePrice(buff);
+            } else {
+                window.setTimeout(function () { changeScale('right'); }, 500);
+            }
+        } else {
+            buff = parseFloat($('#display-price').html().replace(' ', '').replace('&nbsp;', '').replace(' ', '').replace('&nbsp;', '')) - step;
+            if (buff >= minPrice) {
+                UpdatePrice(buff);
+            }
+        }
+        return false;
+    };
+    function UpdatePrice(price) {
+        debugger;
+
+        $('#display-price').html(price.toFixed(2));
+        $('#Price').val(parseFloat(price.toFixed(2)));
+        //$('#firstsum').text((parseFloat(price) * lotVolume).toLocaleString() + " грн");
+    };
+</script>

@@ -1,0 +1,56 @@
+﻿@model List<TradingPlatform.Models.ShowTradeDocsModel>
+@{
+    ViewBag.Title = @LocalText.Inst.Get("label", "Trade.BuyerDocs", "Документи", "Документы");
+}
+<div class="create-auction title">
+    <a class="ref" href="#hint" onclick="OpenHelpDialog('docs')">?</a>
+    <h3>@ViewBag.Title</h3>
+    <hr />
+</div>
+<table class="table">
+    <tbody>
+        <tr class="table-header">
+            <th>@LocalText.Inst.Get("label", "historayTableN", "№ торгів", "№ торгов")</th>
+            <th>@LocalText.Inst.Get("label", "historayTableDate", "Дата створення", "Дата создания")</th>
+            <th>@*@Html.DisplayNameFor(c=>c.Contract)*@ Дог №</th>
+            @*<th>@Html.DisplayNameFor(c => c.AddContract)</th>
+            <th>@Html.DisplayNameFor(c => c.BillNumber)</th>*@
+            <th>доп</th>
+            <th>рахунок</th>
+            @*<th>@LocalText.Inst.Get("label", "historayTableBills", "Рахунки", "Счета")</th>*@
+            @*<th> </th>*@
+            @*<th>договір (доп.)</th>*@
+            @*<th></th>*@
+            <th>@LocalText.Inst.Get("label", "historayTableSeller", "Продавець", "Продавец")</th>
+            <th>@LocalText.Inst.Get("label", "historayTableBuyer", "Покупець", "Покупатель")</th>
+        </tr>
+        @if (Model.Any())
+        {
+            foreach (var doc in Model)
+            {
+                <tr class="table-middle">
+                    <td>@doc.TradeNumber</td>
+                    <td>@doc.DocCreaDate.ToString("dd.MM.yyyy")</td>
+                    <td>
+                        @Html.ActionLink($"Договір № \n {@doc.Contract}", "Doc", new {id = @doc.Id, param = "contract"}, new {@target = "_blank"})
+                    </td>
+                    <td>
+                        @Html.ActionLink($"Дод. угода № {@doc.AddContract}", "Doc", new { id = @doc.Id, param = "addcontract" }, new { @target = "_blank" })
+                    </td>
+                    <td>
+                        @Html.ActionLink($"Рахунок № {@doc.BillNumber}","Doc",new {id=@doc.Id,param="bill"},new {@target="_blank"})
+                    </td>
+                    <td>@doc.SellerName</td>
+                    <td>@doc.BuyerName</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8">@LocalText.Inst.Get("error","docsEmpty","Наразі Вами не заключено жодної угоди","Вы пока еще не заключили ни одной сделки")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
