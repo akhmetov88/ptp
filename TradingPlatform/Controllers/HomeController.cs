@@ -130,7 +130,7 @@ namespace TradingPlatform.Controllers
         {
             using (WebClient wc = new WebClient() { Encoding = Encoding.UTF8 })
             {
-                var data = wc.DownloadString($"https://p-t-p-dev.azurewebsites.net/api/tokens");
+                var data = wc.DownloadString($"https://ptp.ua/api/tokens");
                 var models = JsonConvert.DeserializeObject<List<TokenModel>>(data);
                 var t = models.Count;
                 return models.ToList();
@@ -140,7 +140,7 @@ namespace TradingPlatform.Controllers
         {
             using (WebClient wc = new WebClient() { Encoding = Encoding.UTF8 })
             {
-                var data = wc.DownloadString($"https://p-t-p-dev.azurewebsites.net/api/contents");
+                var data = wc.DownloadString($"https://ptp.ua/api/contents");
                 var models = JsonConvert.DeserializeObject<IEnumerable<ContentView>>(data);
                 return models.ToList();
             }
@@ -149,7 +149,7 @@ namespace TradingPlatform.Controllers
         {
             using (WebClient wc = new WebClient() { Encoding = Encoding.UTF8 })
             {
-                var data = wc.DownloadString($"https://p-t-p-dev.azurewebsites.net/api/catalogs");
+                var data = wc.DownloadString($"https://ptp.ua/api/catalogs");
                 var models = JsonConvert.DeserializeObject<IEnumerable<CatalogModel>>(data);
                 return models.OrderBy(c => c.Id).ToList();
             }

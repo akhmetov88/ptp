@@ -956,14 +956,13 @@ namespace TradingPlatform.Controllers
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         //[CaptchaValidator]
-        //Убрал валидацию капчи, захардкодил, что она всегда true
         public async Task<ActionResult> Register(RegisterViewModel model, FormCollection collection, bool captchaValid=true, string returnUrl = null)
         {
 
-            if (/*!model.Confirm||*/!captchaValid)
-            {
-                ModelState.AddModelError("Captcha", LocalText.Inst.Get("error", "mustAcceptOffert", "Ми не можемо обробити заявку на реєстрацію без акцепту оферти", "Мы не можем обработать заявку на регистрацию без акцепта оферты"));
-            }
+            //if (/*!model.Confirm||*/!captchaValid)
+            //{
+            //    ModelState.AddModelError("Captcha", LocalText.Inst.Get("error", "mustAcceptOffert", "Ми не можемо обробити заявку на реєстрацію без акцепту оферти", "Мы не можем обработать заявку на регистрацию без акцепта оферты"));
+            //}
             if (ModelState.IsValid)
             {
                 var user = new Models.ApplicationUser
@@ -1000,6 +999,7 @@ namespace TradingPlatform.Controllers
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code },
                             protocol: Request.Url.Scheme);
                         user.IsAcceptedOffert = true;
+                        user.EmailConfirmed = true;
                         UserManager.Update(user);
                         db.SaveChanges();
                         //Mailer.SendMail(user.Email, "Для подтверждения е-мэйла перейдите по <a href=\"" + callbackUrl + "\">ccылке</a>");

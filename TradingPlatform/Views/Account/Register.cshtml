@@ -570,9 +570,9 @@
                 </a>
             </div>
             <div class="col-md-12">
-                <label>
+                @*<label>
                     @LocalText.Inst.Get("label", "userAgreement", "Погоджуюсь з вищевикладеним", "Согласен с вышеизложенным")
-                </label>
+                </label>*@
                 <!--Закомментировал гугл капчу. Насколько я понял, unobtrusive validation не давал засабмитить форму, так как капча была невалидна-->
                 @*@Html.Recaptcha()
                 @Html.ValidationMessage("Captcha")*@
